@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EMA - Control de Operadores y Gasolina</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
+    
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <!-- ========== PANTALLA DE INICIO ========== -->
+    <div id="pantallaInicio" class="pantalla-inicio">
+        <div class="inicio-contenido">
+            <div class="inicio-logo">
+                <div class="logo-ema">
+                    <i class="ri-gas-station-fill"></i>
+                </div>
+            </div>
+            <h1>EMA</h1>
+            <p class="subtitulo">Control de Operadores y Gasolina</p>
+            <p class="descripcion">Sencillo, claro y fácil de usar</p>
+            
+            <div class="inicio-botones">
+                <button onclick="iniciarApp()" class="boton-grande boton-azul">
+                    <i class="ri-play-circle-fill"></i>
+                    Empezar
+                </button>
+                <button onclick="cargarDatosDemo()" class="boton-grande boton-verde">
+                    <i class="ri-magic-line"></i>
+                    Probar con datos
+                </button>
+            </div>
+            
+            <div class="inicio-tarjetas">
+                <div class="tarjeta-mini">
+                    <i class="ri-file-excel-line"></i>
+                    <span>Carga Excel</span>
+                </div>
+                <div class="tarjeta-mini">
+                    <i class="ri-user-star-line"></i>
+                    <span>Operadores</span>
+                </div>
+                <div class="tarjeta-mini">
+                    <i class="ri-drop-line"></i>
+                    <span>Gasolina</span>
+                </div>
+                <div class="tarjeta-mini">
+                    <i class="ri-time-line"></i>
+                    <span>Horas</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== APLICACIÓN ========== -->
+    <div id="app" class="app">
+        
+        <!-- MENÚ LATERAL -->
+        <aside class="menu-lateral">
+            <div class="menu-logo">
+                <div class="logo-chico"><i class="ri-gas-station-fill"></i></div>
+                <div class="menu-titulo">
+                    <h2>EMA</h2>
+                    <span>Control de Operadores</span>
+                </div>
+            </div>
+            
+            <nav class="menu-opciones">
+                <button class="menu-item activo" onclick="cambiarVista('resumen')" id="menu-resumen">
+                    <i class="ri-dashboard-line"></i>
+                    <span>Resumen</span>
+                </button>
+                <button class="menu-item" onclick="cambiarVista('registros')" id="menu-registros">
+                    <i class="ri-list-check-2"></i>
+                    <span>Registros</span>
+                </button>
+                <button class="menu-item" onclick="cambiarVista('operadores')" id="menu-operadores">
+                    <i class="ri-team-line"></i>
+                    <span>Operadores</span>
+                </button>
+                <button class="menu-item" onclick="cambiarVista('archivos')" id="menu-archivos">
+                    <i class="ri-folder-line"></i>
+                    <span>Archivos</span>
+                </button>
+            </nav>
+            
+            <div class="menu-abajo">
+                <button onclick="cambiarTema()" class="boton-icono" title="Cambiar color">
+                    <i class="ri-sun-line" id="iconoTema"></i>
+                </button>
+                <button onclick="exportarExcel()" class="boton-icono" title="Descargar Excel">
+                    <i class="ri-file-excel-line"></i>
+                </button>
+                <button onclick="limpiarTodo()" class="boton-icono" title="Borrar todo">
+                    <i class="ri-delete-bin-line"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- CONTENIDO -->
+        <main class="contenido">
+            
+            <header class="barra-superior">
+                <h1 id="tituloVista">Resumen</h1>
+                <div class="acciones">
+                    <button onclick="document.getElementById('cargarArchivo').click()" class="boton boton-azul">
+                        <i class="ri-upload-line"></i> Cargar Excel
+                    </button>
+                    <button onclick="agregarRegistro()" class="boton boton-verde">
+                        <i class="ri-add-line"></i> Agregar
+                    </button>
+                </div>
+                <input type="file" id="cargarArchivo" accept=".xlsx,.xls,.csv" style="display:none;">
+            </header>
+
+            <!-- VISTA: RESUMEN -->
+            <section id="vista-resumen" class="vista activa">
+                
+                <div class="tarjetas-resumen">
+                    <div class="tarjeta-resumen">
+                        <div class="tarjeta-icono azul"><i class="ri-file-list-3-line"></i></div>
+                        <div class="tarjeta-info">
+                            <div class="tarjeta-numero" id="totalRegistros">0</div>
+                            <div class="tarjeta-texto">Total Registros</div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="tarjeta-icono verde"><i class="ri-drop-line"></i></div>
+                        <div class="tarjeta-info">
+                            <div class="tarjeta-numero" id="totalGalones">0</div>
+                            <div class="tarjeta-texto">Galones Totales</div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="tarjeta-icono naranja"><i class="ri-time-line"></i></div>
+                        <div class="tarjeta-info">
+                            <div class="tarjeta-numero" id="totalHoras">0</div>
+                            <div class="tarjeta-texto">Horas Trabajadas</div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="tarjeta-icono morado"><i class="ri-team-line"></i></div>
+                        <div class="tarjeta-info">
+                            <div class="tarjeta-numero" id="totalOperadores">0</div>
+                            <div class="tarjeta-texto">Operadores</div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="tarjeta-icono exito"><i class="ri-gas-station-fill"></i></div>
+                        <div class="tarjeta-info">
+                            <div class="tarjeta-numero" id="conGasolina">0</div>
+                            <div class="tarjeta-texto">Con Gasolina</div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="tarjeta-icono gris"><i class="ri-gas-station-line"></i></div>
+                        <div class="tarjeta-info">
+                            <div class="tarjeta-numero" id="sinGasolina">0</div>
+                            <div class="tarjeta-texto">Sin Gasolina</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="zonaCarga" class="zona-carga">
+                    <div class="carga-inner">
+                        <i class="ri-upload-cloud-2-line"></i>
+                        <div>
+                            <h3>Carga tu archivo Excel</h3>
+                            <p>Arrastra aquí o haz clic para seleccionar. Formato: .xlsx, .xls, .csv</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="contenidoResumen" style="display:none;">
+                    <div class="dos-columnas">
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <h3><i class="ri-bar-chart-line"></i> Galones por Región</h3>
+                            </div>
+                            <div class="grafico-chico"><canvas id="graficoGalones"></canvas></div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <h3><i class="ri-pie-chart-line"></i> Gasolina: Sí / No</h3>
+                            </div>
+                            <div class="grafico-chico"><canvas id="graficoGasolina"></canvas></div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel">
+                        <div class="panel-titulo">
+                            <h3><i class="ri-time-line"></i> Horas por Región</h3>
+                        </div>
+                        <div class="grafico-chico"><canvas id="graficoHoras"></canvas></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-titulo">
+                            <h3><i class="ri-user-star-line"></i> Top Operadores</h3>
+                            <span>Los que más horas trabajaron</span>
+                        </div>
+                        <div class="lista-top" id="listaTop"></div>
+                    </div>
+                </div>
+
+                <div id="mensajeVacio" class="mensaje-vacio">
+                    <i class="ri-inbox-line"></i>
+                    <h3>Sin datos todavía</h3>
+                    <p>Carga un archivo Excel o agrega registros para empezar</p>
+                    <div class="vacio-botones">
+                        <button onclick="document.getElementById('cargarArchivo').click()" class="boton boton-azul">
+                            <i class="ri-upload-line"></i> Cargar Excel
+                        </button>
+                        <button onclick="cargarDatosDemo()" class="boton boton-verde">
+                            <i class="ri-magic-line"></i> Probar con datos
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA: REGISTROS -->
+            <section id="vista-registros" class="vista">
+                
+                <div class="filtros">
+                    <div class="buscador">
+                        <i class="ri-search-line"></i>
+                        <input type="text" id="buscarRegistros" placeholder="Buscar por nombre, región, fecha..." oninput="renderizarRegistros()">
+                    </div>
+                    <div class="filtro-gasolina">
+                        <button class="chip-filtro activo" onclick="filtrarGasolina(null, this)">Todos</button>
+                        <button class="chip-filtro" onclick="filtrarGasolina('SI', this)">⛽ Con Gasolina</button>
+                        <button class="chip-filtro" onclick="filtrarGasolina('No', this)">❌ Sin Gasolina</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="tabla-contenedor">
+                        <table class="tabla" id="tablaRegistros">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Operador</th>
+                                    <th>Región</th>
+                                    <th>Galones</th>
+                                    <th>Horas</th>
+                                    <th>Gasolina</th>
+                                    <th>Horómetro</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoTabla"></tbody>
+                        </table>
+                    </div>
+                    <div class="paginacion" id="paginacion"></div>
+                </div>
+            </section>
+
+            <!-- VISTA: OPERADORES -->
+            <section id="vista-operadores" class="vista">
+                
+                <div class="operadores-grid" id="operadoresGrid"></div>
+                
+                <div id="operadoresVacios" class="mensaje-vacio" style="display:none;">
+                    <i class="ri-team-line"></i>
+                    <h3>Sin operadores</h3>
+                    <p>Carga datos para ver a los operadores</p>
+                </div>
+            </section>
+
+            <!-- VISTA: ARCHIVOS -->
+            <section id="vista-archivos" class="vista">
+                
+                <div class="zona-carga chica">
+                    <div class="carga-inner">
+                        <i class="ri-upload-cloud-2-line"></i>
+                        <div>
+                            <h4>Agregar más archivos</h4>
+                            <p>Haz clic o arrastra aquí</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="archivos-lista" id="archivosLista"></div>
+                
+                <div id="archivosVacios" class="mensaje-vacio" style="display:none;">
+                    <i class="ri-folder-open-line"></i>
+                    <h3>No hay archivos cargados</h3>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- MODAL: AGREGAR REGISTRO -->
+    <div id="modalAgregar" class="modal-fondo">
+        <div class="modal">
+            <div class="modal-cabeza">
+                <h3><i class="ri-add-circle-line"></i> Agregar Registro</h3>
+                <button onclick="cerrarModal('modalAgregar')" class="boton-icono"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-cuerpo">
+                <div class="formulario">
+                    <div class="campo">
+                        <label>📅 Fecha</label>
+                        <input type="text" id="campoFecha" class="entrada" placeholder="01/09/2026">
+                    </div>
+                    <div class="campo">
+                        <label>👤 Nombre del Operador *</label>
+                        <input type="text" id="campoNombre" class="entrada" placeholder="Ej: Carlos López">
+                    </div>
+                    <div class="campo">
+                        <label>📍 Región</label>
+                        <input type="text" id="campoRegion" class="entrada" placeholder="Ej: Norte, Sur, Centro">
+                    </div>
+                    <div class="campo">
+                        <label>⛽ Echaron Gasolina?</label>
+                        <select id="campoGasolina" class="entrada">
+                            <option value="SI">✅ Sí, echaron gasolina</option>
+                            <option value="No">❌ No, no echaron</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>💧 Cantidad de Galones</label>
+                        <input type="number" step="0.1" id="campoGalones" class="entrada" placeholder="Ej: 25.5">
+                    </div>
+                    <div class="campo">
+                        <label>⏱️ Horómetro Inicio</label>
+                        <input type="number" step="0.1" id="campoHoraInicio" class="entrada" placeholder="Ej: 1346.5">
+                    </div>
+                    <div class="campo">
+                        <label>⏱️ Horómetro Fin</label>
+                        <input type="number" step="0.1" id="campoHoraFin" class="entrada" placeholder="Ej: 1349.0">
+                    </div>
+                    <div class="campo">
+                        <label>⏰ Horas Trabajadas (se calcula automático)</label>
+                        <input type="number" step="0.1" id="campoHoras" class="entrada" placeholder="Se llena solo">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-pies">
+                <button onclick="cerrarModal('modalAgregar')" class="boton boton-gris">Cancelar</button>
+                <button onclick="guardarRegistro()" class="boton boton-verde"><i class="ri-save-line"></i> Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: DETALLE OPERADOR -->
+    <div id="modalOperador" class="modal-fondo">
+        <div class="modal grande">
+            <div class="modal-cabeza">
+                <h3 id="tituloOperador"><i class="ri-user-line"></i> Detalle del Operador</h3>
+                <button onclick="cerrarModal('modalOperador')" class="boton-icono"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-cuerpo" id="cuerpoOperador"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: CONFIRMAR -->
+    <div id="modalConfirmar" class="modal-fondo">
+        <div class="modal chico">
+            <div class="modal-cabeza peligro">
+                <h3><i class="ri-error-warning-line"></i> Confirmar</h3>
+            </div>
+            <div class="modal-cuerpo">
+                <p id="mensajeConfirmar">¿Estás seguro?</p>
+            </div>
+            <div class="modal-pies">
+                <button onclick="cerrarModal('modalConfirmar')" class="boton boton-gris">Cancelar</button>
+                <button id="botonConfirmar" class="boton boton-rojo">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AVISOS -->
+    <div id="avisos" class="avisos"></div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
