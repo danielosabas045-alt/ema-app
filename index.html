@@ -3,11 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMA - Control de Operadores y Gasolina</title>
+    <title>EMA PRO - Control de Operadores y Gasolina</title>
+    <meta name="description" content="EMA PRO - Sistema profesional de control de operadores, gasolina y horas trabajadas">
+    <meta name="theme-color" content="#2563eb">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
     
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -16,280 +18,780 @@
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
-    <!-- ========== PANTALLA DE INICIO ========== -->
+
+    <!-- ========== PANTALLA DE INICIO MEJORADA ========== -->
     <div id="pantallaInicio" class="pantalla-inicio">
+        <div class="particulas-fondo"></div>
+        <div class="brillo-fondo"></div>
+        
         <div class="inicio-contenido">
-            <div class="inicio-logo">
+            <div class="inicio-logo anim-flotar">
                 <div class="logo-ema">
                     <i class="ri-gas-station-fill"></i>
+                    <div class="logo-brillo"></div>
                 </div>
+                <div class="logo-anillo-1"></div>
+                <div class="logo-anillo-2"></div>
             </div>
-            <h1>EMA</h1>
-            <p class="subtitulo">Control de Operadores y Gasolina</p>
-            <p class="descripcion">Sencillo, claro y fácil de usar</p>
             
-            <div class="inicio-botones">
-                <button onclick="iniciarApp()" class="boton-grande boton-azul">
-                    <i class="ri-play-circle-fill"></i>
-                    Empezar
+            <div class="insignia-oficial anim-aparecer">
+                <i class="ri-shield-check-fill"></i>
+                <span>SISTEMA PROFESIONAL · VERSIÓN PRO</span>
+            </div>
+            
+            <h1 class="anim-aparecer anim-retraso-1">EMA <span class="texto-pro">PRO</span></h1>
+            <p class="subtitulo anim-aparecer anim-retraso-2">Control Inteligente de Operadores y Gasolina</p>
+            <p class="descripcion anim-aparecer anim-retraso-3">
+                La herramienta definitiva para gestionar registros, analizar rendimiento 
+                y tener el control total de tu operación. <strong>Sencillo, rápido y poderoso.</strong>
+            </p>
+            
+            <div class="inicio-botones anim-aparecer anim-retraso-4">
+                <button onclick="iniciarApp()" class="boton-grande boton-azul boton-brillo">
+                    <i class="ri-rocket-2-line"></i>
+                    Empezar Ahora
                 </button>
                 <button onclick="cargarDatosDemo()" class="boton-grande boton-verde">
                     <i class="ri-magic-line"></i>
-                    Probar con datos
+                    Probar con Datos
                 </button>
             </div>
             
-            <div class="inicio-tarjetas">
-                <div class="tarjeta-mini">
-                    <i class="ri-file-excel-line"></i>
+            <div class="inicio-caracteristicas anim-aparecer anim-retraso-5">
+                <div class="caracteristica">
+                    <div class="carac-icono azul"><i class="ri-file-excel-2-line"></i></div>
                     <span>Carga Excel</span>
                 </div>
-                <div class="tarjeta-mini">
-                    <i class="ri-user-star-line"></i>
+                <div class="caracteristica">
+                    <div class="carac-icono verde"><i class="ri-user-star-line"></i></div>
                     <span>Operadores</span>
                 </div>
-                <div class="tarjeta-mini">
-                    <i class="ri-drop-line"></i>
+                <div class="caracteristica">
+                    <div class="carac-icono naranja"><i class="ri-drop-line"></i></div>
                     <span>Gasolina</span>
                 </div>
-                <div class="tarjeta-mini">
-                    <i class="ri-time-line"></i>
+                <div class="caracteristica">
+                    <div class="carac-icono morado"><i class="ri-time-line"></i></div>
                     <span>Horas</span>
+                </div>
+                <div class="caracteristica">
+                    <div class="carac-icono rosa"><i class="ri-robot-2-line"></i></div>
+                    <span>Asistente IA</span>
+                </div>
+                <div class="caracteristica">
+                    <div class="carac-icono dorado"><i class="ri-bar-chart-box-line"></i></div>
+                    <span>Análisis</span>
+                </div>
+            </div>
+            
+            <div class="inicio-estadisticas anim-aparecer anim-retraso-6">
+                <div class="estadistica-mini">
+                    <strong>+Rápido</strong>
+                    <span>Gestión instantánea</span>
+                </div>
+                <div class="separador-est"></div>
+                <div class="estadistica-mini">
+                    <strong>100% Seguro</strong>
+                    <span>Datos en tu equipo</span>
+                </div>
+                <div class="separador-est"></div>
+                <div class="estadistica-mini">
+                    <strong>+Intuitivo</strong>
+                    <span>Fácil de usar</span>
+                </div>
+                <div class="separador-est"></div>
+                <div class="estadistica-mini">
+                    <strong>PRO</strong>
+                    <span>Características únicas</span>
                 </div>
             </div>
         </div>
     </div>
-    <!-- ========== APLICACIÓN ========== -->
+
+    <!-- ========== APLICACIÓN PRINCIPAL ========== -->
     <div id="app" class="app">
         
-        <!-- MENÚ LATERAL -->
-        <aside class="menu-lateral">
+        <!-- MENÚ LATERAL MEJORADO -->
+        <aside class="menu-lateral" id="menuLateral">
             <div class="menu-logo">
                 <div class="logo-chico"><i class="ri-gas-station-fill"></i></div>
                 <div class="menu-titulo">
-                    <h2>EMA</h2>
-                    <span>Control de Operadores</span>
+                    <h2>EMA <span class="etiqueta-pro">PRO</span></h2>
+                    <span><i class="ri-shield-check-fill"></i> Control Profesional</span>
                 </div>
             </div>
             
             <nav class="menu-opciones">
-                <button class="menu-item activo" onclick="cambiarVista('resumen')" id="menu-resumen">
-                    <i class="ri-dashboard-line"></i>
-                    <span>Resumen</span>
-                </button>
-                <button class="menu-item" onclick="cambiarVista('registros')" id="menu-registros">
-                    <i class="ri-list-check-2"></i>
-                    <span>Registros</span>
-                </button>
-                <button class="menu-item" onclick="cambiarVista('operadores')" id="menu-operadores">
-                    <i class="ri-team-line"></i>
-                    <span>Operadores</span>
-                </button>
-                <button class="menu-item" onclick="cambiarVista('archivos')" id="menu-archivos">
-                    <i class="ri-folder-line"></i>
-                    <span>Archivos</span>
-                </button>
+                <div class="menu-seccion">
+                    <span class="menu-titulo-seccion">Principal</span>
+                    
+                    <button class="menu-item activo" onclick="cambiarVista('resumen')" id="menu-resumen">
+                        <i class="ri-dashboard-3-line"></i>
+                        <span>Resumen</span>
+                        <div class="menu-indicador"></div>
+                    </button>
+                    <button class="menu-item" onclick="cambiarVista('registros')" id="menu-registros">
+                        <i class="ri-list-check-2"></i>
+                        <span>Registros</span>
+                        <span class="contador-menu" id="contadorRegistros">0</span>
+                        <div class="menu-indicador"></div>
+                    </button>
+                    <button class="menu-item" onclick="cambiarVista('operadores')" id="menu-operadores">
+                        <i class="ri-team-line"></i>
+                        <span>Operadores</span>
+                        <div class="menu-indicador"></div>
+                    </button>
+                </div>
+                
+                <div class="menu-seccion">
+                    <span class="menu-titulo-seccion">Inteligencia</span>
+                    
+                    <button class="menu-item" onclick="cambiarVista('analisis')" id="menu-analisis">
+                        <i class="ri-line-chart-line"></i>
+                        <span>Análisis</span>
+                        <span class="etiqueta-nuevo">NUEVO</span>
+                        <div class="menu-indicador"></div>
+                    </button>
+                    <button class="menu-item" onclick="cambiarVista('reportes')" id="menu-reportes">
+                        <i class="ri-file-chart-line"></i>
+                        <span>Reportes</span>
+                        <div class="menu-indicador"></div>
+                    </button>
+                    <button class="menu-item" onclick="cambiarVista('archivos')" id="menu-archivos">
+                        <i class="ri-folder-3-line"></i>
+                        <span>Archivos</span>
+                        <div class="menu-indicador"></div>
+                    </button>
+                </div>
+                
+                <div class="menu-seccion">
+                    <span class="menu-titulo-seccion">Sistema</span>
+                    
+                    <button class="menu-item" onclick="cambiarVista('ajustes')" id="menu-ajustes">
+                        <i class="ri-settings-4-line"></i>
+                        <span>Ajustes</span>
+                        <div class="menu-indicador"></div>
+                    </button>
+                    <button class="menu-item" onclick="mostrarAtajos()" id="menu-atajos">
+                        <i class="ri-keyboard-box-line"></i>
+                        <span>Atajos</span>
+                        <div class="menu-indicador"></div>
+                    </button>
+                </div>
             </nav>
             
             <div class="menu-abajo">
-                <button onclick="cambiarTema()" class="boton-icono" title="Cambiar color">
-                    <i class="ri-sun-line" id="iconoTema"></i>
-                </button>
-                <button onclick="exportarExcel()" class="boton-icono" title="Descargar Excel">
-                    <i class="ri-file-excel-line"></i>
-                </button>
-                <button onclick="limpiarTodo()" class="boton-icono" title="Borrar todo">
-                    <i class="ri-delete-bin-line"></i>
-                </button>
+                <div class="usuario-mini">
+                    <div class="usuario-avatar">
+                        <i class="ri-user-line"></i>
+                        <div class="usuario-punto"></div>
+                    </div>
+                    <div class="usuario-info">
+                        <strong>Administrador</strong>
+                        <span><i class="ri-shield-check-fill"></i> Acceso Total</span>
+                    </div>
+                </div>
+                <div class="acciones-rapidas">
+                    <button onclick="cambiarTema()" class="boton-icono" title="Cambiar tema">
+                        <i class="ri-sun-line" id="iconoTema"></i>
+                    </button>
+                    <button onclick="exportarExcel()" class="boton-icono" title="Exportar Excel">
+                        <i class="ri-file-excel-line"></i>
+                    </button>
+                    <button onclick="togglePantallaCompleta()" class="boton-icono" title="Pantalla completa">
+                        <i class="ri-fullscreen-line"></i>
+                    </button>
+                    <button onclick="limpiarTodo()" class="boton-icono" title="Reiniciar datos">
+                        <i class="ri-restart-line"></i>
+                    </button>
+                </div>
             </div>
         </aside>
-        <!-- CONTENIDO -->
+
+        <!-- CONTENIDO PRINCIPAL -->
         <main class="contenido">
             
+            <!-- BARRA SUPERIOR MEJORADA -->
             <header class="barra-superior">
-                <h1 id="tituloVista">Resumen</h1>
-                <div class="acciones">
-                    <button onclick="document.getElementById('cargarArchivo').click()" class="boton boton-azul">
-                        <i class="ri-upload-line"></i> Cargar Excel
+                <div class="barra-izquierda">
+                    <button class="boton-icono menu-movil" onclick="toggleMenu()">
+                        <i class="ri-menu-line"></i>
                     </button>
-                    <button onclick="agregarRegistro()" class="boton boton-verde">
-                        <i class="ri-add-line"></i> Agregar
-                    </button>
+                    <div class="migas-pan">
+                        <i class="ri-home-4-line"></i>
+                        <span class="separador">/</span>
+                        <span id="migasVista">Resumen</span>
+                    </div>
                 </div>
-                <input type="file" id="cargarArchivo" accept=".xlsx,.xls,.csv" style="display:none;">
-            </header>
-            <!-- VISTA: RESUMEN -->
-            <section id="vista-resumen" class="vista activa">
                 
-                <div class="tarjetas-resumen">
-                    <div class="tarjeta-resumen">
-                        <div class="tarjeta-icono azul"><i class="ri-file-list-3-line"></i></div>
-                        <div class="tarjeta-info">
-                            <div class="tarjeta-numero" id="totalRegistros">0</div>
-                            <div class="tarjeta-texto">Total Registros</div>
-                        </div>
-                    </div>
-                    <div class="tarjeta-resumen">
-                        <div class="tarjeta-icono verde"><i class="ri-drop-line"></i></div>
-                        <div class="tarjeta-info">
-                            <div class="tarjeta-numero" id="totalGalones">0</div>
-                            <div class="tarjeta-texto">Galones Totales</div>
-                        </div>
-                    </div>
-                    <div class="tarjeta-resumen">
-                        <div class="tarjeta-icono naranja"><i class="ri-time-line"></i></div>
-                        <div class="tarjeta-info">
-                            <div class="tarjeta-numero" id="totalHoras">0</div>
-                            <div class="tarjeta-texto">Horas Trabajadas</div>
-                        </div>
-                    </div>
-                    <div class="tarjeta-resumen">
-                        <div class="tarjeta-icono morado"><i class="ri-team-line"></i></div>
-                        <div class="tarjeta-info">
-                            <div class="tarjeta-numero" id="totalOperadores">0</div>
-                            <div class="tarjeta-texto">Operadores</div>
-                        </div>
-                    </div>
-                    <div class="tarjeta-resumen">
-                        <div class="tarjeta-icono exito"><i class="ri-gas-station-fill"></i></div>
-                        <div class="tarjeta-info">
-                            <div class="tarjeta-numero" id="conGasolina">0</div>
-                            <div class="tarjeta-texto">Con Gasolina</div>
-                        </div>
-                    </div>
-                    <div class="tarjeta-resumen">
-                        <div class="tarjeta-icono gris"><i class="ri-gas-station-line"></i></div>
-                        <div class="tarjeta-info">
-                            <div class="tarjeta-numero" id="sinGasolina">0</div>
-                            <div class="tarjeta-texto">Sin Gasolina</div>
-                        </div>
-                    </div>
-                </div>
-                <div id="zonaCarga" class="zona-carga">
-                    <div class="carga-inner">
-                        <i class="ri-upload-cloud-2-line"></i>
-                        <div>
-                            <h3>Carga tu archivo Excel</h3>
-                            <p>Arrastra aquí o haz clic para seleccionar. Formato: .xlsx, .xls, .csv</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="contenidoResumen" style="display:none;">
-                    <div class="dos-columnas">
-                        <div class="panel">
-                            <div class="panel-titulo">
-                                <h3><i class="ri-bar-chart-line"></i> Galones por Región</h3>
-                            </div>
-                            <div class="grafico-chico"><canvas id="graficoGalones"></canvas></div>
-                        </div>
-                        <div class="panel">
-                            <div class="panel-titulo">
-                                <h3><i class="ri-pie-chart-line"></i> Gasolina: Sí / No</h3>
-                            </div>
-                            <div class="grafico-chico"><canvas id="graficoGasolina"></canvas></div>
-                        </div>
-                    </div>
-                    
-                    <div class="panel">
-                        <div class="panel-titulo">
-                            <h3><i class="ri-time-line"></i> Horas por Región</h3>
-                        </div>
-                        <div class="grafico-chico"><canvas id="graficoHoras"></canvas></div>
-                    </div>
-                    <div class="panel">
-                        <div class="panel-titulo">
-                            <h3><i class="ri-user-star-line"></i> Top Operadores</h3>
-                            <span>Los que más horas trabajaron</span>
-                        </div>
-                        <div class="lista-top" id="listaTop"></div>
-                    </div>
-                </div>
-                <div id="mensajeVacio" class="mensaje-vacio">
-                    <i class="ri-inbox-line"></i>
-                    <h3>Sin datos todavía</h3>
-                    <p>Carga un archivo Excel o agrega registros para empezar</p>
-                    <div class="vacio-botones">
-                        <button onclick="document.getElementById('cargarArchivo').click()" class="boton boton-azul">
-                            <i class="ri-upload-line"></i> Cargar Excel
-                        </button>
-                        <button onclick="cargarDatosDemo()" class="boton boton-verde">
-                            <i class="ri-magic-line"></i> Probar con datos
-                        </button>
-                    </div>
-                </div>
-            </section>
-            <!-- VISTA: REGISTROS -->
-            <section id="vista-registros" class="vista">
-                
-                <div class="filtros">
-                    <div class="buscador">
+                <div class="barra-centro">
+                    <div class="busqueda-global">
                         <i class="ri-search-line"></i>
-                        <input type="text" id="buscarRegistros" placeholder="Buscar por nombre, región, fecha..." oninput="renderizarRegistros()">
-                    </div>
-                    <div class="filtro-gasolina">
-                        <button class="chip-filtro activo" onclick="filtrarGasolina(null, this)">Todos</button>
-                        <button class="chip-filtro" onclick="filtrarGasolina('SI', this)">⛽ Con Gasolina</button>
-                        <button class="chip-filtro" onclick="filtrarGasolina('No', this)">❌ Sin Gasolina</button>
+                        <input type="text" id="busquedaGlobal" placeholder="Buscar en todo el sistema..." oninput="busquedaGlobal(this.value)">
+                        <kbd>Ctrl K</kbd>
                     </div>
                 </div>
-                <div class="panel">
-                    <div class="tabla-contenedor">
-                        <table class="tabla" id="tablaRegistros">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>Operador</th>
-                                    <th>Región</th>
-                                    <th>Galones</th>
-                                    <th>Horas</th>
-                                    <th>Gasolina</th>
-                                    <th>Horómetro</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="cuerpoTabla"></tbody>
-                        </table>
+                
+                <div class="barra-derecha">
+                    <div class="reloj-en-vivo">
+                        <i class="ri-time-line"></i>
+                        <span id="relojVivo">--:--:--</span>
                     </div>
-                    <div class="paginacion" id="paginacion"></div>
+                    <button onclick="deshacer()" class="boton-icono" title="Deshacer (Ctrl+Z)">
+                        <i class="ri-arrow-go-back-line"></i>
+                    </button>
+                    <button onclick="mostrarNotificaciones()" class="boton-icono campana" title="Notificaciones">
+                        <i class="ri-notification-3-line"></i>
+                        <span class="campana-punto" id="campanaPunto" style="display:none;"></span>
+                    </button>
                 </div>
-            </section>
-            <!-- VISTA: OPERADORES -->
-            <section id="vista-operadores" class="vista">
-                
-                <div class="operadores-grid" id="operadoresGrid"></div>
-                
-                <div id="operadoresVacios" class="mensaje-vacio" style="display:none;">
-                    <i class="ri-team-line"></i>
-                    <h3>Sin operadores</h3>
-                    <p>Carga datos para ver a los operadores</p>
-                </div>
-            </section>
-            <!-- VISTA: ARCHIVOS -->
-            <section id="vista-archivos" class="vista">
-                
-                <div class="zona-carga chica">
-                    <div class="carga-inner">
-                        <i class="ri-upload-cloud-2-line"></i>
-                        <div>
-                            <h4>Agregar más archivos</h4>
-                            <p>Haz clic o arrastra aquí</p>
+            </header>
+
+            <!-- ÁREA DE CONTENIDO -->
+            <div class="area-contenido">
+
+                <!-- VISTA: RESUMEN MEJORADA -->
+                <section id="vista-resumen" class="vista activa">
+                    
+                    <div class="tarjetas-resumen">
+                        <div class="tarjeta-resumen">
+                            <div class="tarjeta-icono azul"><i class="ri-file-list-3-line"></i></div>
+                            <div class="tarjeta-info">
+                                <div class="tarjeta-numero" id="totalRegistros">0</div>
+                                <div class="tarjeta-texto">Total Registros</div>
+                            </div>
+                            <div class="mini-grafico" id="sparkRegistros"></div>
+                        </div>
+                        <div class="tarjeta-resumen">
+                            <div class="tarjeta-icono verde"><i class="ri-drop-line"></i></div>
+                            <div class="tarjeta-info">
+                                <div class="tarjeta-numero" id="totalGalones">0</div>
+                                <div class="tarjeta-texto">Galones Totales</div>
+                            </div>
+                            <div class="mini-grafico" id="sparkGalones"></div>
+                        </div>
+                        <div class="tarjeta-resumen">
+                            <div class="tarjeta-icono naranja"><i class="ri-time-line"></i></div>
+                            <div class="tarjeta-info">
+                                <div class="tarjeta-numero" id="totalHoras">0</div>
+                                <div class="tarjeta-texto">Horas Trabajadas</div>
+                            </div>
+                            <div class="mini-grafico" id="sparkHoras"></div>
+                        </div>
+                        <div class="tarjeta-resumen">
+                            <div class="tarjeta-icono morado"><i class="ri-team-line"></i></div>
+                            <div class="tarjeta-info">
+                                <div class="tarjeta-numero" id="totalOperadores">0</div>
+                                <div class="tarjeta-texto">Operadores</div>
+                            </div>
+                            <div class="mini-grafico" id="sparkOperadores"></div>
+                        </div>
+                        <div class="tarjeta-resumen">
+                            <div class="tarjeta-icono exito"><i class="ri-gas-station-fill"></i></div>
+                            <div class="tarjeta-info">
+                                <div class="tarjeta-numero" id="conGasolina">0</div>
+                                <div class="tarjeta-texto">Con Gasolina</div>
+                                <div class="porcentaje-barra"><div class="porcentaje-lleno exito" id="pctConGasolina" style="width:0%"></div></div>
+                            </div>
+                        </div>
+                        <div class="tarjeta-resumen">
+                            <div class="tarjeta-icono gris"><i class="ri-gas-station-line"></i></div>
+                            <div class="tarjeta-info">
+                                <div class="tarjeta-numero" id="sinGasolina">0</div>
+                                <div class="tarjeta-texto">Sin Gasolina</div>
+                                <div class="porcentaje-barra"><div class="porcentaje-lleno gris" id="pctSinGasolina" style="width:0%"></div></div>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="archivos-lista" id="archivosLista"></div>
-                
-                <div id="archivosVacios" class="mensaje-vacio" style="display:none;">
-                    <i class="ri-folder-open-line"></i>
-                    <h3>No hay archivos cargados</h3>
-                </div>
-            </section>
+
+                    <div id="zonaCarga" class="zona-carga">
+                        <div class="carga-inner">
+                            <div class="carga-icono">
+                                <i class="ri-upload-cloud-2-line"></i>
+                                <div class="carga-anillos"></div>
+                            </div>
+                            <div class="carga-texto">
+                                <h3>Centro de Carga de Datos</h3>
+                                <p>Arrastra tu archivo Excel aquí o <span class="enlace" onclick="document.getElementById('cargarArchivo').click()">haz clic para seleccionar</span></p>
+                                <div class="carga-caracteristicas">
+                                    <span><i class="ri-check-line"></i> Excel .xlsx / .xls</span>
+                                    <span><i class="ri-check-line"></i> CSV</span>
+                                    <span><i class="ri-check-line"></i> Detección automática</span>
+                                    <span><i class="ri-check-line"></i> Vista previa</span>
+                                </div>
+                            </div>
+                        </div>
+                        <input type="file" id="cargarArchivo" accept=".xlsx,.xls,.csv" style="display:none;">
+                    </div>
+
+                    <div id="contenidoResumen" style="display:none;">
+                        <div class="dos-columnas">
+                            <div class="panel">
+                                <div class="panel-titulo">
+                                    <div class="panel-titulo-izq">
+                                        <div class="panel-icono azul"><i class="ri-bar-chart-line"></i></div>
+                                        <div>
+                                            <h3>Galones por Región</h3>
+                                            <p>Consumo de combustible</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grafico-chico"><canvas id="graficoGalones"></canvas></div>
+                            </div>
+                            <div class="panel">
+                                <div class="panel-titulo">
+                                    <div class="panel-titulo-izq">
+                                        <div class="panel-icono dorado"><i class="ri-pie-chart-line"></i></div>
+                                        <div>
+                                            <h3>Gasolina: Sí / No</h3>
+                                            <p>Distribución de cargas</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="grafico-chico"><canvas id="graficoGasolina"></canvas></div>
+                            </div>
+                        </div>
+                        
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <div class="panel-titulo-izq">
+                                    <div class="panel-icono naranja"><i class="ri-time-line"></i></div>
+                                    <div>
+                                        <h3>Horas por Región</h3>
+                                        <p>Tiempo operativo</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="grafico-chico"><canvas id="graficoHoras"></canvas></div>
+                        </div>
+
+                        <div class="dos-columnas">
+                            <div class="panel">
+                                <div class="panel-titulo">
+                                    <div class="panel-titulo-izq">
+                                        <div class="panel-icono dorado"><i class="ri-user-star-line"></i></div>
+                                        <div>
+                                            <h3>Top Operadores</h3>
+                                            <p>Los que más horas trabajaron</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="lista-top" id="listaTop"></div>
+                            </div>
+                            <div class="panel">
+                                <div class="panel-titulo">
+                                    <div class="panel-titulo-izq">
+                                        <div class="panel-icono azul"><i class="ri-fire-line"></i></div>
+                                        <div>
+                                            <h3>Actividad Reciente</h3>
+                                            <p>Últimos movimientos</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="actividad-lista" id="actividadReciente"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="mensajeVacio" class="mensaje-vacio">
+                        <div class="vacio-visual">
+                            <div class="vacio-icono"><i class="ri-inbox-line"></i></div>
+                            <div class="vacio-orbita"></div>
+                            <div class="vacio-orbita lenta"></div>
+                        </div>
+                        <h3>Sistema Listo para Operar</h3>
+                        <p>Carga un archivo Excel o agrega registros manualmente para activar el panel de control con métricas en tiempo real, gráficos inteligentes y análisis automático.</p>
+                        <div class="vacio-botones">
+                            <button onclick="document.getElementById('cargarArchivo').click()" class="boton boton-azul boton-largo">
+                                <i class="ri-upload-line"></i> Cargar Excel
+                            </button>
+                            <button onclick="cargarDatosDemo()" class="boton boton-verde boton-largo">
+                                <i class="ri-magic-line"></i> Probar con Datos
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VISTA: REGISTROS MEJORADA -->
+                <section id="vista-registros" class="vista">
+                    
+                    <div class="encabezado-vista">
+                        <div>
+                            <h1><i class="ri-list-check-2"></i> Registros</h1>
+                            <p>Administra todos los registros. <strong>Clic en operador</strong> para ver detalles completos.</p>
+                        </div>
+                        <div class="acciones-vista">
+                            <button onclick="agregarRegistro()" class="boton boton-verde">
+                                <i class="ri-add-line"></i> Nuevo Registro
+                            </button>
+                            <button onclick="exportarExcel()" class="boton boton-azul">
+                                <i class="ri-download-line"></i> Exportar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="filtros">
+                        <div class="buscador">
+                            <i class="ri-search-line"></i>
+                            <input type="text" id="buscarRegistros" placeholder="Buscar por nombre, región, fecha..." oninput="renderizarRegistros()">
+                        </div>
+                        <div class="filtro-gasolina">
+                            <button class="chip-filtro activo" onclick="filtrarGasolina(null, this)">
+                                <i class="ri-apps-line"></i> Todos
+                            </button>
+                            <button class="chip-filtro" onclick="filtrarGasolina('SI', this)">
+                                <i class="ri-gas-station-fill"></i> Con Gasolina
+                            </button>
+                            <button class="chip-filtro" onclick="filtrarGasolina('No', this)">
+                                <i class="ri-gas-station-line"></i> Sin Gasolina
+                            </button>
+                        </div>
+                        <div class="filtro-region" id="filtroRegion"></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="tabla-herramientas">
+                            <span class="resultados-info" id="resultadosInfo">0 registros</span>
+                            <button onclick="refrescarRegistros()" class="boton boton-chico boton-gris">
+                                <i class="ri-refresh-line"></i> Refrescar
+                            </button>
+                        </div>
+                        <div class="tabla-contenedor">
+                            <table class="tabla" id="tablaRegistros">
+                                <thead>
+                                    <tr>
+                                        <th onclick="ordenarPor('fecha')">Fecha <i class="ri-arrow-up-down-line"></i></th>
+                                        <th onclick="ordenarPor('nombre')">Operador <i class="ri-arrow-up-down-line"></i></th>
+                                        <th onclick="ordenarPor('region')">Región <i class="ri-arrow-up-down-line"></i></th>
+                                        <th onclick="ordenarPor('galones')">Galones <i class="ri-arrow-up-down-line"></i></th>
+                                        <th onclick="ordenarPor('horasTrab')">Horas <i class="ri-arrow-up-down-line"></i></th>
+                                        <th>Gasolina</th>
+                                        <th>Horómetro</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cuerpoTabla"></tbody>
+                            </table>
+                        </div>
+                        <div class="paginacion" id="paginacion"></div>
+                    </div>
+                </section>
+
+                <!-- VISTA: OPERADORES MEJORADA -->
+                <section id="vista-operadores" class="vista">
+                    
+                    <div class="encabezado-vista">
+                        <div>
+                            <h1><i class="ri-team-line"></i> Operadores</h1>
+                            <p>Perfiles individuales con estadísticas completas y rendimiento.</p>
+                        </div>
+                    </div>
+
+                    <div class="operadores-grid" id="operadoresGrid"></div>
+                    
+                    <div id="operadoresVacios" class="mensaje-vacio" style="display:none;">
+                        <div class="vacio-icono"><i class="ri-team-line"></i></div>
+                        <h3>Sin operadores registrados</h3>
+                        <p>Carga datos para ver los perfiles de los operadores</p>
+                    </div>
+                </section>
+
+                <!-- VISTA: ANÁLISIS (NUEVA) -->
+                <section id="vista-analisis" class="vista">
+                    
+                    <div class="encabezado-vista">
+                        <div>
+                            <h1><i class="ri-line-chart-line"></i> Análisis Inteligente</h1>
+                            <p>Estadísticas avanzadas, métricas clave y patrones de tu operación.</p>
+                        </div>
+                    </div>
+
+                    <div class="tarjetas-analisis">
+                        <div class="tarjeta-analisis">
+                            <div class="analisis-icono dorado"><i class="ri-trophy-line"></i></div>
+                            <h3>🏆 Mejor Operador</h3>
+                            <div id="mejorOperador" class="analisis-contenido">
+                                <p class="analisis-vacio">Sin datos</p>
+                            </div>
+                        </div>
+                        <div class="tarjeta-analisis">
+                            <div class="analisis-icono verde"><i class="ri-gas-station-line"></i></div>
+                            <h3>⛽ Estadísticas Combustible</h3>
+                            <div id="estadisticasGasolina" class="analisis-contenido">
+                                <p class="analisis-vacio">Sin datos</p>
+                            </div>
+                        </div>
+                        <div class="tarjeta-analisis">
+                            <div class="analisis-icono azul"><i class="ri-calculator-line"></i></div>
+                            <h3>📊 Métricas Clave</h3>
+                            <div id="metricasClave" class="analisis-contenido">
+                                <p class="analisis-vacio">Sin datos</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-titulo">
+                            <div class="panel-titulo-izq">
+                                <div class="panel-icono morado"><i class="ri-line-chart-line"></i></div>
+                                <div>
+                                    <h3>Tendencia de Horas</h3>
+                                    <p>Evolución por región</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grafico-mediano"><canvas id="graficoTendencia"></canvas></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-titulo">
+                            <div class="panel-titulo-izq">
+                                <div class="panel-icono rojo"><i class="ri-fire-line"></i></div>
+                                <div>
+                                    <h3>Mapa de Calor</h3>
+                                    <p>Intensidad de actividad por región y fecha</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mapa-calor-contenedor" id="mapaCalor"></div>
+                    </div>
+                </section>
+
+                <!-- VISTA: REPORTES (NUEVA) -->
+                <section id="vista-reportes" class="vista">
+                    
+                    <div class="encabezado-vista">
+                        <div>
+                            <h1><i class="ri-file-chart-line"></i> Reportes</h1>
+                            <p>Genera reportes profesionales en diferentes formatos.</p>
+                        </div>
+                    </div>
+
+                    <div class="reportes-grid">
+                        <div class="reporte-tarjeta" onclick="generarReporte('excel')">
+                            <div class="reporte-icono verde"><i class="ri-file-excel-2-line"></i></div>
+                            <h3>Reporte Excel</h3>
+                            <p>Exporta todos los datos en formato Excel completo con hojas organizadas.</p>
+                            <span class="reporte-boton">Generar <i class="ri-arrow-right-line"></i></span>
+                        </div>
+                        <div class="reporte-tarjeta" onclick="generarReporte('resumen')">
+                            <div class="reporte-icono azul"><i class="ri-file-text-line"></i></div>
+                            <h3>Resumen Rápido</h3>
+                            <p>Vista resumida con totales, promedios y operadores destacados.</p>
+                            <span class="reporte-boton">Ver <i class="ri-arrow-right-line"></i></span>
+                        </div>
+                        <div class="reporte-tarjeta" onclick="generarReporte('operadores')">
+                            <div class="reporte-icono morado"><i class="ri-team-line"></i></div>
+                            <h3>Reporte Operadores</h3>
+                            <p>Estadísticas detalladas por cada operador, ranking y rendimiento.</p>
+                            <span class="reporte-boton">Ver <i class="ri-arrow-right-line"></i></span>
+                        </div>
+                        <div class="reporte-tarjeta" onclick="generarReporte('gasolina')">
+                            <div class="reporte-icono naranja"><i class="ri-drop-line"></i></div>
+                            <h3>Reporte Gasolina</h3>
+                            <p>Análisis completo de consumo, cargas, promedios y comparativas.</p>
+                            <span class="reporte-boton">Ver <i class="ri-arrow-right-line"></i></span>
+                        </div>
+                    </div>
+
+                    <div class="panel" id="panelReporte" style="display:none;">
+                        <div class="panel-titulo">
+                            <div class="panel-titulo-izq">
+                                <div class="panel-icono azul"><i class="ri-file-text-line"></i></div>
+                                <div>
+                                    <h3 id="tituloReporte">Reporte</h3>
+                                    <p>Vista previa del reporte generado</p>
+                                </div>
+                            </div>
+                            <button onclick="cerrarReporte()" class="boton boton-chico boton-gris">
+                                <i class="ri-close-line"></i> Cerrar
+                            </button>
+                        </div>
+                        <div class="reporte-contenido" id="contenidoReporte"></div>
+                    </div>
+                </section>
+
+                <!-- VISTA: ARCHIVOS MEJORADA -->
+                <section id="vista-archivos" class="vista">
+                    
+                    <div class="encabezado-vista">
+                        <div>
+                            <h1><i class="ri-folder-3-line"></i> Gestor de Archivos</h1>
+                            <p>Historial completo de archivos cargados en el sistema.</p>
+                        </div>
+                    </div>
+
+                    <div class="zona-carga chica" id="zonaCargaArchivos">
+                        <div class="carga-inner">
+                            <i class="ri-upload-cloud-2-line"></i>
+                            <div>
+                                <h4>Agregar más archivos</h4>
+                                <p>Haz clic o arrastra aquí</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="archivos-grid" id="archivosGrid"></div>
+                    
+                    <div id="archivosVacios" class="mensaje-vacio" style="display:none;">
+                        <div class="vacio-icono"><i class="ri-folder-open-line"></i></div>
+                        <h3>No hay archivos cargados</h3>
+                    </div>
+                </section>
+
+                <!-- VISTA: AJUSTES (NUEVA) -->
+                <section id="vista-ajustes" class="vista">
+                    
+                    <div class="encabezado-vista">
+                        <div>
+                            <h1><i class="ri-settings-4-line"></i> Ajustes del Sistema</h1>
+                            <p>Personaliza tu experiencia en EMA PRO.</p>
+                        </div>
+                    </div>
+
+                    <div class="ajustes-grid">
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <div class="panel-titulo-izq">
+                                    <div class="panel-icono azul"><i class="ri-building-line"></i></div>
+                                    <div>
+                                        <h3>Datos Generales</h3>
+                                        <p>Información de tu operación</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="formulario-ajustes">
+                                <div class="campo-ajuste">
+                                    <label>Nombre de la Empresa</label>
+                                    <input type="text" id="ajusteEmpresa" class="entrada" placeholder="Tu Empresa S.A." oninput="guardarAjustes()">
+                                </div>
+                                <div class="campo-ajuste">
+                                    <label>Moneda</label>
+                                    <select id="ajusteMoneda" class="entrada" onchange="guardarAjustes()">
+                                        <option value="Q">Quetzal (Q)</option>
+                                        <option value="$">Dólar ($)</option>
+                                        <option value="€">Euro (€)</option>
+                                        <option value="L">Lempira (L)</option>
+                                    </select>
+                                </div>
+                                <div class="campo-ajuste">
+                                    <label>Precio por Galón</label>
+                                    <input type="number" step="0.01" id="ajustePrecioGalon" class="entrada" placeholder="25.50" oninput="guardarAjustes()">
+                                </div>
+                                <div class="campo-ajuste">
+                                    <label>Precio por Hora</label>
+                                    <input type="number" step="0.01" id="ajustePrecioHora" class="entrada" placeholder="45.00" oninput="guardarAjustes()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <div class="panel-titulo-izq">
+                                    <div class="panel-icono dorado"><i class="ri-hard-drive-2-line"></i></div>
+                                    <div>
+                                        <h3>Datos y Respaldo</h3>
+                                        <p>Seguridad de tu información</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="botones-respaldo">
+                                <button onclick="exportarRespaldo()" class="boton boton-azul boton-largo">
+                                    <i class="ri-download-line"></i> Exportar Respaldo
+                                </button>
+                                <label class="boton boton-azul boton-largo">
+                                    <i class="ri-upload-line"></i> Importar Respaldo
+                                    <input type="file" accept=".json" onchange="importarRespaldo(event)" style="display:none;">
+                                </label>
+                                <button onclick="limpiarTodo()" class="boton boton-rojo boton-largo">
+                                    <i class="ri-delete-bin-line"></i> Reiniciar Todo
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <div class="panel-titulo-izq">
+                                    <div class="panel-icono morado"><i class="ri-palette-line"></i></div>
+                                    <div>
+                                        <h3>Apariencia</h3>
+                                        <p>Personaliza la interfaz</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="selector-tema">
+                                <div class="tema-opcion" onclick="state.tema='light';aplicarTema('light');guardarDatosStorage();">
+                                    <div class="tema-preview claro"></div>
+                                    <span>Claro</span>
+                                </div>
+                                <div class="tema-opcion" onclick="state.tema='dark';aplicarTema('dark');guardarDatosStorage();">
+                                    <div class="tema-preview oscuro"></div>
+                                    <span>Oscuro</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
         </main>
     </div>
-    <!-- MODAL: AGREGAR REGISTRO -->
+
+    <!-- ========== ASISTENTE IA / CHATBOT ========== -->
+    <div class="chatbot-contenedor">
+        <button class="chatbot-boton" onclick="toggleChatbot()" id="chatbotBoton">
+            <i class="ri-robot-2-line"></i>
+            <span class="chatbot-pulso"></span>
+        </button>
+        
+        <div class="chatbot-ventana" id="chatbotVentana">
+            <div class="chatbot-cabeza">
+                <div class="chatbot-info">
+                    <div class="chatbot-avatar">
+                        <i class="ri-robot-2-line"></i>
+                        <div class="chatbot-estado"></div>
+                    </div>
+                    <div>
+                        <strong>Asistente EMA PRO</strong>
+                        <span><i class="ri-checkbox-circle-fill"></i> En línea · Respuesta inmediata</span>
+                    </div>
+                </div>
+                <button onclick="toggleChatbot()" class="boton-icono claro"><i class="ri-close-line"></i></button>
+            </div>
+            
+            <div class="chatbot-mensajes" id="chatbotMensajes">
+                <div class="chat-mensaje bot">
+                    <div class="chat-avatar"><i class="ri-robot-2-line"></i></div>
+                    <div class="chat-burbuja">
+                        <p>¡Hola! 👋 Soy el <strong>Asistente de EMA PRO</strong>. ¿En qué puedo ayudarte hoy?</p>
+                        <div class="chat-rapidos">
+                            <button onclick="enviarChat('¿Cuántos registros hay?')">📊 Registros</button>
+                            <button onclick="enviarChat('¿Cuál es el mejor operador?')">🏆 Mejor</button>
+                            <button onclick="enviarChat('¿Cómo cargo un Excel?')">📤 Excel</button>
+                            <button onclick="enviarChat('¿Qué funciones tienes?')">💡 Funciones</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chatbot-entrada">
+                <input type="text" id="chatbotInput" placeholder="Pregúntame lo que necesites..." onkeypress="if(event.key==='Enter')enviarChat()">
+                <button onclick="enviarChat()"><i class="ri-send-plane-fill"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: AGREGAR REGISTRO ========== -->
     <div id="modalAgregar" class="modal-fondo">
         <div class="modal">
             <div class="modal-cabeza">
-                <h3><i class="ri-add-circle-line"></i> Agregar Registro</h3>
+                <div class="modal-titulo-izq">
+                    <div class="modal-icono verde"><i class="ri-add-circle-line"></i></div>
+                    <div>
+                        <h3>Agregar Nuevo Registro</h3>
+                        <p>Ingresa los datos del nuevo registro</p>
+                    </div>
+                </div>
                 <button onclick="cerrarModal('modalAgregar')" class="boton-icono"><i class="ri-close-line"></i></button>
             </div>
             <div class="modal-cuerpo">
@@ -326,8 +828,8 @@
                         <input type="number" step="0.1" id="campoHoraFin" class="entrada" placeholder="Ej: 1349.0">
                     </div>
                     <div class="campo">
-                        <label>⏰ Horas Trabajadas (se calcula automático)</label>
-                        <input type="number" step="0.1" id="campoHoras" class="entrada" placeholder="Se llena solo">
+                        <label>⏰ Horas Trabajadas</label>
+                        <input type="number" step="0.1" id="campoHoras" class="entrada" placeholder="Se calcula automático">
                     </div>
                 </div>
             </div>
@@ -337,24 +839,88 @@
             </div>
         </div>
     </div>
-    <!-- MODAL: DETALLE OPERADOR -->
+
+    <!-- ========== MODAL: DETALLE OPERADOR ========== -->
     <div id="modalOperador" class="modal-fondo">
         <div class="modal grande">
             <div class="modal-cabeza">
-                <h3 id="tituloOperador"><i class="ri-user-line"></i> Detalle del Operador</h3>
+                <div class="modal-titulo-izq">
+                    <div class="modal-icono azul"><i class="ri-user-line"></i></div>
+                    <div>
+                        <h3 id="tituloOperador">Detalle del Operador</h3>
+                        <p>Estadísticas completas e historial</p>
+                    </div>
+                </div>
                 <button onclick="cerrarModal('modalOperador')" class="boton-icono"><i class="ri-close-line"></i></button>
             </div>
             <div class="modal-cuerpo" id="cuerpoOperador"></div>
         </div>
     </div>
-    <!-- MODAL: CONFIRMAR -->
+
+    <!-- ========== MODAL: ATAJOS ========== -->
+    <div id="modalAtajos" class="modal-fondo">
+        <div class="modal chico">
+            <div class="modal-cabeza">
+                <div class="modal-titulo-izq">
+                    <div class="modal-icono azul"><i class="ri-keyboard-box-line"></i></div>
+                    <div>
+                        <h3>Atajos de Teclado</h3>
+                        <p>Comandos rápidos del sistema</p>
+                    </div>
+                </div>
+                <button onclick="cerrarModal('modalAtajos')" class="boton-icono"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-cuerpo">
+                <div class="atajos-grid">
+                    <div class="atajo-item"><span>Buscar global</span><div class="atajo-teclas"><kbd>Ctrl</kbd><kbd>K</kbd></div></div>
+                    <div class="atajo-item"><span>Nuevo registro</span><div class="atajo-teclas"><kbd>Ctrl</kbd><kbd>N</kbd></div></div>
+                    <div class="atajo-item"><span>Exportar Excel</span><div class="atajo-teclas"><kbd>Ctrl</kbd><kbd>E</kbd></div></div>
+                    <div class="atajo-item"><span>Guardar</span><div class="atajo-teclas"><kbd>Ctrl</kbd><kbd>S</kbd></div></div>
+                    <div class="atajo-item"><span>Cambiar tema</span><div class="atajo-teclas"><kbd>Ctrl</kbd><kbd>T</kbd></div></div>
+                    <div class="atajo-item"><span>Deshacer</span><div class="atajo-teclas"><kbd>Ctrl</kbd><kbd>Z</kbd></div></div>
+                    <div class="atajo-item"><span>Asistente IA</span><div class="atajo-teclas"><kbd>Ctrl</kbd><kbd>M</kbd></div></div>
+                    <div class="atajo-item"><span>Pantalla completa</span><div class="atajo-teclas"><kbd>F11</kbd></div></div>
+                    <div class="atajo-item"><span>Cerrar ventana</span><div class="atajo-teclas"><kbd>Esc</kbd></div></div>
+                    <div class="atajo-item"><span>Ver atajos</span><div class="atajo-teclas"><kbd>?</kbd></div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: NOTIFICACIONES ========== -->
+    <div id="modalNotificaciones" class="modal-fondo">
+        <div class="modal chico">
+            <div class="modal-cabeza">
+                <div class="modal-titulo-izq">
+                    <div class="modal-icono azul"><i class="ri-notification-3-line"></i></div>
+                    <div>
+                        <h3>Notificaciones</h3>
+                        <p>Mensajes del sistema</p>
+                    </div>
+                </div>
+                <button onclick="cerrarModal('modalNotificaciones')" class="boton-icono"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-cuerpo">
+                <div id="listaNotificaciones" class="notificaciones-lista">
+                    <p class="notificaciones-vacio">No hay notificaciones nuevas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: CONFIRMAR ========== -->
     <div id="modalConfirmar" class="modal-fondo">
         <div class="modal chico">
             <div class="modal-cabeza peligro">
-                <h3><i class="ri-error-warning-line"></i> Confirmar</h3>
+                <div class="modal-titulo-izq">
+                    <div class="modal-icono rojo"><i class="ri-error-warning-line"></i></div>
+                    <div>
+                        <h3>Confirmar Acción</h3>
+                    </div>
+                </div>
             </div>
             <div class="modal-cuerpo">
-                <p id="mensajeConfirmar">¿Estás seguro?</p>
+                <p id="mensajeConfirmar" class="confirmar-texto">¿Estás seguro?</p>
             </div>
             <div class="modal-pies">
                 <button onclick="cerrarModal('modalConfirmar')" class="boton boton-gris">Cancelar</button>
@@ -362,8 +928,10 @@
             </div>
         </div>
     </div>
-    <!-- AVISOS -->
+
+    <!-- ========== AVISOS / TOASTS ========== -->
     <div id="avisos" class="avisos"></div>
+
     <script src="app.js"></script>
 </body>
 </html>
