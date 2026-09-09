@@ -1,286 +1,699 @@
 <!DOCTYPE html>
-<html lang="es" data-bs-theme="dark">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EMA PRO - Sistema Inteligente de Gestión y Análisis</title>
+    <title>EMA PRO - Control de Operadores y Gasolina</title>
+    <meta name="theme-color" content="#2563eb">
     
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Iconos -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-    <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- Estilos Personalizados -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css">
+    
     <link rel="stylesheet" href="estilos.css">
 </head>
 <body>
 
-    <!-- Barra de Navegación -->
-    <nav class="navbar navbar-expand-lg fixed-top">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-lightning-charge"></i> EMA <span>PRO</span>
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menuPrincipal">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="menuPrincipal">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#dashboard"><i class="bi bi-speedometer2"></i> Panel Principal</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#compras"><i class="bi bi-cart3"></i> Compras</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#ventas"><i class="bi bi-cash-coin"></i> Ventas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#analisis"><i class="bi bi-bar-chart-steps"></i> Análisis Inteligente</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#base-datos"><i class="bi bi-database"></i> Base de Datos</a></li>
-                </ul>
-                <div class="d-flex align-items-center">
-                    <span class="badge bg-success me-2">✅ Sistema Activo</span>
-                    <button class="btn btn-sm btn-outline-light" onclick="respaldarDatos()">
-                        <i class="bi bi-download"></i> Respaldar
+    <!-- PANTALLA DE INICIO -->
+    <div id="pantallaInicio" class="pantalla-inicio">
+        <div class="particulas"></div>
+        <div class="inicio-contenido">
+            <div class="inicio-logo anim-flotar">
+                <div class="logo-ema"><i class="ri-gas-station-fill"></i></div>
+                <div class="anillo-1"></div>
+                <div class="anillo-2"></div>
+            </div>
+            
+            <div class="insignia">
+                <i class="ri-shield-check-fill"></i> SISTEMA PROFESIONAL
+            </div>
+            
+            <h1>EMA <span class="texto-pro">PRO</span></h1>
+            <p class="subtitulo">Control de Operadores y Gasolina</p>
+            <p class="descripcion">Sencillo, rápido y poderoso. Gestiona registros, analiza rendimiento y toma el control total.</p>
+            
+            <div class="inicio-botones">
+                <button onclick="iniciarApp()" class="boton-grande btn-azul">
+                    <i class="ri-rocket-2-line"></i> Empezar Ahora
+                </button>
+                <button onclick="cargarDatosDemo()" class="boton-grande btn-verde">
+                    <i class="ri-magic-line"></i> Probar con Datos
+                </button>
+            </div>
+            
+            <div class="inicio-caracts">
+                <div class="caract"><i class="ri-file-excel-line"></i><span>Carga Excel</span></div>
+                <div class="caract"><i class="ri-user-star-line"></i><span>Operadores</span></div>
+                <div class="caract"><i class="ri-drop-line"></i><span>Gasolina</span></div>
+                <div class="caract"><i class="ri-time-line"></i><span>Horas</span></div>
+                <div class="caract"><i class="ri-robot-2-line"></i><span>Asistente IA</span></div>
+                <div class="caract"><i class="ri-bar-chart-box-line"></i><span>Análisis</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APLICACIÓN -->
+    <div id="app" class="app">
+        
+        <!-- MENÚ LATERAL -->
+        <aside class="menu-lateral" id="menuLateral">
+            <div class="menu-logo">
+                <div class="logo-chico"><i class="ri-gas-station-fill"></i></div>
+                <div class="menu-titulo">
+                    <h2>EMA <span class="tag-pro">PRO</span></h2>
+                    <span><i class="ri-shield-check-fill"></i> Control Total</span>
+                </div>
+            </div>
+            
+            <nav class="menu-opciones">
+                <div class="menu-seccion">Principal</div>
+                
+                <button class="menu-item activo" onclick="cambiarVista('resumen')" id="menu-resumen">
+                    <i class="ri-dashboard-3-line"></i>
+                    <span>Resumen</span>
+                </button>
+                <button class="menu-item" onclick="cambiarVista('registros')" id="menu-registros">
+                    <i class="ri-list-check-2"></i>
+                    <span>Registros</span>
+                    <span class="contador" id="contadorReg">0</span>
+                </button>
+                <button class="menu-item" onclick="cambiarVista('operadores')" id="menu-operadores">
+                    <i class="ri-team-line"></i>
+                    <span>Operadores</span>
+                </button>
+                
+                <div class="menu-seccion">Inteligencia</div>
+                
+                <button class="menu-item" onclick="cambiarVista('analisis')" id="menu-analisis">
+                    <i class="ri-line-chart-line"></i>
+                    <span>Análisis</span>
+                    <span class="tag-nuevo">NUEVO</span>
+                </button>
+                <button class="menu-item" onclick="cambiarVista('reportes')" id="menu-reportes">
+                    <i class="ri-file-chart-line"></i>
+                    <span>Reportes</span>
+                </button>
+                <button class="menu-item" onclick="cambiarVista('archivos')" id="menu-archivos">
+                    <i class="ri-folder-3-line"></i>
+                    <span>Archivos</span>
+                </button>
+                
+                <div class="menu-seccion">Sistema</div>
+                
+                <button class="menu-item" onclick="cambiarVista('ajustes')" id="menu-ajustes">
+                    <i class="ri-settings-4-line"></i>
+                    <span>Ajustes</span>
+                </button>
+                <button class="menu-item" onclick="mostrarAtajos()">
+                    <i class="ri-keyboard-box-line"></i>
+                    <span>Atajos</span>
+                </button>
+            </nav>
+            
+            <div class="menu-abajo">
+                <div class="usuario-mini">
+                    <div class="user-avatar">
+                        <i class="ri-user-line"></i>
+                        <div class="user-punto"></div>
+                    </div>
+                    <div class="user-info">
+                        <strong>Administrador</strong>
+                        <span><i class="ri-shield-check-fill"></i> Acceso Total</span>
+                    </div>
+                </div>
+                <div class="acciones-rapidas">
+                    <button onclick="cambiarTema()" class="btn-icono" title="Cambiar tema">
+                        <i class="ri-sun-line" id="iconoTema"></i>
+                    </button>
+                    <button onclick="exportarExcel()" class="btn-icono" title="Exportar Excel">
+                        <i class="ri-file-excel-line"></i>
+                    </button>
+                    <button onclick="pantallaCompleta()" class="btn-icono" title="Pantalla completa">
+                        <i class="ri-fullscreen-line"></i>
                     </button>
                 </div>
             </div>
-        </div>
-    </nav>
+        </aside>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Contenido Principal -->
-            <main class="col-12 px-4">
-                <!-- PANEL PRINCIPAL -->
-                <section id="dashboard" class="pagina-activa py-4">
-                    <div class="bienvenida mb-4">
-                        <h1>🚀 Sistema de Gestión y Análisis Inteligente</h1>
-                        <p class="lead">Carga tu archivo Excel y el sistema hará todo automáticamente: detecta Compras, Ventas, crea base de datos, genera gráficos y más.</p>
+        <!-- CONTENIDO -->
+        <main class="contenido">
+            
+            <!-- BARRA SUPERIOR -->
+            <header class="barra-superior">
+                <div class="barra-izq">
+                    <button class="btn-icono menu-movil" onclick="toggleMenu()">
+                        <i class="ri-menu-line"></i>
+                    </button>
+                    <div class="migas">
+                        <i class="ri-home-4-line"></i>
+                        <span>/</span>
+                        <strong id="migasVista">Resumen</strong>
+                    </div>
+                </div>
+                
+                <div class="barra-der">
+                    <div class="reloj">
+                        <i class="ri-time-line"></i>
+                        <span id="relojVivo">--:--:--</span>
+                    </div>
+                    <button onclick="mostrarNotificaciones()" class="btn-icono campana" title="Notificaciones">
+                        <i class="ri-notification-3-line"></i>
+                        <span class="campana-punto" id="campanaPunto" style="display:none;"></span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- VISTA: RESUMEN -->
+            <section id="vista-resumen" class="vista activa">
+                
+                <div class="tarjetas-resumen">
+                    <div class="tarjeta-resumen">
+                        <div class="t-icono azul"><i class="ri-file-list-3-line"></i></div>
+                        <div class="t-info">
+                            <div class="t-numero" id="totalRegistros">0</div>
+                            <div class="t-texto">Total Registros</div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="t-icono verde"><i class="ri-drop-line"></i></div>
+                        <div class="t-info">
+                            <div class="t-numero" id="totalGalones">0</div>
+                            <div class="t-texto">Galones Totales</div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="t-icono naranja"><i class="ri-time-line"></i></div>
+                        <div class="t-info">
+                            <div class="t-numero" id="totalHoras">0</div>
+                            <div class="t-texto">Horas Trabajadas</div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="t-icono morado"><i class="ri-team-line"></i></div>
+                        <div class="t-info">
+                            <div class="t-numero" id="totalOperadores">0</div>
+                            <div class="t-texto">Operadores</div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="t-icono exito"><i class="ri-gas-station-fill"></i></div>
+                        <div class="t-info">
+                            <div class="t-numero" id="conGasolina">0</div>
+                            <div class="t-texto">Con Gasolina</div>
+                            <div class="barra-pct"><div class="barra-llena exito" id="pctCon" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                    <div class="tarjeta-resumen">
+                        <div class="t-icono gris"><i class="ri-gas-station-line"></i></div>
+                        <div class="t-info">
+                            <div class="t-numero" id="sinGasolina">0</div>
+                            <div class="t-texto">Sin Gasolina</div>
+                            <div class="barra-pct"><div class="barra-llena gris" id="pctSin" style="width:0%"></div></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="zonaCarga" class="zona-carga">
+                    <div class="carga-inner">
+                        <div class="carga-icono">
+                            <i class="ri-upload-cloud-2-line"></i>
+                            <div class="carga-anillo"></div>
+                        </div>
+                        <div class="carga-texto">
+                            <h3>Centro de Carga de Datos</h3>
+                            <p>Arrastra tu archivo Excel aquí o <span class="enlace" onclick="document.getElementById('cargarArchivo').click()">haz clic para seleccionar</span></p>
+                            <div class="carga-ops">
+                                <span><i class="ri-check-line"></i> Excel .xlsx / .xls</span>
+                                <span><i class="ri-check-line"></i> CSV</span>
+                                <span><i class="ri-check-line"></i> Detección automática</span>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="file" id="cargarArchivo" accept=".xlsx,.xls,.csv" style="display:none;">
+                </div>
+
+                <div id="contenidoResumen" style="display:none;">
+                    <div class="dos-columnas">
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <h3><i class="ri-bar-chart-line"></i> Galones por Región</h3>
+                            </div>
+                            <div class="grafico"><canvas id="graficoGalones"></canvas></div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <h3><i class="ri-pie-chart-line"></i> Gasolina: Sí / No</h3>
+                            </div>
+                            <div class="grafico"><canvas id="graficoGasolina"></canvas></div>
+                        </div>
+                    </div>
+                    
+                    <div class="panel">
+                        <div class="panel-titulo">
+                            <h3><i class="ri-time-line"></i> Horas por Región</h3>
+                        </div>
+                        <div class="grafico"><canvas id="graficoHoras"></canvas></div>
                     </div>
 
-                    <!-- Carga de Archivo -->
-                    <div class="tarjeta principal mb-4">
-                        <h4><i class="bi bi-cloud-upload"></i> Cargar Archivo Excel</h4>
-                        <div class="area-soltar mt-3" id="areaSoltar">
-                            <i class="bi bi-file-earmark-spreadsheet"></i>
-                            <p>Arrastra tu archivo Excel aquí o haz clic para seleccionar</p>
-                            <input type="file" id="archivoExcel" accept=".xlsx,.xls,.csv" hidden>
-                            <button class="btn btn-primary btn-lg mt-2" onclick="document.getElementById('archivoExcel').click()">
-                                <i class="bi bi-folder2-open"></i> Seleccionar Archivo
+                    <div class="dos-columnas">
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <h3><i class="ri-user-star-line"></i> Top Operadores</h3>
+                            </div>
+                            <div class="lista-top" id="listaTop"></div>
+                        </div>
+                        <div class="panel">
+                            <div class="panel-titulo">
+                                <h3><i class="ri-fire-line"></i> Actividad Reciente</h3>
+                            </div>
+                            <div class="actividad" id="actividadReciente"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="mensajeVacio" class="mensaje-vacio">
+                    <div class="vacio-icono"><i class="ri-inbox-line"></i></div>
+                    <h3>Sistema Listo para Operar</h3>
+                    <p>Carga un archivo Excel o agrega registros para activar el panel de control con métricas en tiempo real, gráficos inteligentes y análisis automático.</p>
+                    <div class="vacio-botones">
+                        <button onclick="document.getElementById('cargarArchivo').click()" class="boton btn-azul">
+                            <i class="ri-upload-line"></i> Cargar Excel
+                        </button>
+                        <button onclick="cargarDatosDemo()" class="boton btn-verde">
+                            <i class="ri-magic-line"></i> Probar con Datos
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VISTA: REGISTROS -->
+            <section id="vista-registros" class="vista">
+                
+                <div class="encabezado">
+                    <div>
+                        <h1><i class="ri-list-check-2"></i> Registros</h1>
+                        <p>Administra todos los registros. Clic en el nombre para ver detalles.</p>
+                    </div>
+                    <div class="acciones">
+                        <button onclick="agregarRegistro()" class="boton btn-verde">
+                            <i class="ri-add-line"></i> Nuevo
+                        </button>
+                        <button onclick="exportarExcel()" class="boton btn-azul">
+                            <i class="ri-download-line"></i> Exportar
+                        </button>
+                    </div>
+                </div>
+
+                <div class="filtros">
+                    <div class="buscador">
+                        <i class="ri-search-line"></i>
+                        <input type="text" id="buscarRegistros" placeholder="Buscar por nombre, región, fecha..." oninput="renderizarRegistros()">
+                    </div>
+                    <div class="filtro-gas">
+                        <button class="chip activo" onclick="filtrarGas(null, this)">Todos</button>
+                        <button class="chip" onclick="filtrarGas('SI', this)">⛽ Con Gasolina</button>
+                        <button class="chip" onclick="filtrarGas('No', this)">❌ Sin Gasolina</button>
+                    </div>
+                    <div class="filtro-regiones" id="filtroRegiones"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="tabla-herramientas">
+                        <span id="infoResultados">0 registros</span>
+                        <button onclick="refrescarFiltros()" class="boton btn-chico btn-gris">
+                            <i class="ri-refresh-line"></i> Limpiar
+                        </button>
+                    </div>
+                    <div class="tabla-contenedor">
+                        <table class="tabla" id="tablaRegistros">
+                            <thead>
+                                <tr>
+                                    <th onclick="ordenarPor('fechaCreacion')">Fecha <i class="ri-arrow-up-down-line"></i></th>
+                                    <th onclick="ordenarPor('nombre')">Operador <i class="ri-arrow-up-down-line"></i></th>
+                                    <th onclick="ordenarPor('region')">Región <i class="ri-arrow-up-down-line"></i></th>
+                                    <th onclick="ordenarPor('galones')">Galones <i class="ri-arrow-up-down-line"></i></th>
+                                    <th onclick="ordenarPor('horasTrab')">Horas <i class="ri-arrow-up-down-line"></i></th>
+                                    <th>Gasolina</th>
+                                    <th>Horómetro</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="cuerpoTabla"></tbody>
+                        </table>
+                    </div>
+                    <div class="paginacion" id="paginacion"></div>
+                </div>
+            </section>
+
+            <!-- VISTA: OPERADORES -->
+            <section id="vista-operadores" class="vista">
+                
+                <div class="encabezado">
+                    <div>
+                        <h1><i class="ri-team-line"></i> Operadores</h1>
+                        <p>Perfiles individuales con estadísticas completas.</p>
+                    </div>
+                </div>
+
+                <div class="operadores-grid" id="operadoresGrid"></div>
+                
+                <div id="operadoresVacios" class="mensaje-vacio" style="display:none;">
+                    <div class="vacio-icono"><i class="ri-team-line"></i></div>
+                    <h3>Sin operadores</h3>
+                    <p>Carga datos para ver los perfiles</p>
+                </div>
+            </section>
+
+            <!-- VISTA: ANÁLISIS -->
+            <section id="vista-analisis" class="vista">
+                
+                <div class="encabezado">
+                    <div>
+                        <h1><i class="ri-line-chart-line"></i> Análisis Inteligente</h1>
+                        <p>Estadísticas avanzadas y patrones de tu operación.</p>
+                    </div>
+                </div>
+
+                <div class="tarjetas-analisis">
+                    <div class="tarjeta-analisis">
+                        <div class="a-icono dorado"><i class="ri-trophy-line"></i></div>
+                        <h3>🏆 Mejor Operador</h3>
+                        <div id="mejorOperador" class="a-contenido"><p class="a-vacio">Sin datos</p></div>
+                    </div>
+                    <div class="tarjeta-analisis">
+                        <div class="a-icono verde"><i class="ri-gas-station-line"></i></div>
+                        <h3>⛽ Combustible</h3>
+                        <div id="estadisticasGas" class="a-contenido"><p class="a-vacio">Sin datos</p></div>
+                    </div>
+                    <div class="tarjeta-analisis">
+                        <div class="a-icono azul"><i class="ri-calculator-line"></i></div>
+                        <h3>📊 Métricas Clave</h3>
+                        <div id="metricasClave" class="a-contenido"><p class="a-vacio">Sin datos</p></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-titulo">
+                        <h3><i class="ri-fire-line"></i> Mapa de Calor</h3>
+                        <span>Intensidad por región y fecha</span>
+                    </div>
+                    <div class="mapa-contenedor" id="mapaCalor"></div>
+                </div>
+            </section>
+
+            <!-- VISTA: REPORTES -->
+            <section id="vista-reportes" class="vista">
+                
+                <div class="encabezado">
+                    <div>
+                        <h1><i class="ri-file-chart-line"></i> Reportes</h1>
+                        <p>Genera reportes profesionales en diferentes formatos.</p>
+                    </div>
+                </div>
+
+                <div class="reportes-grid">
+                    <div class="reporte" onclick="generarReporte('excel')">
+                        <div class="r-icono verde"><i class="ri-file-excel-2-line"></i></div>
+                        <h3>Reporte Excel</h3>
+                        <p>Exporta todos los datos en formato Excel completo.</p>
+                        <span class="r-boton">Generar <i class="ri-arrow-right-line"></i></span>
+                    </div>
+                    <div class="reporte" onclick="generarReporte('resumen')">
+                        <div class="r-icono azul"><i class="ri-file-text-line"></i></div>
+                        <h3>Resumen General</h3>
+                        <p>Vista rápida con totales, promedios y destacados.</p>
+                        <span class="r-boton">Ver <i class="ri-arrow-right-line"></i></span>
+                    </div>
+                    <div class="reporte" onclick="generarReporte('operadores')">
+                        <div class="r-icono morado"><i class="ri-team-line"></i></div>
+                        <h3>Reporte Operadores</h3>
+                        <p>Estadísticas detalladas por cada operador y ranking.</p>
+                        <span class="r-boton">Ver <i class="ri-arrow-right-line"></i></span>
+                    </div>
+                    <div class="reporte" onclick="generarReporte('gasolina')">
+                        <div class="r-icono naranja"><i class="ri-drop-line"></i></div>
+                        <h3>Reporte Gasolina</h3>
+                        <p>Análisis completo de consumo, cargas y promedios.</p>
+                        <span class="r-boton">Ver <i class="ri-arrow-right-line"></i></span>
+                    </div>
+                </div>
+
+                <div class="panel" id="panelReporte" style="display:none;">
+                    <div class="panel-titulo">
+                        <h3 id="tituloReporte"><i class="ri-file-text-line"></i> Reporte</h3>
+                        <button onclick="cerrarReporte()" class="boton btn-chico btn-gris">
+                            <i class="ri-close-line"></i> Cerrar
+                        </button>
+                    </div>
+                    <div class="reporte-contenido" id="contenidoReporte"></div>
+                </div>
+            </section>
+
+            <!-- VISTA: ARCHIVOS -->
+            <section id="vista-archivos" class="vista">
+                
+                <div class="encabezado">
+                    <div>
+                        <h1><i class="ri-folder-3-line"></i> Gestor de Archivos</h1>
+                        <p>Historial completo de archivos cargados.</p>
+                    </div>
+                </div>
+
+                <div class="zona-carga chica" onclick="document.getElementById('cargarArchivo').click()">
+                    <div class="carga-inner">
+                        <i class="ri-upload-cloud-2-line"></i>
+                        <div>
+                            <h4>Agregar más archivos</h4>
+                            <p>Haz clic o arrastra aquí</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="archivos-grid" id="archivosGrid"></div>
+                
+                <div id="archivosVacios" class="mensaje-vacio" style="display:none;">
+                    <div class="vacio-icono"><i class="ri-folder-open-line"></i></div>
+                    <h3>No hay archivos cargados</h3>
+                </div>
+            </section>
+
+            <!-- VISTA: AJUSTES -->
+            <section id="vista-ajustes" class="vista">
+                
+                <div class="encabezado">
+                    <div>
+                        <h1><i class="ri-settings-4-line"></i> Ajustes del Sistema</h1>
+                        <p>Personaliza tu experiencia en EMA PRO.</p>
+                    </div>
+                </div>
+
+                <div class="ajustes-grid">
+                    <div class="panel">
+                        <div class="panel-titulo"><h3><i class="ri-building-line"></i> Datos Generales</h3></div>
+                        <div class="form-ajustes">
+                            <div class="campo-a">
+                                <label>Nombre de la Empresa</label>
+                                <input type="text" id="ajusteEmpresa" class="entrada" placeholder="Tu Empresa" oninput="guardarAjustes()">
+                            </div>
+                            <div class="campo-a">
+                                <label>Moneda</label>
+                                <select id="ajusteMoneda" class="entrada" onchange="guardarAjustes()">
+                                    <option value="Q">Quetzal (Q)</option>
+                                    <option value="$">Dólar ($)</option>
+                                    <option value="€">Euro (€)</option>
+                                    <option value="L">Lempira (L)</option>
+                                </select>
+                            </div>
+                            <div class="campo-a">
+                                <label>Precio por Galón</label>
+                                <input type="number" step="0.01" id="ajustePrecioGalon" class="entrada" placeholder="25.50" oninput="guardarAjustes()">
+                            </div>
+                            <div class="campo-a">
+                                <label>Precio por Hora</label>
+                                <input type="number" step="0.01" id="ajustePrecioHora" class="entrada" placeholder="45.00" oninput="guardarAjustes()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-titulo"><h3><i class="ri-hard-drive-2-line"></i> Datos y Respaldo</h3></div>
+                        <div class="botones-respaldo">
+                            <button onclick="exportarRespaldo()" class="boton btn-azul btn-largo">
+                                <i class="ri-download-line"></i> Exportar Respaldo
+                            </button>
+                            <label class="boton btn-azul btn-largo">
+                                <i class="ri-upload-line"></i> Importar Respaldo
+                                <input type="file" accept=".json" onchange="importarRespaldo(event)" style="display:none;">
+                            </label>
+                            <button onclick="limpiarTodo()" class="boton btn-rojo btn-largo">
+                                <i class="ri-delete-bin-line"></i> Reiniciar Todo
                             </button>
                         </div>
-                        <div class="progreso mt-3 d-none" id="barraProgreso">
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" style="width:0%" id="barraCarga"></div>
-                            </div>
-                            <p class="text-center mt-1" id="textoProgreso">Leyendo archivo...</p>
-                        </div>
                     </div>
+                </div>
+            </section>
+        </main>
+    </div>
 
-                    <!-- Tarjetas de Resumen -->
-                    <div class="row g-3 mb-4">
-                        <div class="col-md-3 col-sm-6">
-                            <div class="tarjeta resumen">
-                                <h5>📦 Total Compras</h5>
-                                <h2 id="totalCompras">Q 0.00</h2>
-                                <small id="cantidadCompras">0 registros</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="tarjeta resumen">
-                                <h5>💰 Total Ventas</h5>
-                                <h2 id="totalVentas">Q 0.00</h2>
-                                <small id="cantidadVentas">0 registros</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="tarjeta resumen">
-                                <h5>📈 Ganancia</h5>
-                                <h2 id="ganancia">Q 0.00</h2>
-                                <small id="porcentajeGanancia">0%</small>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6">
-                            <div class="tarjeta resumen">
-                                <h5>🗄️ Base de Datos</h5>
-                                <h2 id="totalRegistros">0</h2>
-                                <small>registros almacenados</small>
-                            </div>
-                        </div>
+    <!-- CHATBOT ASISTENTE IA -->
+    <div class="chatbot">
+        <button class="chatbot-btn" onclick="toggleChatbot()">
+            <i class="ri-robot-2-line"></i>
+            <span class="chatbot-pulso"></span>
+        </button>
+        
+        <div class="chatbot-ventana" id="chatbotVentana">
+            <div class="chatbot-cabeza">
+                <div class="chatbot-info">
+                    <div class="chatbot-avatar">
+                        <i class="ri-robot-2-line"></i>
+                        <div class="chatbot-estado"></div>
                     </div>
-
-                    <!-- Gráficos -->
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <div class="tarjeta">
-                                <h5>📊 Compras vs Ventas</h5>
-                                <canvas id="graficoComparativo" height="300"></canvas>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="tarjeta">
-                                <h5>📈 Tendencia Mensual</h5>
-                                <canvas id="graficoTendencia" height="300"></canvas>
-                            </div>
-                        </div>
+                    <div>
+                        <strong>Asistente EMA PRO</strong>
+                        <span><i class="ri-checkbox-circle-fill"></i> En línea</span>
                     </div>
-                </section>
-
-                <!-- SECCIÓN COMPRAS -->
-                <section id="compras" class="py-4 d-none">
-                    <h2 class="mb-4"><i class="bi bi-cart3"></i> Registro de Compras</h2>
-                    <div class="tarjeta mb-3">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <input type="text" id="buscarCompras" class="form-control" placeholder="🔍 Buscar en compras...">
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <button class="btn btn-primary" onclick="agregarCompraManual()">
-                                    <i class="bi bi-plus-circle"></i> Nueva Compra
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tarjeta">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Concepto / Descripción</th>
-                                        <th>Proveedor</th>
-                                        <th>Monto (Q)</th>
-                                        <th>Observaciones</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablaCompras"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SECCIÓN VENTAS -->
-                <section id="ventas" class="py-4 d-none">
-                    <h2 class="mb-4"><i class="bi bi-cash-coin"></i> Registro de Ventas</h2>
-                    <div class="tarjeta mb-3">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <input type="text" id="buscarVentas" class="form-control" placeholder="🔍 Buscar en ventas...">
-                            </div>
-                            <div class="col-md-4 text-end">
-                                <button class="btn btn-success" onclick="agregarVentaManual()">
-                                    <i class="bi bi-plus-circle"></i> Nueva Venta
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tarjeta">
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
-                                <thead class="table-dark">
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Cliente</th>
-                                        <th>Descripción</th>
-                                        <th>Monto (Q)</th>
-                                        <th>Observaciones</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablaVentas"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- SECCIÓN ANÁLISIS INTELIGENTE -->
-                <section id="analisis" class="py-4 d-none">
-                    <h2 class="mb-4"><i class="bi bi-bar-chart-steps"></i> Análisis Inteligente de Datos</h2>
-                    <div class="tarjeta principal mb-4">
-                        <h5>🧠 Informe Generado Automáticamente</h5>
-                        <div id="informeIA" class="informe-ia">
-                            <p class="text-muted">Carga un archivo Excel para que el sistema analice y genere este informe automáticamente...</p>
-                        </div>
-                    </div>
-                    <div class="tarjeta">
-                        <h5>📋 Detección de Columnas y Estructura</h5>
-                        <div id="estructuraDetectada"></div>
-                    </div>
-                </section>
-
-                <!-- SECCIÓN BASE DE DATOS -->
-                <section id="base-datos" class="py-4 d-none">
-                    <h2 class="mb-4"><i class="bi bi-database"></i> Base de Datos del Sistema</h2>
-                    <div class="tarjeta mb-3">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h5>📦 Almacenamiento Local</h5>
-                                <p>Todos los datos se guardan automáticamente en tu navegador. <strong>Nunca se pierden.</strong></p>
-                            </div>
-                            <div class="col-md-6 text-end">
-                                <button class="btn btn-outline-success" onclick="exportarTodo()">
-                                    <i class="bi bi-file-earmark-excel"></i> Exportar Todo
-                                </button>
-                                <button class="btn btn-outline-danger" onclick="limpiarBaseDatos()">
-                                    <i class="bi bi-trash3"></i> Limpiar Base
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tarjeta">
-                        <h5>📊 Resumen de la Base</h5>
-                        <div id="resumenBaseDatos"></div>
-                    </div>
-                </section>
-
-                <!-- CHATBOT INTELIGENTE -->
-                <div class="chatbot-container">
-                    <button class="btn-chatbot" id="botonChat" onclick="alternarChat()">
-                        <i class="bi bi-robot"></i> <span>Asistente IA</span>
-                    </button>
-                    <div class="ventana-chat d-none" id="ventanaChat">
-                        <div class="cabecera-chat">
-                            <h6><i class="bi bi-robot"></i> Asistente Inteligente EMA</h6>
-                            <button class="btn-cerrar" onclick="alternarChat()">&times;</button>
-                        </div>
-                        <div class="cuerpo-chat" id="cuerpoChat">
-                            <div class="mensaje ia">
-                                <strong>🤖 EMA:</strong> ¡Hola! He analizado tus datos. Pregúntame lo que quieras sobre Compras, Ventas, Totales, Fechas...
-                            </div>
-                        </div>
-                        <div class="pie-chat">
-                            <input type="text" id="entradaChat" placeholder="Pregúntame sobre tus datos..." onkeypress="if(event.key==='Enter')enviarMensajeChat()">
-                            <button onclick="enviarMensajeChat()"><i class="bi bi-send-fill"></i></button>
+                </div>
+                <button onclick="toggleChatbot()" class="btn-icono claro"><i class="ri-close-line"></i></button>
+            </div>
+            
+            <div class="chatbot-mensajes" id="chatbotMensajes">
+                <div class="chat bot">
+                    <div class="chat-avatar"><i class="ri-robot-2-line"></i></div>
+                    <div class="chat-burbuja">
+                        <p>¡Hola! 👋 Soy tu asistente de <strong>EMA PRO</strong>. ¿En qué puedo ayudarte?</p>
+                        <div class="chat-rapidos">
+                            <button onclick="enviarChat('¿Cuántos registros hay?')">📊 Registros</button>
+                            <button onclick="enviarChat('¿Cuál es el mejor operador?')">🏆 Mejor</button>
+                            <button onclick="enviarChat('¿Cómo cargo un Excel?')">📤 Excel</button>
+                            <button onclick="enviarChat('¿Qué funciones tienes?')">💡 Funciones</button>
                         </div>
                     </div>
                 </div>
-            </main>
+            </div>
+            
+            <div class="chatbot-entrada">
+                <input type="text" id="chatbotInput" placeholder="Pregúntame lo que necesites..." onkeypress="if(event.key==='Enter')enviarChat()">
+                <button onclick="enviarChat()"><i class="ri-send-plane-fill"></i></button>
+            </div>
         </div>
     </div>
 
-    <!-- MODAL FORMULARIO -->
-    <div class="modal fade" id="modalFormulario" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="tituloModal">Agregar Registro</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <!-- MODAL: AGREGAR REGISTRO -->
+    <div id="modalAgregar" class="modal-fondo">
+        <div class="modal">
+            <div class="modal-cabeza">
+                <h3><i class="ri-add-circle-line"></i> Agregar Nuevo Registro</h3>
+                <button onclick="cerrarModal('modalAgregar')" class="btn-icono"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-cuerpo">
+                <div class="formulario">
+                    <div class="campo">
+                        <label>📅 Fecha</label>
+                        <input type="text" id="campoFecha" class="entrada" placeholder="01/09/2026">
+                    </div>
+                    <div class="campo">
+                        <label>👤 Nombre del Operador *</label>
+                        <input type="text" id="campoNombre" class="entrada" placeholder="Ej: Carlos López">
+                    </div>
+                    <div class="campo">
+                        <label>📍 Región</label>
+                        <input type="text" id="campoRegion" class="entrada" placeholder="Ej: Norte, Sur, Centro">
+                    </div>
+                    <div class="campo">
+                        <label>⛽ Echaron Gasolina?</label>
+                        <select id="campoGasolina" class="entrada">
+                            <option value="SI">✅ Sí, echaron gasolina</option>
+                            <option value="No">❌ No, no echaron</option>
+                        </select>
+                    </div>
+                    <div class="campo">
+                        <label>💧 Cantidad de Galones</label>
+                        <input type="number" step="0.1" id="campoGalones" class="entrada" placeholder="Ej: 25.5">
+                    </div>
+                    <div class="campo">
+                        <label>⏰ Horas Trabajadas</label>
+                        <input type="number" step="0.1" id="campoHoras" class="entrada" placeholder="Ej: 2.5">
+                    </div>
                 </div>
-                <div class="modal-body" id="cuerpoModal"></div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="guardarFormulario()">Guardar</button>
+            </div>
+            <div class="modal-pies">
+                <button onclick="cerrarModal('modalAgregar')" class="boton btn-gris">Cancelar</button>
+                <button onclick="guardarRegistro()" class="boton btn-verde"><i class="ri-save-line"></i> Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: DETALLE OPERADOR -->
+    <div id="modalOperador" class="modal-fondo">
+        <div class="modal grande">
+            <div class="modal-cabeza">
+                <h3 id="tituloOperador"><i class="ri-user-line"></i> Detalle del Operador</h3>
+                <button onclick="cerrarModal('modalOperador')" class="btn-icono"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-cuerpo" id="cuerpoOperador"></div>
+        </div>
+    </div>
+
+    <!-- MODAL: ATAJOS -->
+    <div id="modalAtajos" class="modal-fondo">
+        <div class="modal chico">
+            <div class="modal-cabeza">
+                <h3><i class="ri-keyboard-box-line"></i> Atajos de Teclado</h3>
+                <button onclick="cerrarModal('modalAtajos')" class="btn-icono"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-cuerpo">
+                <div class="atajos">
+                    <div class="atajo"><span>Buscar</span><div class="teclas"><kbd>Ctrl</kbd><kbd>K</kbd></div></div>
+                    <div class="atajo"><span>Nuevo registro</span><div class="teclas"><kbd>Ctrl</kbd><kbd>N</kbd></div></div>
+                    <div class="atajo"><span>Exportar Excel</span><div class="teclas"><kbd>Ctrl</kbd><kbd>E</kbd></div></div>
+                    <div class="atajo"><span>Cambiar tema</span><div class="teclas"><kbd>Ctrl</kbd><kbd>T</kbd></div></div>
+                    <div class="atajo"><span>Asistente IA</span><div class="teclas"><kbd>Ctrl</kbd><kbd>M</kbd></div></div>
+                    <div class="atajo"><span>Cerrar ventana</span><div class="teclas"><kbd>Esc</kbd></div></div>
+                    <div class="atajo"><span>Ver atajos</span><div class="teclas"><kbd>?</kbd></div></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Toast Notificaciones -->
-    <div class="toast-container position-fixed bottom-0 end-0 p-3"></div>
+    <!-- MODAL: NOTIFICACIONES -->
+    <div id="modalNotificaciones" class="modal-fondo">
+        <div class="modal chico">
+            <div class="modal-cabeza">
+                <h3><i class="ri-notification-3-line"></i> Notificaciones</h3>
+                <button onclick="cerrarModal('modalNotificaciones')" class="btn-icono"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-cuerpo">
+                <div id="listaNotificaciones" class="notificaciones">
+                    <p class="notif-vacio">No hay notificaciones</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
-    <script src="script.js"></script>
+    <!-- MODAL: CONFIRMAR -->
+    <div id="modalConfirmar" class="modal-fondo">
+        <div class="modal chico">
+            <div class="modal-cabeza peligro">
+                <h3><i class="ri-error-warning-line"></i> Confirmar</h3>
+            </div>
+            <div class="modal-cuerpo">
+                <p id="mensajeConfirmar">¿Estás seguro?</p>
+            </div>
+            <div class="modal-pies">
+                <button onclick="cerrarModal('modalConfirmar')" class="boton btn-gris">Cancelar</button>
+                <button id="botonConfirmar" class="boton btn-rojo">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AVISOS -->
+    <div id="avisos" class="avisos"></div>
+
+    <script src="app.js"></script>
 </body>
 </html>
