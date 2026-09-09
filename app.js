@@ -1,301 +1,356 @@
-/* ============================================
-   EMA PRO - JavaScript Súper Robusto
-   Lectura Excel mejorada, todas las funciones
-============================================ */
+// =============================================
+// 🔧 SISTEMA EMA PRO - MOTOR PRINCIPAL
+// =============================================
 
-(function() {
-    'use strict';
+// Base de Datos Automática (se guarda siempre)
+let BaseDatos = {
+    compras: [],
+    ventas: [],
+    configuracion: { ultimaCarga: null, nombreArchivo: null }
+};
 
-    const CLAVE_STORAGE = 'ema_pro_datos_v3';
-    const REGISTROS_POR_PAGINA = 15;
+// Gráficos
+let graficoComparativo, graficoTendencia;
 
-    const state = {
-        registros: [],
-        archivos: [],
-        vistaActiva: 'resumen',
-        paginaActual: 1,
-        filtroGasolina: null,
-        filtroRegion: null,
-        busqueda: '',
-        ordenColumna: 'fechaCreacion',
-        ordenDireccion: 'desc',
-        tema: 'light',
-        graficos: {},
-        notificaciones: [],
-        ajustes: {
-            empresa: 'Tu Empresa',
-            moneda: 'Q',
-            precioGalon: 25.50,
-            precioHora: 45.00
-        },
-        chatAbierto: false
-    };
+// Inicio Automático
+document.addEventListener('DOMContentLoaded', () => {
+    cargarBaseDatosLocal();
+    configurarCargaExcel();
+    configurarNavegacion();
+    actualizarTodo();
+    console.log('✅ Sistema EMA PRO Iniciado Perfectamente');
+});
 
-    // ========== UTILIDADES ==========
-    const $ = (id) => document.getElementById(id);
-    const $$ = (sel) => document.querySelectorAll(sel);
+// =============================================
+// 🧭 NAVEGACIÓN ENTRE SECCIONES
+// =============================================
+function configurarNavegacion() {
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.addEventListener('click', e => {
+            e.preventDefault();
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            const id = link.getAttribute('href').substring(1);
+            document.querySelectorAll('main > section').forEach(s => s.classList.add('d-none'));
+            document.getElementById(id).classList.remove('d-none');
+        });
+    });
+}
 
-    const esc = (v) => {
-        if (v == null) return '';
-        return String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-    };
+// =============================================
+// 📁 CARGA Y ANÁLISIS DE ARCHIVO EXCEL
+// =============================================
+function configurarCargaExcel() {
+    const input = document.getElementById('archivoExcel');
+    const area = document.getElementById('areaSoltar');
 
-    const num = (v) => {
-        if (typeof v === 'number') return isFinite(v) ? v : 0;
-        if (!v && v !== 0) return 0;
-        if (v instanceof Date) return 0;
-        const s = String(v).replace(/,/g, '.').replace(/[^0-9.\-]/g, '');
-        const n = parseFloat(s);
-        return isFinite(n) ? n : 0;
-    };
+    // Click
+    input.addEventListener('change', e => leerArchivo(e.target.files[0]));
 
-    const fmt = (v, d = 0) => Number(v || 0).toLocaleString('es-GT', { 
-        minimumFractionDigits: d, maximumFractionDigits: d 
+    // Arrastrar y Soltar
+    area.addEventListener('dragover', e => { e.preventDefault(); area.classList.add('activo'); });
+    area.addEventListener('dragleave', () => area.classList.remove('activo'));
+    area.addEventListener('drop', e => {
+        e.preventDefault();
+        area.classList.remove('activo');
+        leerArchivo(e.dataTransfer.files[0]);
+    });
+}
+
+async function leerArchivo(archivo) {
+    if (!archivo) return;
+    mostrarProgreso(true, 'Leyendo archivo...');
+
+    try {
+        const datos = await archivo.arrayBuffer();
+        const libro = XLSX.read(datos, { type: 'array' });
+        const hoja = libro.Sheets[libro.SheetNames[0]];
+        const filas = XLSX.utils.sheet_to_json(hoja, { raw: false });
+
+        mostrarProgreso(50, 'Analizando estructura...');
+
+        // 🧠 ANÁLISIS INTELIGENTE - DETECTA SOLO
+        analizarDatosYGuardar(filas, archivo.name);
+
+        mostrarProgreso(100, '¡Completado!');
+        setTimeout(() => mostrarProgreso(false), 1500);
+        notificar('exito', `Archivo "${archivo.name}" procesado con éxito`);
+        
+    } catch (err) {
+        console.error(err);
+        mostrarProgreso(false);
+        notificar('error', 'Error al leer el archivo: ' + err.message);
+    }
+}
+
+function analizarDatosYGuardar(filas, nombreArchivo) {
+    BaseDatos.compras = [];
+    BaseDatos.ventas = [];
+
+    filas.forEach(fila => {
+        const texto = JSON.stringify(fila).toLowerCase();
+        const registro = normalizarRegistro(fila);
+
+        // 🧠 DETECCIÓN INTELIGENTE AUTOMÁTICA
+        if (texto.includes('compra') || texto.includes('gasto') || texto.includes('proveedor')) {
+            BaseDatos.compras.push(registro);
+        }
+        else if (texto.includes('venta') || texto.includes('cliente') || texto.includes('ingreso')) {
+            BaseDatos.ventas.push(registro);
+        }
+        else {
+            // Si no se detecta, separamos por monto
+            if (registro.monto < 0) BaseDatos.compras.push({...registro, monto: Math.abs(registro.monto)});
+            else BaseDatos.ventas.push(registro);
+        }
     });
 
-    const fmtMoneda = (v) => {
-        const m = state.ajustes?.moneda || 'Q';
-        return `${m} ${fmt(v, 2)}`;
+    BaseDatos.configuracion.ultimaCarga = new Date().toLocaleString();
+    BaseDatos.configuracion.nombreArchivo = nombreArchivo;
+
+    guardarBaseDatosLocal();
+    actualizarTodo();
+    generarInformeIA(filas);
+}
+
+function normalizarRegistro(fila) {
+    return {
+        fecha: fila.Fecha || fila.fecha || fila['Fecha Operación'] || new Date().toLocaleDateString(),
+        concepto: fila.Concepto || fila.concepto || fila.Descripcion || fila.descripcion || 'Sin descripción',
+        monto: Math.abs(parseFloat(fila.Monto || fila.monto || fila.Importe || fila.importe || 0)),
+        observaciones: fila.Observaciones || fila.observaciones || '',
+        cliente: fila.Cliente || fila.cliente || fila.Proveedor || fila.proveedor || 'General'
     };
+}
 
-    const generarId = () => 'r_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
-    const fechaHoy = () => new Date().toLocaleDateString('es-GT');
-    const horaActual = () => new Date().toLocaleTimeString('es-GT');
+// =============================================
+// 💾 BASE DE DATOS LOCAL AUTOMÁTICA
+// =============================================
+function guardarBaseDatosLocal() {
+    localStorage.setItem('ema_compras', JSON.stringify(BaseDatos.compras));
+    localStorage.setItem('ema_ventas', JSON.stringify(BaseDatos.ventas));
+    localStorage.setItem('ema_config', JSON.stringify(BaseDatos.configuracion));
+}
 
-    // ========== INICIO ==========
-    function iniciar() {
-        cargarDatos();
-        configurarCarga();
-        configurarEventos();
-        iniciarReloj();
-        iniciarAtajos();
-        
-        if (state.registros.length > 0) {
-            ocultarInicio();
-        }
-        
-        aplicarTema(state.tema);
+function cargarBaseDatosLocal() {
+    try {
+        BaseDatos.compras = JSON.parse(localStorage.getItem('ema_compras') || '[]');
+        BaseDatos.ventas = JSON.parse(localStorage.getItem('ema_ventas') || '[]');
+        BaseDatos.configuracion = JSON.parse(localStorage.getItem('ema_config') || '{}');
+    } catch {
+        BaseDatos = { compras:[], ventas:[], configuracion:{} };
+    }
+}
+
+// =============================================
+// 📊 ACTUALIZAR TODOS LOS DATOS Y GRÁFICOS
+// =============================================
+function actualizarTodo() {
+    const totalCompras = BaseDatos.compras.reduce((s,r) => s + r.monto, 0);
+    const totalVentas = BaseDatos.ventas.reduce((s,r) => s + r.monto, 0);
+    const ganancia = totalVentas - totalCompras;
+    const porcentaje = totalCompras > 0 ? ((ganancia/totalCompras)*100).toFixed(1) : 0;
+
+    document.getElementById('totalCompras').textContent = formatoMoneda(totalCompras);
+    document.getElementById('totalVentas').textContent = formatoMoneda(totalVentas);
+    document.getElementById('ganancia').textContent = formatoMoneda(ganancia);
+    document.getElementById('porcentajeGanancia').textContent = porcentaje + '%';
+    document.getElementById('cantidadCompras').textContent = BaseDatos.compras.length + ' registros';
+    document.getElementById('cantidadVentas').textContent = BaseDatos.ventas.length + ' registros';
+    document.getElementById('totalRegistros').textContent = BaseDatos.compras.length + BaseDatos.ventas.length;
+
+    actualizarTablas();
+    actualizarGraficos(totalCompras, totalVentas);
+}
+
+function actualizarTablas() {
+    document.getElementById('tablaCompras').innerHTML = BaseDatos.compras.map(r => `
+        <tr>
+            <td>${r.fecha}</td>
+            <td>${r.concepto}</td>
+            <td>${r.cliente}</td>
+            <td>${formatoMoneda(r.monto)}</td>
+            <td>${r.observaciones || '-'}</td>
+            <td><button class="btn btn-sm btn-outline-danger">🗑️</button></td>
+        </tr>`).join('');
+
+    document.getElementById('tablaVentas').innerHTML = BaseDatos.ventas.map(r => `
+        <tr>
+            <td>${r.fecha}</td>
+            <td>${r.cliente}</td>
+            <td>${r.concepto}</td>
+            <td>${formatoMoneda(r.monto)}</td>
+            <td>${r.observaciones || '-'}</td>
+            <td><button class="btn btn-sm btn-outline-danger">🗑️</button></td>
+        </tr>`).join('');
+}
+
+function actualizarGraficos(compras, ventas) {
+    const ctx1 = document.getElementById('graficoComparativo');
+    if (graficoComparativo) graficoComparativo.destroy();
+    graficoComparativo = new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Compras', 'Ventas'],
+            datasets: [{
+                label: 'Total Q',
+                data: [compras, ventas],
+                backgroundColor: ['#ef4444', '#10b981'],
+                borderRadius: 12
+            }]
+        },
+        options: { responsive: true, plugins: { legend:{display:false} } }
+    });
+
+    const ctx2 = document.getElementById('graficoTendencia');
+    if (graficoTendencia) graficoTendencia.destroy();
+    graficoTendencia = new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: ['Compras', 'Ventas', 'Ganancia'],
+            datasets: [{
+                label: 'Quetzales',
+                data: [compras, ventas, ventas-compras],
+                borderColor: '#2563eb',
+                backgroundColor: 'rgba(37,99,235,0.15)',
+                fill: true, tension: 0.4
+            }]
+        },
+        options: { responsive: true }
+    });
+}
+
+// =============================================
+// 🤖 GENERADOR DE INFORME INTELIGENTE
+// =============================================
+function generarInformeIA(filas) {
+    const totalCompras = BaseDatos.compras.reduce((s,r)=>s+r.monto,0);
+    const totalVentas = BaseDatos.ventas.reduce((s,r)=>s+r.monto,0);
+    const ganancia = totalVentas - totalCompras;
+    const margen = totalCompras>0 ? ((ganancia/totalCompras)*100).toFixed(1) : 0;
+
+    document.getElementById('informeIA').innerHTML = `
+        <h6>📊 Resumen del Análisis</h6>
+        <p>✅ Archivo analizado: <strong>${BaseDatos.configuracion.nombreArchivo || 'Desconocido'}</strong></p>
+        <p>📅 Fecha y hora: ${BaseDatos.configuracion.ultimaCarga}</p>
+        <hr>
+        <p>🔢 Filas detectadas en el Excel: <strong>${filas.length}</strong></p>
+        <p>🛒 Compras identificadas: <strong>${BaseDatos.compras.length}</strong> — Total: ${formatoMoneda(totalCompras)}</p>
+        <p>💰 Ventas identificadas: <strong>${BaseDatos.ventas.length}</strong> — Total: ${formatoMoneda(totalVentas)}</p>
+        <hr>
+        <p>📈 <strong>Ganancia Estimada:</strong> ${formatoMoneda(ganancia)} (${margen}%)</p>
+        <p>${ganancia >=0 ? '✅' : '⚠️'} Situación: ${ganancia >=0 ? 'GANANCIA' : 'PÉRDIDA'}</p>
+        <hr>
+        <p class="text-muted">💡 El sistema ha creado automáticamente la base de datos con estos registros. Se guardarán permanentemente.</p>
+    `;
+}
+
+// =============================================
+// 🤖 CHATBOT INTELIGENTE
+// =============================================
+function alternarChat() {
+    document.getElementById('ventanaChat').classList.toggle('d-none');
+}
+
+function enviarMensajeChat() {
+    const entrada = document.getElementById('entradaChat');
+    const texto = entrada.value.trim();
+    if (!texto) return;
+
+    agregarMensajeChat('usuario', texto);
+    entrada.value = '';
+
+    // Respuesta Inteligente
+    setTimeout(() => {
+        const resp = generarRespuestaIA(texto.toLowerCase());
+        agregarMensajeChat('ia', resp);
+    }, 700);
+}
+
+function agregarMensajeChat(tipo, texto) {
+    const cuerpo = document.getElementById('cuerpoChat');
+    cuerpo.innerHTML += `<div class="mensaje ${tipo}">
+        <strong>${tipo==='ia'?'🤖 EMA':'👤 Tú'}:</strong> ${texto}
+    </div>`;
+    cuerpo.scrollTop = cuerpo.scrollHeight;
+}
+
+function generarRespuestaIA(pregunta) {
+    const tc = BaseDatos.compras.reduce((s,r)=>s+r.monto,0);
+    const tv = BaseDatos.ventas.reduce((s,r)=>s+r.monto,0);
+    const g = tv - tc;
+
+    if (pregunta.includes('compra')) return `El total de COMPRAS es de ${formatoMoneda(tc)}. Hay ${BaseDatos.compras.length} registros guardados.`;
+    if (pregunta.includes('venta')) return `El total de VENTAS es de ${formatoMoneda(tv)}. Hay ${BaseDatos.ventas.length} registros guardados.`;
+    if (pregunta.includes('ganancia') || pregunta.includes('diferencia')) return `La GANANCIA es de ${formatoMoneda(g)} (${g>=0?'positiva':'negativa'}).`;
+    if (pregunta.includes('cuantos') || pregunta.includes('registros')) return `En total hay ${BaseDatos.compras.length+BaseDatos.ventas.length} registros: ${BaseDatos.compras.length} compras y ${BaseDatos.ventas.length} ventas.`;
+    if (pregunta.includes('fecha') || pregunta.includes('cuando')) return `La última carga fue: ${BaseDatos.configuracion.ultimaCarga || 'No hay fecha registrada'}`;
+    if (pregunta.includes('hola')) return '¡Hola! 👋 Estoy aquí para ayudarte. Pregúntame sobre tus compras, ventas, totales...';
+    return `He analizado tus datos. Compras: ${formatoMoneda(tc)} | Ventas: ${formatoMoneda(tv)} | Ganancia: ${formatoMoneda(g)}. ¿En qué más te ayudo?`;
+}
+
+// =============================================
+// 🔧 UTILIDADES
+// =============================================
+function formatoMoneda(cantidad) {
+    return 'Q ' + cantidad.toLocaleString('es-GT', {minimumFractionDigits:2});
+}
+
+function mostrarProgreso(mostrar, texto='') {
+    const caja = document.getElementById('barraProgreso');
+    const barra = document.getElementById('barraCarga');
+    const text = document.getElementById('textoProgreso');
+    if (mostrar===true) {
+        caja.classList.remove('d-none');
+        barra.style.width = '0%';
+        text.textContent = texto;
+    } else if (typeof mostrar === 'number') {
+        barra.style.width = mostrar + '%';
+        text.textContent = texto;
+    } else {
+        caja.classList.add('d-none');
+    }
+}
+
+function notificar(tipo, mensaje) {
+    const contenedor = document.querySelector('.toast-container');
+    const color = tipo==='exito'?'bg-success':tipo==='error'?'bg-danger':'bg-primary';
+    const icono = tipo==='exito'?'✅':tipo==='error'?'❌':'ℹ️';
+    contenedor.innerHTML = `<div class="toast align-items-center text-white ${color} border-0 show" role="alert">
+        <div class="d-flex">
+            <div class="toast-body">${icono} ${mensaje}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>`;
+}
+
+// Funciones rápidas
+function exportarTodo() {
+    const hoja = XLSX.utils.json_to_sheet([...BaseDatos.compras.map(r=>({Tipo:'COMPRA',...r})), ...BaseDatos.ventas.map(r=>({Tipo:'VENTA',...r}))]);
+    const libro = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(libro, hoja, 'Datos Completos');
+    XLSX.writeFile(libro, 'EMA_BaseDeDatos_Completa.xlsx');
+    notificar('exito', '✅ Base de Datos Exportada');
+}
+
+function limpiarBaseDatos() {
+    if(confirm('¿Eliminar TODOS los datos? Esta acción no se puede deshacer.')) {
+        localStorage.clear();
+        BaseDatos = {compras:[], ventas:[], configuracion:{}};
         actualizarTodo();
+        notificar('exito', '🗑️ Base de Datos Limpiada');
     }
+}
 
-    // ========== ALMACENAMIENTO ==========
-    function cargarDatos() {
-        try {
-            const raw = localStorage.getItem(CLAVE_STORAGE);
-            if (raw) {
-                const d = JSON.parse(raw);
-                state.registros = Array.isArray(d.registros) ? d.registros : [];
-                state.archivos = Array.isArray(d.archivos) ? d.archivos : [];
-                state.tema = d.tema || 'light';
-                state.ajustes = { ...state.ajustes, ...(d.ajustes || {}) };
-                state.notificaciones = Array.isArray(d.notificaciones) ? d.notificaciones : [];
-            }
-        } catch (e) {
-            console.warn('Error cargando datos:', e);
-            state.registros = [];
-            state.archivos = [];
-        }
-    }
+function respaldarDatos() {
+    const datos = btoa(JSON.stringify(BaseDatos,null,2));
+    const a = document.createElement('a');
+    a.href = 'data:application/json;base64,' + datos;
+    a.download = 'EMA_Respaldado_' + new Date().toISOString().slice(0,10) + '.json';
+    a.click();
+    notificar('exito', '✅ Respaldo Generado');
+}
 
-    function guardarDatos() {
-        try {
-            localStorage.setItem(CLAVE_STORAGE, JSON.stringify({
-                registros: state.registros,
-                archivos: state.archivos,
-                tema: state.tema,
-                ajustes: state.ajustes,
-                notificaciones: state.notificaciones.slice(-20)
-            }));
-            return true;
-        } catch (e) {
-            mostrarAviso('Error al guardar datos', 'error');
-            return false;
-        }
-    }
-
-    // ========== PANTALLA INICIO ==========
-    function ocultarInicio() {
-        const inicio = $('pantallaInicio');
-        if (inicio) {
-            inicio.style.opacity = '0';
-            inicio.style.transition = 'opacity 0.4s ease';
-            setTimeout(() => {
-                inicio.style.display = 'none';
-                $('app').classList.add('activa');
-            }, 400);
-        } else {
-            $('app').classList.add('activa');
-        }
-    }
-
-    window.iniciarApp = function() {
-        ocultarInicio();
-        actualizarTodo();
-    };
-
-    window.cargarDatosDemo = function() {
-        const nombres = ['CARLOS LÓPEZ', 'MARÍA PÉREZ', 'JOSÉ GARCÍA', 'ANA MORALES', 
-                         'LUIS RAMÍREZ', 'SOFÍA CASTILLO', 'PEDRO MENDEZ', 'DANIEL HERNÁNDEZ'];
-        const regiones = ['NORTE', 'SUR', 'CENTRO', 'ORIENTE', 'OCCIDENTE'];
-        
-        const base = new Date('2026-08-01');
-        const nuevos = [];
-        
-        for (let i = 0; i < 80; i++) {
-            const hi = +(5 + Math.random() * 7).toFixed(1);
-            const ht = +(1.5 + Math.random() * 6).toFixed(2);
-            const hf = +(hi + ht).toFixed(1);
-            const conGas = Math.random() > 0.2;
-            const gal = conGas ? +(10 + Math.random() * 35).toFixed(2) : 0;
-            const f = new Date(base.getTime() + i * 3600000 * 5);
-            
-            nuevos.push({
-                id: generarId(),
-                fecha: f.toLocaleDateString('es-GT'),
-                nombre: nombres[i % nombres.length],
-                region: regiones[i % regiones.length],
-                horasInicio: hi,
-                horasFin: hf,
-                combustible: conGas ? 'SI' : 'No',
-                galones: gal,
-                horasTrab: ht,
-                fechaCreacion: Date.now() - i * 1000
-            });
-        }
-        
-        state.registros = nuevos;
-        state.archivos = [{
-            id: generarId(),
-            nombre: 'datos_demo.xlsx',
-            tamano: 0,
-            fecha: Date.now(),
-            registros: 80,
-            hoja: 'Demo'
-        }];
-        
-        guardarDatos();
-        ocultarInicio();
-        actualizarTodo();
-        agregarNotificacion('Datos de ejemplo', '80 registros cargados correctamente');
-        mostrarAviso('¡80 registros de ejemplo cargados!', 'exito');
-    };
-
-    // ========== NAVEGACIÓN ==========
-    window.cambiarVista = function(vista) {
-        state.vistaActiva = vista;
-        state.paginaActual = 1;
-        
-        $$('.vista').forEach(v => v.classList.remove('activa'));
-        const vEl = $('vista-' + vista);
-        if (vEl) vEl.classList.add('activa');
-        
-        $$('.menu-item').forEach(i => i.classList.remove('activo'));
-        const mEl = $('menu-' + vista);
-        if (mEl) mEl.classList.add('activa');
-        
-        const titulos = {
-            resumen: 'Resumen', registros: 'Registros', operadores: 'Operadores',
-            analisis: 'Análisis', reportes: 'Reportes', archivos: 'Archivos', ajustes: 'Ajustes'
-        };
-        
-        const migas = $('migasVista');
-        if (migas) migas.textContent = titulos[vista] || vista;
-        
-        $('menuLateral')?.classList.remove('abierto');
-        
-        setTimeout(() => {
-            if (vista === 'registros') renderizarRegistros();
-            if (vista === 'operadores') renderizarOperadores();
-            if (vista === 'archivos') renderizarArchivos();
-            if (vista === 'analisis') renderizarAnalisis();
-            if (vista === 'reportes') { if ($('panelReporte')) $('panelReporte').style.display = 'none'; }
-            if (vista === 'ajustes') cargarAjustes();
-        }, 60);
-    };
-
-    window.toggleMenu = function() {
-        $('menuLateral')?.classList.toggle('abierto');
-    };
-
-    // ========== TEMA ==========
-    window.cambiarTema = function() {
-        state.tema = state.tema === 'light' ? 'dark' : 'light';
-        aplicarTema(state.tema);
-        guardarDatos();
-        setTimeout(renderizarGraficos, 120);
-        mostrarAviso(`Modo ${state.tema === 'light' ? 'claro' : 'oscuro'} activado`, 'info');
-    };
-
-    function aplicarTema(tema) {
-        document.documentElement.setAttribute('data-theme', tema);
-        const icono = $('iconoTema');
-        if (icono) icono.className = tema === 'light' ? 'ri-sun-line' : 'ri-moon-line';
-    }
-
-    window.pantallaCompleta = function() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen?.();
-        } else {
-            document.exitFullscreen?.();
-        }
-    };
-
-    // ========== RELOJ ==========
-    function iniciarReloj() {
-        const actualizar = () => {
-            const el = $('relojVivo');
-            if (el) el.textContent = horaActual();
-        };
-        actualizar();
-        setInterval(actualizar, 1000);
-    }
-
-    // ========== ATAJOS ==========
-    function iniciarAtajos() {
-        document.addEventListener('keydown', (e) => {
-            const ctrl = e.ctrlKey || e.metaKey;
-            
-            if (ctrl && e.key.toLowerCase() === 'n') { e.preventDefault(); agregarRegistro(); }
-            if (ctrl && e.key.toLowerCase() === 'e') { e.preventDefault(); exportarExcel(); }
-            if (ctrl && e.key.toLowerCase() === 't') { e.preventDefault(); cambiarTema(); }
-            if (ctrl && e.key.toLowerCase() === 'm') { e.preventDefault(); toggleChatbot(); }
-            if (e.key === '?') { mostrarAtajos(); }
-            if (e.key === 'Escape') {
-                $$('.modal-fondo.activo').forEach(m => m.classList.remove('activo'));
-                document.body.style.overflow = '';
-                if (state.chatAbierto) toggleChatbot();
-            }
-        });
-    }
-
-    window.mostrarAtajos = function() {
-        abrirModal('modalAtajos');
-    };
-
-    // ========== CARGA EXCEL - SÚPER ROBUSTA ==========
-    function configurarCarga() {
-        const zonas = [ $('zonaCarga'), $('zonaCargaArchivos') ];
-        const input = $('cargarArchivo');
-        
-        zonas.forEach(zona => {
-            if (!zona) return;
-            zona.addEventListener('click', () => input?.click());
-            zona.addEventListener('dragover', e => { e.preventDefault(); zona.classList.add('activa'); });
-            zona.addEventListener('dragleave', () => zona.classList.remove('activa'));
-            zona.addEventListener('drop', e => {
-                e.preventDefault();
-                zona.classList.remove('activa');
-                procesarArchivos(e.dataTransfer.files);
-            });
-        });
-        
-        if (input) {
-            input.addEventListener('change', e => {
-                procesarArchivos(e.target.files);
-                e.target.value = '';
-            });
-        }
-    }
-
-    function procesarArchivos(files) {
-        for (const file of files
+// Funciones de ejemplo para agregar registros manualmente
+function agregarCompraManual() { alert('Puedes agregar manualmente aquí'); }
+function agregarVentaManual() { alert('Puedes agregar manualmente aquí'); }
