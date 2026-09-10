@@ -1,660 +1,904 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="DOCVAULT PRO MAX — Visor y Gestor Profesional de PDF · Diseño Renovado · Registro de Actividad">
-<meta name="theme-color" content="#0f172a">
-<title>DOCVAULT PRO MAX · EDICIÓN NOVA</title>
-
-<!-- === LIBRERÍAS === -->
-<script src="https://cdn.tailwindcss.com"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-
-<style>
-:root {
-  --bg-main: #0f172a;
-  --bg-deep: #020617;
-  --bg-card: rgba(15, 23, 42, 0.75);
-  --bg-card-strong: rgba(30, 41, 59, 0.85);
-  --border: rgba(71, 85, 105, 0.35);
-  --accent-blue: #3b82f6;
-  --accent-sky: #0ea5e9;
-  --accent-indigo: #6366f1;
-  --accent-gold: #f59e0b;
-  --accent-emerald: #10b981;
-  --accent-rose: #f43f5e;
-  --text-light: #f1f5f9;
-  --text-soft: #cbd5e1;
-  --text-muted: #64748b;
-  --shadow-blue: 0 0 25px rgba(59, 130, 246, 0.25), 0 0 50px rgba(59, 130, 246, 0.1);
-  --shadow-gold: 0 0 20px rgba(245, 158, 11, 0.25), 0 0 40px rgba(245, 158, 11, 0.1);
-  --radius-xl: 20px;
-  --radius-2xl: 28px;
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Outfit', system-ui, sans-serif;
-  background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
-  color: var(--text-light);
-  min-height: 100vh;
-  overflow-x: hidden;
-  line-height: 1.6;
-}
-
-/* ========== FONDOS Y EFECTOS ========== */
-.bg-layer {
-  position: fixed; inset: 0; z-index: -1; pointer-events: none;
-}
-.bg-grad {
-  background: 
-    radial-gradient(circle at 10% 5%, rgba(59, 130, 246, 0.12), transparent 35%),
-    radial-gradient(circle at 90% 90%, rgba(99, 102, 241, 0.10), transparent 35%),
-    radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.06), transparent 50%);
-}
-.bg-grid {
-  opacity: 0.25;
-  background-image: 
-    linear-gradient(rgba(96, 165, 250, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(96, 165, 250, 0.06) 1px, transparent 1px);
-  background-size: 50px 50px;
-  mask-image: linear-gradient(to bottom, black, transparent 85%);
-}
-.orb-shape {
-  position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.12; z-index: -1; pointer-events: none;
-  animation: floatOrb 18s ease-in-out infinite alternate;
-}
-.orb-1 { width: 450px; height: 450px; background: var(--accent-blue); top: -150px; right: -100px; }
-.orb-2 { width: 380px; height: 380px; background: var(--accent-indigo); bottom: -100px; left: -80px; animation-delay: -6s; }
-.orb-3 { width: 320px; height: 320px; background: var(--accent-gold); top: 40%; left: 30%; animation-delay: -12s; opacity: 0.06; }
-@keyframes floatOrb {
-  0% { transform: translate(0, 0) scale(1); }
-  100% { transform: translate(80px, -60px) scale(1.25); }
-}
-
-/* ========== VIDRIO Y TARJETAS ========== */
-.glass-panel {
-  background: linear-gradient(145deg, rgba(30, 41, 59, 0.65), rgba(15, 23, 42, 0.75));
-  border: 1px solid rgba(96, 165, 250, 0.15);
-  border-radius: var(--radius-xl);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  box-shadow: 
-    0 20px 60px rgba(15, 23, 42, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
-  transition: all 0.35s ease;
-}
-.glass-panel:hover {
-  border-color: rgba(96, 165, 250, 0.3);
-  box-shadow: 
-    0 25px 70px rgba(15, 23, 42, 0.6),
-    0 0 30px rgba(59, 130, 246, 0.08),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
-}
-.glass-deep {
-  background: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95));
-  border: 1px solid rgba(71, 85, 105, 0.4);
-  backdrop-filter: blur(20px);
-}
-
-/* ========== TEXTO Y TIPOGRAFÍA ========== */
-.mono { font-family: 'Roboto Mono', monospace; }
-.text-brand {
-  background: linear-gradient(90deg, #60a5fa, #3b82f6, #818cf8, #60a5fa);
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: brandFlow 5s ease infinite;
-}
-@keyframes brandFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-.text-gold {
-  background: linear-gradient(90deg, #fcd34d, #f59e0b, #fcd34d);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: goldFlow 4s ease infinite;
-}
-@keyframes goldFlow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 100% 50%; }
-}
-.heading-xl { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; }
-.heading-lg { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
-.heading-md { font-size: 1.125rem; font-weight: 600; }
-.small-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-muted); font-weight: 600; }
-
-/* ========== LOGO ========== */
-.logo-box {
-  width: 52px; height: 52px; border-radius: 14px;
-  background: linear-gradient(135deg, #2563eb, #4f46e5, #0ea5e9);
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 20px; color: white;
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
-  position: relative; overflow: hidden;
-}
-.logo-box::after {
-  content: ''; position: absolute; inset: 0;
-  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
-}
-
-/* ========== BOTONES ========== */
-.btn {
-  border: 1px solid rgba(96, 165, 250, 0.2);
-  background: rgba(30, 64, 175, 0.08);
-  padding: 0.7rem 1rem; border-radius: 14px;
-  font-weight: 600; font-size: 0.85rem;
-  color: var(--text-soft);
-  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
-  cursor: pointer; transition: all 0.25s ease;
-  position: relative; overflow: hidden;
-}
-.btn::before {
-  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
-  transition: left 0.4s ease;
-}
-.btn:hover {
-  transform: translateY(-2px);
-  border-color: rgba(96, 165, 250, 0.5);
-  background: rgba(30, 64, 175, 0.15);
-  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
-  color: white;
-}
-.btn:hover::before { left: 100%; }
-.btn:active { transform: translateY(0); }
-.btn.primary {
-  border: none;
-  background: linear-gradient(135deg, #2563eb, #4f46e5);
-  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25);
-  color: white; font-weight: 700;
-}
-.btn.primary:hover {
-  box-shadow: 0 15px 40px rgba(59, 130, 246, 0.35), 0 0 30px rgba(99, 102, 241, 0.15);
-  transform: translateY(-3px) scale(1.02);
-}
-.btn.danger {
-  border-color: rgba(244, 63, 94, 0.3);
-  background: rgba(244, 63, 94, 0.08);
-  color: #fda4af;
-}
-.btn.danger:hover {
-  border-color: rgba(244, 63, 94, 0.6);
-  background: rgba(244, 63, 94, 0.15);
-  box-shadow: 0 8px 25px rgba(244, 63, 94, 0.15);
-  color: white;
-}
-.btn.success {
-  border-color: rgba(16, 185, 129, 0.3);
-  background: rgba(16, 185, 129, 0.08);
-  color: #6ee7b7;
-}
-.btn.success:hover {
-  border-color: rgba(16, 185, 129, 0.6);
-  background: rgba(16, 185, 129, 0.15);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
-  color: white;
-}
-.btn.sm { padding: 0.45rem 0.75rem; font-size: 0.8rem; border-radius: 10px; }
-.btn.w-full { width: 100%; }
-.btn.justify-between { justify-content: space-between; }
-
-/* ========== ZONA DE CARGA ========== */
-.drop-area {
-  border: 2px dashed rgba(96, 165, 250, 0.3);
-  border-radius: var(--radius-xl);
-  background: linear-gradient(145deg, rgba(30, 64, 175, 0.05), rgba(15, 23, 42, 0.5));
-  padding: 2rem; text-align: center; cursor: pointer;
-  transition: all 0.35s ease;
-  position: relative; overflow: hidden;
-}
-.drop-area::before {
-  content: ''; position: absolute; inset: 0;
-  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.08), transparent 60%);
-  opacity: 0; transition: opacity 0.3s ease;
-}
-.drop-area:hover, .drop-area.active {
-  border-color: var(--accent-blue);
-  background: linear-gradient(145deg, rgba(30, 64, 175, 0.12), rgba(15, 23, 42, 0.7));
-  transform: translateY(-4px);
-  box-shadow: 0 0 50px rgba(59, 130, 246, 0.12);
-}
-.drop-area:hover::before, .drop-area.active::before { opacity: 1; }
-
-/* ========== VISOR DE PDF ========== */
-.viewer-box {
-  background: 
-    radial-gradient(circle at 50% 10%, rgba(59, 130, 246, 0.04), transparent 40%),
-    radial-gradient(circle at 20% 90%, rgba(99, 102, 241, 0.04), transparent 40%),
-    #020617;
-  border-radius: var(--radius-xl);
-  border: 1px solid rgba(71, 85, 105, 0.3);
-  min-height: 580px;
-  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.5);
-}
-.page-container {
-  display: flex; justify-content: center; padding: 2rem; min-height: 580px;
-}
-.page-container canvas {
-  max-width: 100%; height: auto !important;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.05);
-  border-radius: 6px; background: white;
-  transition: transform 0.25s ease;
-}
-.page-container canvas:hover { transform: scale(1.005); }
-
-/* ========== MINIATURAS ========== */
-.thumb-card {
-  width: 80px; min-width: 80px; border-radius: 12px; padding: 5px;
-  background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(71, 85, 105, 0.35);
-  cursor: pointer; transition: all 0.25s ease;
-}
-.thumb-card:hover {
-  border-color: var(--accent-blue);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3), 0 0 20px rgba(59, 130, 246, 0.15);
-}
-.thumb-card.active {
-  border-color: var(--accent-blue);
-  background: rgba(30, 64, 175, 0.15);
-  box-shadow: inset 0 0 15px rgba(59, 130, 246, 0.1);
-}
-.thumb-card canvas { width: 70px; height: 90px; object-fit: contain; background: #fff; border-radius: 4px; }
-
-/* ========== BARRA DE PROGRESO ========== */
-.progress-bar {
-  height: 5px; background: rgba(15, 23, 42, 0.8); border-radius: 999px; overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
-}
-.progress-bar > span {
-  display: block; height: 100%; width: 0; border-radius: inherit;
-  background: linear-gradient(90deg, #2563eb, #6366f1, #0ea5e9);
-  background-size: 200% 100%; animation: brandFlow 2s linear infinite;
-  transition: width 0.3s ease; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
-}
-
-/* ========== TARJETAS DE ESTADÍSTICAS ========== */
-.stat-card {
-  position: relative; overflow: hidden;
-  background: linear-gradient(135deg, rgba(30, 64, 175, 0.06), rgba(15, 23, 42, 0.7));
-  border: 1px solid rgba(96, 165, 250, 0.12);
-  border-radius: 16px; padding: 1rem;
-  transition: all 0.3s ease;
-}
-.stat-card:hover {
-  border-color: rgba(96, 165, 250, 0.3);
-  transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.4);
-}
-.stat-card::after {
-  content: ''; position: absolute; width: 100px; height: 100px;
-  right: -30px; top: -40px; border-radius: 50%;
-  background: radial-gradient(circle, rgba(59, 130, 246, 0.06), transparent 60%);
-}
-
-/* ========== MODAL Y PANEL ========== */
-.modal-wrap {
-  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8);
-  backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center;
-  padding: 1.5rem; z-index: 80;
-}
-.modal-wrap.show { display: flex; animation: fadeIn 0.25s ease; }
-.modal-content {
-  width: min(640px, 100%); max-height: 85vh; overflow: auto;
-  border-radius: var(--radius-xl); background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
-  border: 1px solid rgba(96, 165, 250, 0.2); box-shadow: 0 30px 90px rgba(0,0,0,0.6);
-  animation: scaleIn 0.35s ease;
-}
-.side-panel {
-  position: fixed; top: 0; right: 0; width: min(420px, 100%); height: 100vh;
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
-  border-left: 1px solid rgba(96, 165, 250, 0.18);
-  transform: translateX(105%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); z-index: 70;
-  box-shadow: -10px 0 40px rgba(0,0,0,0.3);
-}
-.side-panel.open { transform: translateX(0); }
-.side-backdrop {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; pointer-events: none;
-  transition: opacity 0.3s ease; z-index: 60;
-}
-.side-backdrop.show { opacity: 1; pointer-events: auto; }
-
-/* ========== NOTIFICACIONES ========== */
-.toast-item {
-  animation: slideIn 0.3s cubic-bezier(0.68,-0.55,0.265,1.55);
-}
-.toast-item.out { animation: slideOut 0.25s ease forwards; }
-.toast-success { border-left: 4px solid var(--accent-emerald); background: rgba(6, 78, 59, 0.7); }
-.toast-error { border-left: 4px solid var(--accent-rose); background: rgba(76, 5, 25, 0.7); }
-.toast-info { border-left: 4px solid var(--accent-sky); background: rgba(12, 74, 110, 0.7); }
-.toast-warning { border-left: 4px solid var(--accent-gold); background: rgba(120, 53, 15, 0.7); }
-
-/* ========== ANIMACIONES ========== */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
-@keyframes slideIn { from { opacity: 0; transform: translateY(-10px) scale(0.97); } to { opacity: 1; transform: none; } }
-@keyframes slideOut { to { opacity: 0; transform: translateY(-10px); } }
-
-/* ========== SCROLL PERSONALIZADO ========== */
-::-webkit-scrollbar { width: 8px; height: 8px; }
-::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 4px; }
-::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #3b82f6, #6366f1); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #60a5fa, #818cf8); }
-
-/* ========== RESPONSIVE ========== */
-@media (max-width: 900px) {
-  .desktop-only { display: none !important; }
-  .viewer-box { min-height: 400px; }
-  .page-container { min-height: 400px; padding: 1rem; }
-}
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
-}
-
-/* ========== UTILIDADES ========== */
-.hidden { display: none !important; }
-.kbd-style { font-family: 'Roboto Mono', monospace; font-size: 11px; padding: 3px 7px; border-radius: 6px; background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(71, 85, 105, 0.4); color: #94a3b8; }
-.truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.mr-2 { margin-right: 0.5rem; }
-.text-right { text-align: right; }
-.text-amber-400 { color: #fbbf24; }
-.text-emerald-300 { color: #6ee7b7; }
-.text-rose-300 { color: #fda4af; }
-.text-sky-300 { color: #7dd3fc; }
-.text-slate-400 { color: #94a3b8; }
-.text-slate-500 { color: #64748b; }
-.text-slate-700\/40 { border-color: rgba(51, 65, 85, 0.4); }
-.border-slate-700\/50 { border-color: rgba(51, 65, 85, 0.5); }
-.bg-slate-900\/60 { background: rgba(15, 23, 42, 0.6); }
-.bg-slate-900\/30 { background: rgba(15, 23, 42, 0.3); }
-.bg-sky-500\/10 { background: rgba(14, 165, 233, 0.1); }
-.bg-sky-500\/15 { background: rgba(14, 165, 233, 0.15); }
-.bg-amber-500\/5 { background: rgba(245, 158, 11, 0.05); }
-.border-amber-400\/20 { border-color: rgba(251, 191, 36, 0.2); }
-.border-sky-400\/15 { border-color: rgba(56, 189, 248, 0.15); }
-.border-sky-400\/20 { border-color: rgba(56, 189, 248, 0.2); }
-.gap-2 { gap: 0.5rem; }
-.gap-3 { gap: 0.75rem; }
-.gap-4 { gap: 1rem; }
-.space-y-2 > * + * { margin-top: 0.5rem; }
-.space-y-3 > * + * { margin-top: 0.75rem; }
-.space-y-4 > * + * { margin-top: 1rem; }
-.space-x-2 > * + * { margin-left: 0.5rem; }
-.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.grid-cols-1fr-auto { grid-template-columns: 1fr auto; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.justify-center { justify-content: center; }
-.flex-wrap { flex-wrap: wrap; }
-.flex-1 { flex: 1; }
-.flex-col { flex-direction: column; }
-.fixed { position: fixed; }
-.sticky { position: sticky; }
-.top-0 { top: 0; }
-.top-10 { top: 2.5rem; }
-.top-\[150px\] { top: 150px; }
-.inset-0 { inset: 0; }
-.inset-x-0 { left: 0; right: 0; }
-.right-4 { right: 1rem; }
-.z-40 { z-index: 40; }
-.z-50 { z-index: 50; }
-.z-60 { z-index: 60; }
-.z-70 { z-index: 70; }
-.z-80 { z-index: 80; }
-.z-\[100\] { z-index: 100; }
-.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-.px-4 { padding-left: 1rem; padding-right: 1rem; }
-.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
-.pb-1 { padding-bottom: 0.25rem; }
-.pb-6 { padding-bottom: 1.5rem; }
-.pr-1 { padding-right: 0.25rem; }
-.pt-\[140px\] { padding-top: 140px; }
-.pb-10 { padding-bottom: 2.5rem; }
-.mb-3 { margin-bottom: 0.75rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mb-5 { margin-bottom: 1.25rem; }
-.mb-6 { margin-bottom: 1.5rem; }
-.mt-1 { margin-top: 0.25rem; }
-.mt-2 { margin-top: 0.5rem; }
-.mt-3 { margin-top: 0.75rem; }
-.mt-4 { margin-top: 1rem; }
-.mt-5 { margin-top: 1.25rem; }
-.mt-6 { margin-top: 1.5rem; }
-.min-h-\[560px\] { min-height: 560px; }
-.min-w-0 { min-width: 0; }
-.w-14 { width: 3.5rem; }
-.w-24 { width: 6rem; }
-.w-full { width: 100%; }
-.w-\[min\(360px\,calc\(100vw-2rem\)\)\] { width: min(360px,calc(100vw-2rem)); }
-.max-w-md { max-width: 28rem; }
-.max-w-7xl { max-width: 80rem; }
-.max-w-full { max-width: 100%; }
-.max-h-\[420px\] { max-height: 420px; }
-.max-h-\[85vh\] { max-height: 85vh; }
-.min-w-0 { min-width: 0; }
-.truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-.rounded-full { border-radius: 9999px; }
-.rounded-2xl { border-radius: 1rem; }
-.rounded-3xl { border-radius: 1.5rem; }
-.border-b { border-bottom-width: 1px; }
-.border-t { border-top-width: 1px; }
-.border-l { border-left-width: 4px; }
-.border-b-2 { border-bottom-width: 2px; }
-.p-2 { padding: 0.5rem; }
-.p-4 { padding: 1rem; }
-.p-5 { padding: 1.25rem; }
-.p-6 { padding: 1.5rem; }
-.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
-.py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
-.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
-.h-20 { height: 5rem; }
-.h-14 { height: 3.5rem; }
-.h-24 { height: 6rem; }
-.h-5 { height: 1.25rem; }
-.w-2 { width: 0.5rem; }
-.h-2 { height: 0.5rem; }
-.rounded-full { border-radius: 9999px; }
-.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-.text-xs { font-size: 0.75rem; line-height: 1rem; }
-.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
-.text-base { font-size: 1rem; line-height: 1.5rem; }
-.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-.text-2xl { font-size: 1.5rem; line-height: 2rem; }
-.font-medium { font-weight: 500; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
-.font-extrabold { font-weight: 800; }
-.uppercase { text-transform: uppercase; }
-.leading-tight { line-height: 1.25; }
-.opacity-0 { opacity: 0; }
-.opacity-100 { opacity: 1; }
-.transition-all { transition: all 0.3s ease; }
-.duration-300 { transition-duration: 300ms; }
-.ease-in-out { transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
-.hover\:scale-105:hover { transform: scale(1.05); }
-.hover\:shadow-lg:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-.focus\:outline-none:focus { outline: 2px solid transparent; outline-offset: 2px; }
-.focus\:ring-2:focus { box-shadow: inset 0 0 0 2px rgba(59, 130, 246, 0.5); }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOCVAULT PRO MAX · Gestor Profesional de Documentos</title>
+    
+    <!-- Librerías -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <!-- Estilos -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Roboto+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        dv: {
+                            dark: '#020617',
+                            card: 'rgba(15, 23, 42, 0.75)',
+                            blue: '#3b82f6',
+                            indigo: '#6366f1',
+                            sky: '#0ea5e9',
+                            emerald: '#10b981',
+                            gold: '#f59e0b',
+                            rose: '#f43f5e',
+                            slate: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'system-ui', 'sans-serif'],
+                        mono: ['Roboto Mono', 'monospace']
+                    },
+                    boxShadow: {
+                        'glow': '0 0 20px rgba(59, 130, 246, 0.15), 0 0 40px rgba(59, 130, 246, 0.08)'
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .glass {
+                background: linear-gradient(145deg, rgba(30, 41, 59, 0.6), rgba(15, 23, 42, 0.7));
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(96, 165, 250, 0.15);
+            }
+            .glass-deep {
+                background: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95));
+                backdrop-filter: blur(16px);
+                border: 1px solid rgba(71, 85, 105, 0.4);
+            }
+            .text-gradient {
+                background: linear-gradient(90deg, #60a5fa, #6366f1, #0ea5e9);
+                background-size: 200% auto;
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+                animation: gradientFlow 4s ease infinite;
+            }
+            .drop-zone {
+                border: 2px dashed rgba(96, 165, 250, 0.3);
+                transition: all 0.3s ease;
+            }
+            .drop-zone:hover, .drop-zone.active {
+                border-color: #3b82f6;
+                background: rgba(59, 130, 246, 0.06);
+                transform: translateY(-2px);
+            }
+            .btn-primary {
+                background: linear-gradient(135deg, #2563eb, #4f46e5);
+                transition: all 0.3s ease;
+            }
+            .btn-primary:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 25px rgba(59, 130, 246, 0.25);
+            }
+            .btn-glass {
+                background: rgba(30, 64, 175, 0.08);
+                border: 1px solid rgba(96, 165, 250, 0.2);
+                transition: all 0.25s ease;
+            }
+            .btn-glass:hover {
+                border-color: rgba(96, 165, 250, 0.5);
+                background: rgba(30, 64, 175, 0.15);
+                transform: translateY(-1px);
+            }
+            .toast {
+                animation: slideIn 0.3s ease forwards;
+            }
+            .toast-out {
+                animation: slideOut 0.25s ease forwards;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .scrollbar-thin::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+            .scrollbar-thin::-webkit-scrollbar-thumb {
+                background: linear-gradient(180deg, #3b82f6, #6366f1);
+                border-radius: 3px;
+            }
+        }
+        
+        @keyframes gradientFlow {
+            0% { background-position: 0% center; }
+            50% { background-position: 100% center; }
+            100% { background-position: 0% center; }
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideOut {
+            to { opacity: 0; transform: translateY(-10px); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+    </style>
 </head>
-<body>
+<body class="bg-dv-dark text-slate-100 font-sans min-h-screen">
 
-<!-- FONDOS ANIMADOS -->
-<div class="bg-layer bg-grad"></div>
-<div class="bg-layer bg-grid"></div>
-<div class="orb-shape orb-1"></div>
-<div class="orb-shape orb-2"></div>
-<div class="orb-shape orb-3"></div>
-
-<!-- BARRA DE ESTADO SUPERIOR -->
-<div class="fixed top-0 inset-x-0 z-50 glass-deep border-b border-slate-700/40 py-2 px-4 text-xs">
-  <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-slate-400">
-    <div class="flex items-center gap-4">
-      <span class="flex items-center gap-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        Sistema <b class="text-emerald-300">En Línea</b>
-      </span>
-      <span class="hidden sm:inline">PDF.js · JSZip · jsPDF</span>
+    <!-- Fondo animado -->
+    <div class="fixed inset-0 -z-10 overflow-hidden">
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-dv-blue/10 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-[450px] h-[450px] rounded-full bg-dv-indigo/10 blur-3xl"></div>
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-dv-sky/5 blur-3xl"></div>
+        <div class="absolute inset-0 opacity-20" style="background-image: linear-gradient(rgba(96, 165, 250, 0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(96, 165, 250, 0.05) 1px, transparent 1px); background-size: 50px 50px;"></div>
     </div>
-    <div class="flex items-center gap-4">
-      <span>Procesamiento Local · Seguro</span>
-      <span id="clock" class="mono text-sky-300 font-medium"></span>
-    </div>
-  </div>
-</div>
 
-<!-- CABECERA PRINCIPAL -->
-<header class="fixed top-10 inset-x-0 z-40 glass-deep border-b border-slate-700/40">
-  <div class="max-w-7xl mx-auto px-4 lg:px-6 h-20 flex items-center justify-between gap-4">
-    <div class="flex items-center gap-4 min-w-0">
-      <div class="logo-box">DV</div>
-      <div class="min-w-0">
-        <div class="flex items-center gap-2 flex-wrap">
-          <h1 class="heading-lg">DOC<span class="text-brand">VAULT</span></h1>
-          <span class="px-3 py-1 rounded-full border border-amber-400/20 bg-amber-500/5 text-amber-300 text-xs font-semibold mono">EDICIÓN NOVA</span>
+    <!-- Barra superior de estado -->
+    <div class="fixed top-0 inset-x-0 z-50 glass-deep border-b border-slate-700/40 py-2 px-4 text-xs">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-slate-400">
+            <div class="flex items-center gap-4">
+                <span class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-dv-emerald animate-pulse"></span>
+                    Sistema <b class="text-dv-emerald">Activo</b>
+                </span>
+                <span class="hidden sm:inline">Procesamiento 100% Local · Seguro</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span id="userEmailDisplay" class="hidden sm:inline">Sin sesión</span>
+                <span id="clock" class="font-mono text-dv-sky font-medium">00:00:00</span>
+            </div>
         </div>
-        <p class="text-sm text-slate-400 mt-0.5">Visor y Gestor Profesional de Documentos PDF</p>
-      </div>
     </div>
-    <div class="flex items-center gap-2">
-      <button class="btn sm desktop-only" onclick="openHistory()">
-        <i class="fa-solid fa-clock-rotate-left"></i> Historial 
-        <span id="historyCount" class="text-sky-300 font-bold">0</span>
-      </button>
-      <button class="btn sm desktop-only" onclick="openHelp()">
-        <i class="fa-solid fa-circle-question"></i> Ayuda
-      </button>
-      <button class="btn primary sm" onclick="document.getElementById('fileInput').click()">
-        <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Abrir PDF</span>
-      </button>
-    </div>
-  </div>
-</header>
 
-<!-- CONTENIDO PRINCIPAL -->
-<main class="max-w-7xl mx-auto px-4 lg:px-6 pt-[140px] pb-10">
-
-  <!-- TARJETAS DE ESTADO -->
-  <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-    <div class="stat-card">
-      <p class="small-label">Documento</p>
-      <p id="statName" class="mt-2 text-lg font-bold truncate">Sin documento</p>
-      <p id="statType" class="text-xs text-slate-400 mt-1">Esperando archivo PDF</p>
-    </div>
-    <div class="stat-card">
-      <p class="small-label">Páginas</p>
-      <p id="statPages" class="mt-2 text-2xl font-bold text-brand">0</p>
-      <p class="text-xs text-slate-400 mt-1">Total del documento</p>
-    </div>
-    <div class="stat-card">
-      <p class="small-label">Página Activa</p>
-      <p id="statCurrent" class="mt-2 text-2xl font-bold">—</p>
-      <p class="text-xs text-slate-400 mt-1">Vista actual</p>
-    </div>
-    <div class="stat-card">
-      <p class="small-label">Estado</p>
-      <p id="statStatus" class="mt-2 font-bold text-emerald-300">Listo</p>
-      <p id="statMessage" class="text-xs text-slate-400 mt-1">Carga un PDF para empezar</p>
-    </div>
-  </section>
-
-  <!-- SECCIÓN PRINCIPAL -->
-  <section class="grid xl:grid-cols-[300px_minmax(0,1fr)_320px] gap-4">
-
-    <!-- PANEL IZQUIERDO: BIBLIOTECA -->
-    <aside class="glass-panel p-5 h-fit xl:sticky xl:top-[150px]">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <p class="small-label">Biblioteca</p>
-          <h3 class="font-bold mt-1">Tus Documentos</h3>
+    <!-- Cabecera principal -->
+    <header class="fixed top-10 inset-x-0 z-40 glass-deep border-b border-slate-700/40">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6 h-20 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-dv-blue to-dv-indigo flex items-center justify-center font-extrabold text-white shadow-glow">DV</div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-tight">DOC<span class="text-gradient">VAULT</span> PRO MAX</h1>
+                    <p class="text-sm text-slate-400">Gestor y Analizador Profesional de Documentos</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openActivityLog()" class="btn-glass px-3 py-2 rounded-xl text-sm font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span class="hidden sm:inline">Actividad</span>
+                </button>
+                <button onclick="openHistory()" class="btn-glass px-3 py-2 rounded-xl text-sm font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span class="hidden sm:inline">Historial</span>
+                    <span id="historyCount" class="text-dv-blue font-bold">0</span>
+                </button>
+                <button onclick="openUserPanel()" class="btn-glass px-3 py-2 rounded-xl text-sm font-medium flex items-center gap-2">
+                    <i class="fa-solid fa-user"></i>
+                    <span class="hidden sm:inline">Usuario</span>
+                </button>
+                <button onclick="document.getElementById('fileInput').click()" class="btn-primary px-4 py-2 rounded-xl text-sm font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span class="hidden sm:inline">Abrir PDF</span>
+                </button>
+            </div>
         </div>
-        <button class="btn sm !p-2" title="Limpiar historial" onclick="clearHistory()">
-          <i class="fa-solid fa-trash-can text-slate-400"></i>
-        </button>
-      </div>
+    </header>
 
-      <label class="drop-area" id="dropZone" for="fileInput">
-        <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/15 flex items-center justify-center text-2xl text-sky-400 mb-3">
-          <i class="fa-solid fa-cloud-arrow-up"></i>
+    <!-- Contenido principal -->
+    <main class="max-w-7xl mx-auto px-4 lg:px-6 pt-[140px] pb-10">
+
+        <!-- Tarjetas de información -->
+        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div class="glass rounded-2xl p-4">
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Documento</p>
+                <p id="docName" class="mt-2 text-lg font-bold truncate">Sin documento</p>
+                <p class="text-xs text-slate-400 mt-1">Carga un archivo para empezar</p>
+            </div>
+            <div class="glass rounded-2xl p-4">
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Páginas</p>
+                <p id="docPages" class="mt-2 text-2xl font-bold text-gradient">0</p>
+                <p class="text-xs text-slate-400 mt-1">Total del documento</p>
+            </div>
+            <div class="glass rounded-2xl p-4">
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Página Actual</p>
+                <p id="docCurrentPage" class="mt-2 text-2xl font-bold">—</p>
+                <p class="text-xs text-slate-400 mt-1">Vista activa</p>
+            </div>
+            <div class="glass rounded-2xl p-4">
+                <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Estado</p>
+                <p id="docStatus" class="mt-2 font-bold text-dv-emerald">Listo</p>
+                <p id="docStatusMsg" class="text-xs text-slate-400 mt-1">Esperando documento</p>
+            </div>
+        </section>
+
+        <!-- Sección principal: Biblioteca + Visor + Herramientas -->
+        <section class="grid xl:grid-cols-[300px_minmax(0,1fr)_320px] gap-4">
+
+            <!-- Panel Izquierdo: Biblioteca -->
+            <aside class="glass rounded-2xl p-5 h-fit xl:sticky xl:top-[150px]">
+                <div class="flex items-center justify-between mb-4">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold">Biblioteca</p>
+                        <h3 class="font-bold mt-1">Tus Documentos</h3>
+                    </div>
+                    <button onclick="clearAllHistory()" class="text-slate-400 hover:text-dv-rose transition-colors" title="Limpiar todo">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+
+                <!-- Área de carga -->
+                <label for="fileInput" class="drop-zone rounded-2xl p-6 text-center cursor-pointer block">
+                    <div class="w-14 h-14 rounded-2xl bg-dv-sky/10 flex items-center justify-center text-2xl text-dv-sky mx-auto mb-3">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <b class="text-base">Cargar Documento PDF</b>
+                    <p class="text-sm text-slate-400 mt-1">Arrastra el archivo o haz clic aquí</p>
+                </label>
+                <input type="file" id="fileInput" accept=".pdf,application/pdf" class="hidden">
+
+                <div class="h-1.5 bg-slate-800 rounded-full mt-4 overflow-hidden">
+                    <div id="progressBar" class="h-full w-0 bg-gradient-to-r from-dv-blue to-dv-indigo rounded-full transition-all duration-300"></div>
+                </div>
+
+                <!-- Lista de documentos recientes -->
+                <div class="mt-5 space-y-2 max-h-[420px] overflow-y-auto scrollbar-thin pr-1" id="recentDocs">
+                    <p class="text-sm text-slate-500 text-center py-4">Sin documentos recientes</p>
+                </div>
+            </aside>
+
+            <!-- Panel Central: Visor PDF -->
+            <section class="glass rounded-2xl overflow-hidden flex flex-col">
+                <!-- Barra de controles -->
+                <div class="p-4 border-b border-slate-700/40 flex flex-wrap items-center justify-between gap-3">
+                    <div class="flex items-center gap-2">
+                        <button onclick="prevPage()" class="btn-glass w-10 h-10 rounded-xl flex items-center justify-center" title="Página anterior">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </button>
+                        <div class="font-mono text-sm px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700/50">
+                            <span id="pageNum">0</span> / <span id="pageTotal">0</span>
+                        </div>
+                        <button onclick="nextPage()" class="btn-glass w-10 h-10 rounded-xl flex items-center justify-center" title="Página siguiente">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </button>
+                        <span class="hidden sm:inline text-xs text-slate-400 ml-2">Zoom</span>
+                        <button onclick="zoom(-0.1)" class="btn-glass w-9 h-9 rounded-xl flex items-center justify-center">−</button>
+                        <span id="zoomPercent" class="font-mono text-sm text-dv-sky w-14 text-center">100%</span>
+                        <button onclick="zoom(0.1)" class="btn-glass w-9 h-9 rounded-xl flex items-center justify-center">+</button>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        <button onclick="downloadOriginal()" class="btn-glass px-3 py-2 rounded-xl text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-download text-dv-sky"></i>
+                            <span class="hidden sm:inline">Original</span>
+                        </button>
+                        <button onclick="exportToPDF()" class="btn-glass px-3 py-2 rounded-xl text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-file-pdf text-red-400"></i>
+                            <span class="hidden sm:inline">PDF</span>
+                        </button>
+                        <button onclick="exportToJPG()" class="btn-glass px-3 py-2 rounded-xl text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-file-image text-dv-emerald"></i>
+                            <span class="hidden sm:inline">JPG</span>
+                        </button>
+                        <button onclick="exportToWord()" class="btn-glass px-3 py-2 rounded-xl text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-file-word text-blue-400"></i>
+                            <span class="hidden sm:inline">Word</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Área de visualización -->
+                <div id="viewerArea" class="flex-1 min-h-[500px] flex items-center justify-center p-6 bg-slate-950/40">
+                    <div id="emptyState" class="text-center max-w-md">
+                        <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-dv-sky/10 to-dv-indigo/10 flex items-center justify-center text-4xl text-dv-sky mx-auto mb-5">
+                            <i class="fa-solid fa-file-pdf"></i>
+                        </div>
+                        <h2 class="text-xl font-bold mb-2">Bienvenido a DOCVAULT PRO MAX</h2>
+                        <p class="text-slate-400 mb-6">Carga un documento PDF para verlo, analizarlo y exportarlo en los formatos que necesites.</p>
+                        <button onclick="document.getElementById('fileInput').click()" class="btn-primary px-6 py-3 rounded-xl font-bold text-white">
+                            <i class="fa-solid fa-folder-open mr-2"></i> Cargar Mi Primer PDF
+                        </button>
+                    </div>
+                    <div id="pdfView" class="hidden">
+                        <canvas id="pdfCanvas" class="shadow-2xl rounded-lg bg-white"></canvas>
+                    </div>
+                </div>
+
+                <!-- Miniaturas -->
+                <div class="p-4 border-t border-slate-700/40 bg-slate-900/30">
+                    <div id="thumbs" class="flex gap-2 overflow-x-auto scrollbar-hide pb-1"></div>
+                </div>
+            </section>
+
+            <!-- Panel Derecho: Herramientas y Análisis -->
+            <aside class="space-y-4">
+                <!-- Acciones rápidas -->
+                <div class="glass rounded-2xl p-4">
+                    <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">Acciones Rápidas</p>
+                    <div class="space-y-2">
+                        <button onclick="fitToWidth()" class="btn-glass w-full px-3 py-2.5 rounded-xl text-sm flex items-center justify-between">
+                            <span><i class="fa-solid fa-arrows-left-right mr-2 text-dv-sky"></i> Ajustar al ancho</span>
+                            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+                        </button>
+                        <button onclick="resetZoom()" class="btn-glass w-full px-3 py-2.5 rounded-xl text-sm flex items-center justify-between">
+                            <span><i class="fa-solid fa-expand mr-2 text-dv-indigo"></i> Tamaño Original</span>
+                            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+                        </button>
+                        <button onclick="extractAllImages()" class="btn-glass w-full px-3 py-2.5 rounded-xl text-sm flex items-center justify-between">
+                            <span><i class="fa-solid fa-images mr-2 text-dv-emerald"></i> Extraer Imágenes</span>
+                            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+                        </button>
+                        <button onclick="closeDocument()" class="btn-glass w-full px-3 py-2.5 rounded-xl text-sm flex items-center justify-between text-dv-rose">
+                            <span><i class="fa-solid fa-xmark mr-2"></i> Cerrar Documento</span>
+                            <i class="fa-solid fa-chevron-right text-xs text-slate-500"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Análisis del documento -->
+                <div class="glass rounded-2xl p-4">
+                    <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">Análisis del Documento</p>
+                    <dl class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <dt class="text-slate-400">Nombre</dt>
+                            <dd id="anName" class="font-semibold text-right max-w-[180px] truncate">—</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-slate-400">Tamaño</dt>
+                            <dd id="anSize" class="font-mono">—</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-slate-400">Páginas</dt>
+                            <dd id="anPages" class="font-mono">—</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-slate-400">Autor</dt>
+                            <dd id="anAuthor" class="truncate max-w-[180px] text-right">—</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-slate-400">Creador</dt>
+                            <dd id="anCreator" class="truncate max-w-[180px] text-right">—</dd>
+                        </div>
+                        <div class="flex justify-between">
+                            <dt class="text-slate-400">Fecha Creación</dt>
+                            <dd id="anDate" class="text-xs">—</dd>
+                        </div>
+                    </dl>
+                </div>
+
+                <!-- Información del sistema -->
+                <div class="glass rounded-2xl p-4">
+                    <p class="text-xs uppercase tracking-wider text-slate-400 font-semibold mb-3">Información</p>
+                    <p class="text-sm text-slate-300">Todos los documentos se procesan en tu dispositivo. Nada se envía a servidores externos. Tú tienes el control total.</p>
+                </div>
+            </aside>
+        </section>
+    </main>
+
+    <!-- Área de notificaciones -->
+    <div id="toastContainer" class="fixed top-24 right-4 z-50 space-y-2 w-[min(360px,calc(100vw-2rem))]"></div>
+
+    <!-- Panel lateral: Historial / Actividad / Usuario -->
+    <div id="panelOverlay" class="fixed inset-0 bg-black/60 z-50 hidden opacity-0 transition-opacity duration-300" onclick="closeSidePanel()"></div>
+    <aside id="sidePanel" class="fixed top-0 right-0 h-screen w-[min(420px,100vw)] glass-deep border-l border-slate-700/40 z-50 transform translate-x-full transition-transform duration-300 ease-out">
+        <div class="p-6 h-full flex flex-col">
+            <div class="flex items-center justify-between mb-6">
+                <h2 id="panelTitle" class="text-lg font-bold">Panel</h2>
+                <button onclick="closeSidePanel()" class="btn-glass w-9 h-9 rounded-xl flex items-center justify-center">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div id="panelContent" class="flex-1 overflow-y-auto scrollbar-thin pr-1"></div>
         </div>
-        <b class="text-base">Importar Documento</b>
-        <p class="text-sm text-slate-400 mt-1">Arrastra tu PDF o haz clic aquí</p>
-        <span class="btn primary mt-4 !text-sm">Seleccionar Archivo PDF</span>
-      </label>
-
-      <input id="fileInput" type="file" accept="application/pdf,.pdf" class="hidden">
-      <div class="progress-bar mt-4"><span id="loadProgress"></span></div>
-      <div id="library" class="mt-5 space-y-2 max-h-[420px] overflow-auto pr-1"></div>
     </aside>
 
-    <!-- PANEL CENTRAL: VISOR PDF -->
-    <section class="glass-panel p-0 overflow-hidden">
-      <!-- BARRA DE CONTROLES -->
-      <div class="p-4 border-b border-slate-700/40 flex flex-wrap items-center justify-between gap-3">
-        <div class="flex items-center gap-2">
-          <button class="btn sm" onclick="prevPage()" title="Página Anterior"><i class="fa-solid fa-chevron-left"></i></button>
-          <div class="mono text-sm px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700/50">
-            <span id="pageCurrent">0</span> / <span id="pageTotal">0</span>
-          </div>
-          <button class="btn sm" onclick="nextPage()" title="Página Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
-          <span class="hidden sm:inline text-xs text-slate-400 ml-2">Zoom</span>
-          <button class="btn sm" onclick="zoom(-0.1)">−</button>
-          <span id="zoomValue" class="mono text-sm text-sky-300 w-14 text-center">100%</span>
-          <button class="btn sm" onclick="zoom(0.1)">+</button>
-        </div>
-        <div class="flex gap-2">
-          <button class="btn sm desktop-only" onclick="downloadOriginal()"><i class="fa-solid fa-download"></i> Original</button>
-          <button class="btn sm desktop-only" onclick="exportAsPDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
-          <button class="btn sm desktop-only" onclick="exportAsJPG()"><i class="fa-solid fa-file-image"></i> JPG</button>
-          <button class="btn primary sm" onclick="exportImages()"><i class="fa-solid fa-file-zipper"></i> <span class="hidden sm:inline">Imágenes</span></button>
-        </div>
-      </div>
+    <script>
+        // ==================================================
+        // CONFIGURACIÓN Y VARIABLES GLOBALES
+        // ==================================================
+        const { jsPDF } = window.jspdf;
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-      <!-- ÁREA DE VISUALIZACIÓN -->
-      <div id="viewer" class="viewer-box">
-        <div id="emptyViewer" class="flex flex-col items-center justify-center text-center p-8 min-h-[560px]">
-          <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-sky-500/10 to-indigo-500/10 border border-sky-400/15 flex items-center justify-center text-4xl text-sky-400 mb-5">
-            <i class="fa-regular fa-file-pdf"></i>
-          </div>
-          <h2 class="heading-lg text-brand mb-3">Tu Espacio de Trabajo</h2>
-          <p class="text-slate-400 max-w-md mb-6">Carga un documento PDF y disfruta de una vista limpia, rápida y profesional.</p>
-          <button class="btn primary" onclick="document.getElementById('fileInput').click()">
-            <i class="fa-solid fa-folder-open"></i> Abrir Primer Documento
-          </button>
-          <p class="text-xs text-slate-500 mt-6">Atajos: <span class="kbd-style">←</span> <span class="kbd-style">→</span> Navegar · <span class="kbd-style">+</span> <span class="kbd-style">−</span> Zoom</p>
-        </div>
-        <div id="pageWrap" class="page-container hidden">
-          <canvas id="pdfCanvas"></canvas>
-        </div>
-      </div>
+        let pdfDoc = null;
+        let currentPage = 1;
+        let totalPages = 0;
+        let scale = 1.5;
+        let baseScale = 1.5;
+        let currentFile = null;
+        let currentFileName = '';
+        let fileBlob = null;
 
-      <!-- MINIATURAS -->
-      <div class="p-4 border-t border-slate-700/40 bg-slate-900/30">
-        <div id="thumbnails" class="flex gap-2 overflow-x-auto pb-1"></div>
-      </div>
-    </section>
+        // Almacenamiento local
+        const STORAGE_KEYS = {
+            HISTORY: 'dvpro_history',
+            ACTIVITY: 'dvpro_activity',
+            USER: 'dvpro_user'
+        };
 
-    <!-- PANEL DERECHO: HERRAMIENTAS E INFO -->
-    <aside class="space-y-4">
-      <div class="glass-panel p-4">
-        <p class="small-label">Herramientas</p>
-        <div class="grid grid-cols-2 gap
+        // Elementos canvas
+        const canvas = document.getElementById('pdfCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // ==================================================
+        // INICIALIZACIÓN
+        // ==================================================
+        document.addEventListener('DOMContentLoaded', () => {
+            initClock();
+            loadUserData();
+            renderRecentDocs();
+            updateHistoryCount();
+            setupDragDrop();
+            setupKeyboard();
+        });
+
+        // Reloj
+        function initClock() {
+            const update = () => {
+                const now = new Date();
+                document.getElementById('clock').textContent = now.toLocaleTimeString('es-GT', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+            };
+            update();
+            setInterval(update, 1000);
+        }
+
+        // ==================================================
+        // GESTIÓN DE USUARIO Y ACTIVIDAD
+        // ==================================================
+        function loadUserData() {
+            const saved = localStorage.getItem(STORAGE_KEYS.USER);
+            if (saved) {
+                const user = JSON.parse(saved);
+                document.getElementById('userEmailDisplay').textContent = user.email || 'Usuario';
+            }
+        }
+
+        function openUserPanel() {
+            openSidePanel('Configuración de Usuario', `
+                <div class="space-y-4">
+                    <p class="text-sm text-slate-400">Ingresa tu correo para registrar tu actividad y accesos.</p>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Correo Electrónico</label>
+                        <input type="email" id="userEmail" placeholder="tu@correo.com" 
+                            class="w-full px-3 py-2 rounded-xl bg-slate-900/60 border border-slate-700/50 text-sm focus:outline-none focus:ring-2 focus:ring-dv-blue/50" />
+                    </div>
+                    <button onclick="saveUserData()" class="btn-primary w-full py-2.5 rounded-xl font-bold text-white">
+                        Guardar Datos
+                    </button>
+                    <div class="pt-4 border-t border-slate-700/40">
+                        <p class="text-sm font-medium mb-2">Información Registrada</p>
+                        <p class="text-sm text-slate-400">Tu correo se usa solo para identificar quién usa el sistema y registrar entradas en el historial de actividad.</p>
+                    </div>
+                </div>
+            `);
+            const saved = localStorage.getItem(STORAGE_KEYS.USER);
+            if (saved) {
+                document.getElementById('userEmail').value = JSON.parse(saved).email;
+            }
+        }
+
+        function saveUserData() {
+            const email = document.getElementById('userEmail').value.trim();
+            if (!email || !email.includes('@')) {
+                showToast('Ingresa un correo válido', 'warning');
+                return;
+            }
+            localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify({ email, savedAt: new Date().toISOString() }));
+            document.getElementById('userEmailDisplay').textContent = email;
+            registerActivity('Inicio de sesión', email);
+            showToast('Usuario guardado: ' + email, 'success');
+            closeSidePanel();
+        }
+
+        // Registro de actividad
+        function registerActivity(action, detail = '') {
+            const userData = JSON.parse(localStorage.getItem(STORAGE_KEYS.USER) || '{}');
+            const email = userData.email || 'Anónimo';
+            const activity = JSON.parse(localStorage.getItem(STORAGE_KEYS.ACTIVITY) || '[]');
+            
+            activity.unshift({
+                accion: action,
+                detalle: detail,
+                usuario: email,
+                fecha: new Date().toLocaleString('es-GT', { timeZone: 'America/Guatemala' }),
+                timestamp: Date.now()
+            });
+
+            localStorage.setItem(STORAGE_KEYS.ACTIVITY, JSON.stringify(activity.slice(0, 200))); // Guardar últimos 200
+        }
+
+        function openActivityLog() {
+            const activity = JSON.parse(localStorage.getItem(STORAGE_KEYS.ACTIVITY) || '[]');
+            if (activity.length === 0) {
+                openSidePanel('Historial de Actividad', '<p class="text-slate-400 text-center py-8">Sin actividad registrada todavía.</p>');
+                return;
+            }
+
+            const html = activity.map(item => `
+                <div class="p-3 rounded-xl bg-slate-900/40 border border-slate-700/40 mb-2">
+                    <div class="font-semibold text-sm">${item.accion}</div>
+                    <div class="text-xs text-slate-400 mt-1">${item.detalle || '—'}</div>
+                    <div class="flex justify-between items-center mt-2 text-xs">
+                        <span class="text-dv-sky">${item.usuario}</span>
+                        <span class="text-slate-500">${item.fecha}</span>
+                    </div>
+                </div>
+            `).join('');
+
+            openSidePanel('Historial de Actividad (' + activity.length + ')', html);
+        }
+
+        // ==================================================
+        // CARGA DE ARCHIVOS
+        // ==================================================
+        function setupDragDrop() {
+            const dropZone = document.querySelector('.drop-zone');
+            const fileInput = document.getElementById('fileInput');
+
+            ['dragover', 'dragenter'].forEach(evt => {
+                dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.add('active'); });
+            });
+            ['dragleave', 'drop'].forEach(evt => {
+                dropZone.addEventListener(evt, e => { e.preventDefault(); dropZone.classList.remove('active'); });
+            });
+            dropZone.addEventListener('drop', e => {
+                if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+            });
+            fileInput.addEventListener('change', e => {
+                if (e.target.files[0]) loadFile(e.target.files[0]);
+            });
+        }
+
+        async function loadFile(file) {
+            if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+                showToast('Solo se aceptan archivos PDF', 'error');
+                return;
+            }
+
+            try {
+                currentFile = file;
+                currentFileName = file.name;
+                fileBlob = file;
+                const fileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+
+                updateStatus('Cargando...', 'text-dv-gold', 'Leyendo documento...');
+                setProgress(20);
+
+                const arrayBuffer = await file.arrayBuffer();
+                setProgress(40);
+
+                pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                totalPages = pdfDoc.numPages;
+                currentPage = 1;
+                setProgress(60);
+
+                // Leer metadatos
+                const meta = await pdfDoc.getMetadata();
+                const info = meta.info || {};
+
+                // Actualizar interfaz
+                document.getElementById('docName').textContent = currentFileName;
+                document.getElementById('docPages').textContent = totalPages;
+                document.getElementById('pageTotal').textContent = totalPages;
+                document.getElementById('anName').textContent = currentFileName;
+                document.getElementById('anSize').textContent = fileSize;
+                document.getElementById('anPages').textContent = totalPages;
+                document.getElementById('anAuthor').textContent = info.Author || 'Desconocido';
+                document.getElementById('anCreator').textContent = info.Creator || 'Desconocido';
+                document.getElementById('anDate').textContent = info.CreationDate ? formatDate(info.CreationDate) : '—';
+
+                setProgress(75);
+
+                // Renderizar miniaturas y primera página
+                await renderPage(currentPage);
+                await renderThumbnails();
+                setProgress(100);
+
+                // Cambiar vista
+                document.getElementById('emptyState').classList.add('hidden');
+                document.getElementById('pdfView').classList.remove('hidden');
+
+                // Guardar en historial
+                addToHistory({
+                    nombre: currentFileName,
+                    tamaño: fileSize,
+                    paginas: totalPages,
+                    autor: info.Author || 'Desconocido',
+                    fecha: new Date().toLocaleString('es-GT', { timeZone: 'America/Guatemala' })
+                });
+
+                registerActivity('Cargó documento', currentFileName + ' · ' + totalPages + ' págs.');
+
+                updateStatus('¡Listo!', 'text-dv-emerald', 'Documento cargado correctamente');
+                showToast('PDF cargado: ' + currentFileName, 'success');
+
+                setTimeout(() => setProgress(0), 600);
+
+            } catch (err) {
+                console.error(err);
+                showToast('Error al cargar: ' + err.message, 'error');
+                updateStatus('Error', 'text-dv-rose', 'No se pudo leer el archivo');
+                setProgress(0);
+            }
+        }
+
+        // ==================================================
+        // RENDERIZADO DE PÁGINAS Y MINIATURAS
+        // ==================================================
+        async function renderPage(num) {
+            if (!pdfDoc) return;
+            currentPage = num;
+            document.getElementById('pageNum').textContent = num;
+            document.getElementById('docCurrentPage').textContent = `${num}/${totalPages}`;
+
+            const page = await pdfDoc.getPage(num);
+            const viewport = page.getViewport({ scale: baseScale * scale });
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+
+            await page.render({ canvasContext: ctx, viewport }).promise;
+
+            // Resaltar miniatura activa
+            document.querySelectorAll('.thumb-item').forEach((el, i) => {
+                el.classList.toggle('ring-2', i + 1 === num);
+                el.classList.toggle('ring-dv-blue', i + 1 === num);
+            });
+        }
+
+        async function renderThumbnails() {
+            const container = document.getElementById('thumbs');
+            container.innerHTML = '';
+
+            for (let i = 1; i <= totalPages; i++) {
+                const page = await pdfDoc.getPage(i);
+                const viewport = page.getViewport({ scale: 0.18 });
+                const tCanvas = document.createElement('canvas');
+                tCanvas.width = viewport.width;
+                tCanvas.height = viewport.height;
+                await page.render({ canvasContext: tCanvas.getContext('2d'), viewport }).promise;
+
+                const div = document.createElement('button');
+                div.className = 'thumb-item rounded-lg overflow-hidden border border-slate-700/40 hover:border-dv-blue transition-all';
+                div.title = `Página ${i}`;
+                div.onclick = () => renderPage(i);
+                div.appendChild(tCanvas);
+                container.appendChild(div);
+            }
+        }
+
+        // ==================================================
+        // NAVEGACIÓN Y ZOOM
+        // ==================================================
+        function prevPage() { if (currentPage > 1) renderPage(currentPage - 1); }
+        function nextPage() { if (currentPage < totalPages) renderPage(currentPage + 1); }
+        function zoom(delta) {
+            scale = Math.max(0.4, Math.min(3, scale + delta));
+            document.getElementById('zoomPercent').textContent = Math.round(scale * 100) + '%';
+            renderPage(currentPage);
+        }
+        function resetZoom() { scale = 1; document.getElementById('zoomPercent').textContent = '100%'; renderPage(currentPage); }
+        function fitToWidth() { scale = 1; baseScale = 1.3; resetZoom(); }
+        function setupKeyboard() {
+            document.addEventListener('keydown', e => {
+                if (e.key === 'ArrowLeft') prevPage();
+                if (e.key === 'ArrowRight') nextPage();
+                if (e.key === '+' || e.key === '=') zoom(0.1);
+                if (e.key === '-') zoom(-0.1);
+            });
+        }
+
+        // ==================================================
+        // EXPORTACIÓN Y DESCARGAS
+        // ==================================================
+        function downloadOriginal() {
+            if (!fileBlob) return showToast('Carga un documento primero', 'info');
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(fileBlob);
+            a.download = currentFileName;
+            a.click();
+            showToast('Descargando: ' + currentFileName, 'success');
+            registerActivity('Descargó original', currentFileName);
+        }
+
+        async function exportToPDF() {
+            if (!pdfDoc) return showToast('Carga un documento primero', 'info');
+            showToast('Preparando PDF...', 'info');
+            
+            try {
+                const pages = [];
+                for (let i = 1; i <= totalPages; i++) {
+                    const page = await pdfDoc.getPage(i);
+                    const viewport = page.getViewport({ scale: 2 });
+                    const c = document.createElement('canvas');
+                    c.width = viewport.width;
+                    c.height = viewport.height;
+                    await page.render({ canvasContext: c.getContext('2d'), viewport }).promise;
+                    pages.push(c.toDataURL('image/jpeg', 0.95));
+                }
+
+                const firstPage = await pdfDoc.getPage(1);
+                const vf = firstPage.getViewport({ scale: 1 });
+                const pdf = new jsPDF({
+                    orientation: vf.width > vf.height ? 'landscape' : 'portrait',
+                    unit: 'px',
+                    format: [vf.width, vf.height]
+                });
+
+                pages.forEach((img, idx) => {
+                    if (idx > 0) pdf.addPage();
+                    pdf.addImage(img, 'JPEG', 0, 0, vf.width, vf.height);
+                });
+
+                pdf.save(currentFileName.replace('.pdf', '') + '_exportado.pdf');
+                showToast('PDF generado correctamente', 'success');
+                registerActivity('Exportó a PDF', currentFileName);
+            } catch (err) {
+                showToast('Error al exportar: ' + err.message, 'error');
+            }
+        }
+
+        async function exportToJPG() {
+            if (!pdfDoc) return showToast('Carga un documento primero', 'info');
+            showToast('Generando imágenes JPG...', 'info');
+
+            try {
+                if (totalPages === 1) {
+                    const page = await pdfDoc.getPage(1);
+                    const viewport = page.getViewport({ scale: 2 });
+                    const c = document.createElement('canvas');
+                    c.width = viewport.width;
+                    c.height = viewport.height;
+                    await page.render({ canvasContext: c.getContext('2d'), viewport }).promise;
+                    const link = document.createElement('a');
+                    link.href = c.toDataURL('image/jpeg', 0.95);
+                    link.download = currentFileName.replace('.pdf', '') + '_pagina_1.jpg';
+                    link.click();
+                } else {
+                    const zip = new JSZip();
+                    for (let i = 1; i <= totalPages; i++) {
+                        const page = await pdfDoc.getPage(i);
+                        const viewport = page.getViewport({ scale: 2 });
+                        const c = document.createElement('canvas');
+                        c.width = viewport.width;
+                        c.height = viewport.height;
+                        await page.render({ canvasContext: c.getContext('2d'), viewport }).promise;
+                        zip.file(`pagina_${String(i).padStart(2,'0')}.jpg`, c.toDataURL('image/jpeg', 0.95).slice(23), { base64: true });
+                    }
+                    const blob = await zip.generateAsync({ type: 'blob' });
+                    const link = document.createElement('a');
+                    link.href = URL.createObjectURL(blob);
+                    link.download = currentFileName.replace('.pdf', '') + '_imagenes.zip';
+                    link.click();
+                }
+                showToast(totalPages === 1 ? 'Imagen JPG generada' : 'ZIP con imágenes generado', 'success');
+                registerActivity('Exportó a JPG', currentFileName);
+            } catch (err) {
+                showToast('Error al exportar: ' + err.message, 'error');
+            }
+        }
+
+        async function exportToWord() {
+            if (!pdfDoc) return showToast('Carga un documento primero', 'info');
+            showToast('Preparando documento Word...', 'info');
+
+            try {
+                let contenido = `DOCUMENTO: ${currentFileName}\n`;
+                contenido += `PÁGINAS: ${totalPages}\n`;
+                contenido += `EXPORTADO: ${new Date().toLocaleString('es-GT', { timeZone: 'America/Guatemala' })}\n`;
+                contenido += `========================================\n\n`;
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const page = await pdfDoc.getPage(i);
+                    const txt = await page.getTextContent();
+                    const texto = txt.items.map(it => it.str).join(' ');
+                    contenido += `--- PÁGINA ${i} ---\n${texto}\n\n`;
+                }
+
+                const blob = new Blob([contenido], { type: 'application/msword' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = currentFileName.replace('.pdf', '') + '.doc';
+                link.click();
+
+                showToast('Documento Word generado', 'success');
+                registerActivity('Exportó a Word', currentFileName);
+            } catch (err) {
+                showToast('Error al exportar: ' + err.message, 'error');
+            }
+        }
+
+        async function extractAllImages() {
+            if (!pdfDoc) return showToast('Carga un documento primero', 'info');
+            showToast('Extrayendo imágenes...', 'info');
+
+            try {
+                const zip = new JSZip();
+                let count = 0;
+
+                for (let p = 1; p <= totalPages; p++) {
+                    const page = await pdfDoc.getPage(p);
+                    const ops = await page.getOperatorList();
+                    for (let i = 0; i < ops.fnArray.length; i++) {
+                        if (ops.fnArray[i] === pdfjsLib.OPS.paintJpegXObject || 
+                            ops.fnArray[i] === pdfjsLib.OPS.paintImageXObject) {
+                            const imgKey = ops.argsArray[i][0];
+                            const img = await pdfDoc.objs.get(imgKey);
+                            if (img && img.data) {
+                                const b64 = btoa(String.fromCharCode(...new Uint8Array(img.data)));
+                                zip.file(`imagen_pag${p}_${++count}.${img.format || 'jpg'}`, b64, { base64: true });
+                            }
+                        }
+                    }
+                }
+
+                if (count === 0) return showToast('No se encontraron imágenes', 'info');
+
+                const blob = await zip.generateAsync({ type: 'blob' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = currentFileName.replace('.pdf', '') + '_imagenes.zip';
+                link.click();
+                showToast(`${count} imágenes extraídas`, 'success');
+                registerActivity('Extrajo imágenes', currentFileName);
+            } catch (err) {
+                showToast('Error al extraer: ' + err.message, 'error');
+            }
+        }
+
+        // ==================================================
+        // HISTORIAL DE DOCUMENTOS
+        // ==================================================
+        function addToHistory(item) {
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY) || '[]');
+            const exists = history.findIndex(h => h.nombre === item.nombre);
+            if (exists !== -1) history.splice(exists, 1);
+            history.unshift(item);
+            localStorage.setItem(STORAGE_KEYS.HISTORY, JSON.stringify(history.slice(0, 50)));
+            renderRecentDocs();
+            updateHistoryCount();
+        }
+
+        function renderRecentDocs() {
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY) || '[]');
+            const container = document.getElementById('recentDocs');
+            
+            if (history.length === 0) {
+                container.innerHTML = '<p class="text-sm text-slate-500 text-center py-4">Sin documentos recientes</p>';
+                return;
+            }
+
+            container.innerHTML = history.map(item => `
+                <div class="p-3 rounded-xl bg-slate-900/40 border border-slate-700/40 text-sm">
+                    <p class="font-semibold truncate">${item.nombre}</p>
+                    <p class="text-xs text-slate-400 mt-1">${item.paginas} págs. · ${item.tamaño}</p>
+                    <p class="text-xs text-slate-500 mt-1">${item.fecha}</p>
+                </div>
+            `).join('');
+        }
+
+        function updateHistoryCount() {
+            const count = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY) || '[]').length;
+            document.getElementById('historyCount').textContent = count;
+        }
+
+        function openHistory() {
+            const history = JSON.parse(localStorage.getItem(STORAGE_KEYS.HISTORY) || '[]');
+            if (history.length === 0) {
+                openSidePanel('Historial', '<p class="text-slate-400 text-center py-8">Sin documentos en el historial.</p>');
+                return;
+            }
+            openSidePanel('Historial de Documentos', history.map(item => `
+                <div class="p-3 rounded-xl bg-slate-900/40 border border-slate-700/40 mb-2">
+                    <p class="font-semibold">${item.nombre}</p>
+                    <p class="text-xs text-slate-400 mt-1">${item.paginas} págs. · ${item.tamaño} · ${item.autor || 'Sin autor'}</p>
+                    <p class="text-xs text-slate-500 mt-1">${item.fecha}</p>
+                </div>
+            `).join(''));
+        }
+
+        function clearAllHistory() {
+            if (!confirm('¿Borrar todo el historial de documentos?')) return;
+            localStorage
