@@ -1,505 +1,783 @@
 <!DOCTYPE html>
-<html lang="es" class="h-full bg-slate-950 text-slate-100 dark scroll-smooth">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="DocVault Pro MAX — Editor, Visor, Convertidor y Gestor de PDF Avanzado">
-    <meta name="theme-color" content="#0f172a">
-    <title>DOCVAULT PRO MAX · EDICIÓN DEFINITIVA</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="description" content="DOCVAULT PRO MAX — Visor y Gestor Profesional de PDF · Diseño Renovado">
+<meta name="theme-color" content="#0f172a">
+<title>DOCVAULT PRO MAX · EDICIÓN NOVA</title>
 
-    <!-- LIBRERÍAS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/tsparticles-preset-firefly@2.12.0/tsparticles.preset.firefly.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+<!-- LIBRERÍAS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-    <!-- CONFIGURACIÓN TAILWIND -->
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        vault: {
-                            50: '#ecfeff', 100: '#cffafe', 200: '#a5f3fc', 300: '#67e8f9', 400: '#22d3ee',
-                            500: '#06b6d4', 600: '#0891b2', 700: '#0e7490', 800: '#155e75', 900: '#164e63', 950: '#083344',
-                            neon: '#00ffcc',
-                            neong: '#00ff88',
-                            neonr: '#ff0080',
-                            neonv: '#a855f7',
-                            gold: '#f59e0b',
-                            danger: '#ef4444',
-                            success: '#10b981',
-                            warning: '#f59e0b',
-                            info: '#3b82f6'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
-                    },
-                    boxShadow: {
-                        'glow': '0 0 15px rgba(6, 182, 212, 0.4), 0 0 30px rgba(6, 182, 212, 0.2), 0 0 45px rgba(6, 182, 212, 0.1)',
-                        'glow-strong': '0 0 20px rgba(0, 255, 204, 0.5), 0 0 40px rgba(0, 255, 204, 0.3), 0 0 60px rgba(0, 255, 204, 0.15)',
-                        'glow-purple': '0 0 15px rgba(168, 85, 247, 0.4), 0 0 30px rgba(168, 85, 247, 0.2)',
-                        'glow-gold': '0 0 12px rgba(245, 158, 11, 0.5), 0 0 25px rgba(245, 158, 11, 0.25)',
-                        'inner-glow': 'inset 0 0 20px rgba(6, 182, 212, 0.15)',
-                    },
-                    animation: {
-                        'border-spin': 'borderSpin 6s linear infinite',
-                        'glow-pulse': 'glowPulse 2.5s ease-in-out infinite alternate',
-                        'float': 'float 4s ease-in-out infinite',
-                        'float-slow': 'floatSlow 6s ease-in-out infinite',
-                        'pulse-slow': 'pulseSlow 3s ease-in-out infinite',
-                        'bounce-in': 'bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-                        'slide-up': 'slideUp 0.5s ease-out forwards',
-                        'slide-down': 'slideDown 0.4s ease-out forwards',
-                        'scale-in': 'scaleIn 0.35s ease-out forwards',
-                        'shimmer': 'shimmer 2s linear infinite',
-                        'ripple': 'ripple 0.7s ease-out forwards',
-                        'heartbeat': 'heartbeat 1.5s ease-in-out infinite',
-                        'shake': 'shake 0.5s ease-in-out',
-                        'wobble': 'wobble 1s ease-in-out',
-                        'spin-slow': 'spin 8s linear infinite',
-                        'fade-in': 'fadeIn 0.6s ease-out forwards',
-                        'fade-out': 'fadeOut 0.3s ease-out forwards',
-                        'flip-in-x': 'flipInX 0.5s ease-out forwards',
-                        'zoom-in': 'zoomIn 0.4s ease-out forwards',
-                        'blur-in': 'blurIn 0.7s ease-out forwards',
-                        'gradient-move': 'gradientMove 4s ease infinite',
-                        'typing': 'typing 2s steps(40, end)',
-                        'blink-caret': 'blinkCaret 0.75s step-end infinite',
-                        'orbit': 'orbit 10s linear infinite',
-                        'pulse-ring': 'pulseRing 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite',
-                        'fall': 'fall 1s ease-in forwards',
-                        'rise': 'rise 1s ease-out forwards',
-                        'swing': 'swing 1s ease-in-out',
-                        'wobble-horizon': 'wobbleHorizon 1s ease-in-out',
-                        'bounce-flash': 'bounceFlash 1s ease infinite',
-                        'stretch': 'stretch 0.5s ease-out',
-                        'jello': 'jello 1s ease-in-out',
-                        'roll-in': 'rollIn 0.6s ease-out forwards',
-                        'rotate-in': 'rotateIn 0.5s ease-out forwards',
-                        'slit-in': 'slitIn 0.5s ease-out forwards',
-                        'vibrate': 'vibrate 0.3s ease-in-out infinite',
-                        'passion': 'passion 0.8s ease-in-out infinite alternate',
-                        'stagger-1': 'slideUp 0.5s ease-out 0.1s both',
-                        'stagger-2': 'slideUp 0.5s ease-out 0.2s both',
-                        'stagger-3': 'slideUp 0.5s ease-out 0.3s both',
-                        'stagger-4': 'slideUp 0.5s ease-out 0.4s both',
-                        'stagger-5': 'slideUp 0.5s ease-out 0.5s both',
-                    },
-                    keyframes: {
-                        borderSpin: {
-                            '0%': { backgroundPosition: '0% 0%, 100% 0%, 100% 100%, 0% 100%' },
-                            '100%': { backgroundPosition: '0% 0%, 100% 0%, 100% 100%, 0% 100%' }
-                        },
-                        glowPulse: {
-                            '0%': { boxShadow: '0 0 15px rgba(6, 182, 212, 0.35), 0 0 30px rgba(6, 182, 212, 0.15)' },
-                            '100%': { boxShadow: '0 0 30px rgba(0, 255, 204, 0.6), 0 0 60px rgba(0, 255, 204, 0.3), 0 0 90px rgba(168, 85, 247, 0.15)' }
-                        },
-                        float: {
-                            '0%, 100%': { transform: 'translateY(0px)' },
-                            '50%': { transform: 'translateY(-12px)' }
-                        },
-                        floatSlow: {
-                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
-                            '50%': { transform: 'translateY(-18px) rotate(1deg)' }
-                        },
-                        pulseSlow: {
-                            '0%, 100%': { opacity: '1' },
-                            '50%': { opacity: '0.6' }
-                        },
-                        bounceIn: {
-                            '0%': { transform: 'scale(0.2)', opacity: '0' },
-                            '20%': { transform: 'scale(0.9)' },
-                            '40%': { transform: 'scale(1.1)' },
-                            '60%': { transform: 'scale(0.95)' },
-                            '80%': { transform: 'scale(1.02)' },
-                            '100%': { transform: 'scale(1)', opacity: '1' }
-                        },
-                        slideUp: {
-                            '0%': { transform: 'translateY(40px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        },
-                        slideDown: {
-                            '0%': { transform: 'translateY(-30px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        },
-                        scaleIn: {
-                            '0%': { transform: 'scale(0.8)', opacity: '0' },
-                            '100%': { transform: 'scale(1)', opacity: '1' }
-                        },
-                        shimmer: {
-                            '0%': { backgroundPosition: '-1000px 0' },
-                            '100%': { backgroundPosition: '1000px 0' }
-                        },
-                        ripple: {
-                            '0%': { transform: 'scale(0)', opacity: '1' },
-                            '100%': { transform: 'scale(4)', opacity: '0' }
-                        },
-                        heartbeat: {
-                            '0%, 100%': { transform: 'scale(1)' },
-                            '14%': { transform: 'scale(1.1)' },
-                            '28%': { transform: 'scale(1)' },
-                            '42%': { transform: 'scale(1.1)' },
-                            '70%': { transform: 'scale(1)' }
-                        },
-                        shake: {
-                            '0%, 100%': { transform: 'translateX(0)' },
-                            '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-5px)' },
-                            '20%, 40%, 60%, 80%': { transform: 'translateX(5px)' }
-                        },
-                        wobble: {
-                            '0%': { transform: 'translateX(0%) rotate(0deg)' },
-                            '15%': { transform: 'translateX(-10px) rotate(-5deg)' },
-                            '30%': { transform: 'translateX(8px) rotate(3deg)' },
-                            '45%': { transform: 'translateX(-5px) rotate(-3deg)' },
-                            '60%': { transform: 'translateX(3px) rotate(2deg)' },
-                            '75%': { transform: 'translateX(-2px) rotate(-1deg)' },
-                            '100%': { transform: 'translateX(0%) rotate(0deg)' }
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0' },
-                            '100%': { opacity: '1' }
-                        },
-                        fadeOut: {
-                            '0%': { opacity: '1' },
-                            '100%': { opacity: '0' }
-                        },
-                        flipInX: {
-                            '0%': { transform: 'perspective(400px) rotateX(90deg)', opacity: '0' },
-                            '40%': { transform: 'perspective(400px) rotateX(-10deg)' },
-                            '70%': { transform: 'perspective(400px) rotateX(10deg)' },
-                            '100%': { transform: 'perspective(400px) rotateX(0deg)', opacity: '1' }
-                        },
-                        zoomIn: {
-                            '0%': { transform: 'scale(0.3)', opacity: '0' },
-                            '50%': { opacity: '1' },
-                            '100%': { transform: 'scale(1)', opacity: '1' }
-                        },
-                        blurIn: {
-                            '0%': { filter: 'blur(12px)', opacity: '0' },
-                            '100%': { filter: 'blur(0)', opacity: '1' }
-                        },
-                        gradientMove: {
-                            '0%': { backgroundPosition: '0% 50%' },
-                            '50%': { backgroundPosition: '100% 50%' },
-                            '100%': { backgroundPosition: '0% 50%' }
-                        },
-                        typing: {
-                            'from': { width: '0' },
-                            'to': { width: '100%' }
-                        },
-                        blinkCaret: {
-                            'from, to': { borderColor: 'transparent' },
-                            '50%': { borderColor: 'currentColor' }
-                        },
-                        orbit: {
-                            'from': { transform: 'rotate(0deg) translateX(120px) rotate(0deg)' },
-                            'to': { transform: 'rotate(360deg) translateX(120px) rotate(-360deg)' }
-                        },
-                        pulseRing: {
-                            '0%': { transform: 'scale(0.33)', opacity: '1' },
-                            '80%, 100%': { transform: 'scale(1.5)', opacity: '0' }
-                        },
-                        fall: {
-                            '0%': { transform: 'translateY(-100px) rotate(0deg)', opacity: '0' },
-                            '100%': { transform: 'translateY(0) rotate(360deg)', opacity: '1' }
-                        },
-                        rise: {
-                            '0%': { transform: 'translateY(100px)', opacity: '0' },
-                            '100%': { transform: 'translateY(0)', opacity: '1' }
-                        },
-                        swing: {
-                            '20%': { transform: 'rotate3d(0, 0, 1, 15deg)' },
-                            '40%': { transform: 'rotate3d(0, 0, 1, -10deg)' },
-                            '60%': { transform: 'rotate3d(0, 0, 1, 5deg)' },
-                            '80%': { transform: 'rotate3d(0, 0, 1, -5deg)' },
-                            '100%': { transform: 'rotate3d(0, 0, 1, 0deg)' }
-                        },
-                        wobbleHorizon: {
-                            '0%': { transform: 'translateX(0%) rotate(0deg)' },
-                            '15%': { transform: 'translateX(-25%) rotate(-5deg)' },
-                            '30%': { transform: 'translateX(20%) rotate(3deg)' },
-                            '45%': { transform: 'translateX(-15%) rotate(-3deg)' },
-                            '60%': { transform: 'translateX(10%) rotate(2deg)' },
-                            '75%': { transform: 'translateX(-5%) rotate(-1deg)' },
-                            '100%': { transform: 'translateX(0%) rotate(0deg)' }
-                        },
-                        bounceFlash: {
-                            '0%, 100%': { transform: 'scale(1)' },
-                            '50%': { transform: 'scale(1.2)' }
-                        },
-                        stretch: {
-                            '0%': { transform: 'scaleX(0.5)' },
-                            '100%': { transform: 'scaleX(1)' }
-                        },
-                        jello: {
-                            '0%, 100%': { transform: 'skewX(0deg) skewY(0deg)' },
-                            '25%': { transform: 'skewX(-10deg) skewY(-10deg)' },
-                            '50%': { transform: 'skewX(5deg) skewY(5deg)' },
-                            '75%': { transform: 'skewX(-3deg) skewY(-3deg)' }
-                        },
-                        rollIn: {
-                            '0%': { transform: 'translateX(-100%) rotate(-120deg)', opacity: '0' },
-                            '100%': { transform: 'translateX(0) rotate(0deg)', opacity: '1' }
-                        },
-                        rotateIn: {
-                            '0%': { transform: 'rotate(-200deg)', opacity: '0' },
-                            '100%': { transform: 'rotate(0)', opacity: '1' }
-                        },
-                        slitIn: {
-                            '0%': { transform: 'translateZ(-1000px) rotateY(-90deg)', opacity: '0' },
-                            '50%': { transform: 'translateZ(-500px) rotateY(-45deg)', opacity: '0.5' },
-                            '100%': { transform: 'translateZ(0) rotateY(0)', opacity: '1' }
-                        },
-                        vibrate: {
-                            '0%, 100%': { transform: 'translate(0)' },
-                            '20%': { transform: 'translate(-2px, 2px)' },
-                            '40%': { transform: 'translate(-2px, -2px)' },
-                            '60%': { transform: 'translate(2px, 2px)' },
-                            '80%': { transform: 'translate(2px, -2px)' }
-                        },
-                        passion: {
-                            '0%': { transform: 'scale(1)' },
-                            '100%': { transform: 'scale(1.15)' }
-                        }
-                    }
-                }
-            }
-        };
-    </script>
+<style>
+:root {
+  --bg-main: #0f172a;
+  --bg-deep: #020617;
+  --bg-card: rgba(15, 23, 42, 0.75);
+  --bg-card-strong: rgba(30, 41, 59, 0.85);
+  --border: rgba(71, 85, 105, 0.35);
+  --accent-blue: #3b82f6;
+  --accent-sky: #0ea5e9;
+  --accent-indigo: #6366f1;
+  --accent-gold: #f59e0b;
+  --accent-emerald: #10b981;
+  --accent-rose: #f43f5e;
+  --text-light: #f1f5f9;
+  --text-soft: #cbd5e1;
+  --text-muted: #64748b;
+  --shadow-blue: 0 0 25px rgba(59, 130, 246, 0.25), 0 0 50px rgba(59, 130, 246, 0.1);
+  --shadow-gold: 0 0 20px rgba(245, 158, 11, 0.25), 0 0 40px rgba(245, 158, 11, 0.1);
+  --radius-xl: 20px;
+  --radius-2xl: 28px;
+}
 
-    <style type="text/tailwindcss">
-        @layer utilities {
-            /* ========== UTILIDADES DE VIDRIO Y FONDO ========== */
-            .glass { background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(51, 65, 85, 0.45); }
-            .glass-card { background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.75)); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(51, 65, 85, 0.55); box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05); transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
-            .glass-card:hover { border-color: rgba(0, 255, 204, 0.35); box-shadow: 0 12px 50px rgba(6, 182, 212, 0.18), inset 0 1px 0 rgba(255,255,255,0.08); transform: translateY(-3px); }
-            .glass-ultra { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border: 1px solid rgba(148, 163, 184, 0.2); }
-            .glass-deep { background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(16px); border: 1px solid rgba(30, 58, 95, 0.6); }
-            .glass-light { background: rgba(30, 64, 175, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(96, 165, 250, 0.18); }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Outfit', system-ui, sans-serif;
+  background: linear-gradient(135deg, #020617 0%, #0f172a 50%, #020617 100%);
+  color: var(--text-light);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
 
-            /* ========== BORDES NEÓN ANIMADOS ========== */
-            .rgb-border { position: relative; border-radius: 18px; }
-            .rgb-border::before {
-                content: ""; position: absolute; inset: -3px; border-radius: 20px;
-                background: linear-gradient(45deg, #00ff88, #00ffcc, #06b6d4, #a855f7, #ec4899, #f59e0b, #00ff88);
-                background-size: 400% 400%; animation: borderSpin 7s linear infinite; z-index: -1;
-            }
-            .rgb-border-strong { position: relative; border-radius: 20px; }
-            .rgb-border-strong::before {
-                content: ""; position: absolute; inset: -4px; border-radius: 22px;
-                background: linear-gradient(45deg, #ff0080, #a855f7, #06b6d4, #00ffcc, #f59e0b, #ff0080);
-                background-size: 500% 500%; animation: borderSpin 5s linear infinite; z-index: -1; filter: blur(0.5px);
-            }
-            .neon-border { border: 1px solid transparent; background-clip: padding-box; position: relative; }
-            .neon-border::after {
-                content: ''; position: absolute; inset: 0; border-radius: inherit; margin: -1px;
-                background: linear-gradient(135deg, rgba(0,255,204,0.7), rgba(168,85,247,0.6), rgba(6,182,212,0.7));
-                z-index: -1; opacity: 0.6; transition: opacity 0.3s;
-            }
-            .neon-border:hover::after { opacity: 1; }
+/* ========== FONDOS Y EFECTOS DE PROFUNDIDAD ========== */
+.bg-layer {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+}
+.bg-grad {
+  background: 
+    radial-gradient(circle at 10% 5%, rgba(59, 130, 246, 0.12), transparent 35%),
+    radial-gradient(circle at 90% 90%, rgba(99, 102, 241, 0.10), transparent 35%),
+    radial-gradient(circle at 50% 50%, rgba(14, 165, 233, 0.06), transparent 50%);
+}
+.bg-grid {
+  opacity: 0.25;
+  background-image: 
+    linear-gradient(rgba(96, 165, 250, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96, 165, 250, 0.06) 1px, transparent 1px);
+  background-size: 50px 50px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+.orb-shape {
+  position: fixed; border-radius: 50%; filter: blur(100px); opacity: 0.12; z-index: -1; pointer-events: none;
+  animation: floatOrb 18s ease-in-out infinite alternate;
+}
+.orb-1 { width: 450px; height: 450px; background: var(--accent-blue); top: -150px; right: -100px; }
+.orb-2 { width: 380px; height: 380px; background: var(--accent-indigo); bottom: -100px; left: -80px; animation-delay: -6s; }
+.orb-3 { width: 320px; height: 320px; background: var(--accent-gold); top: 40%; left: 30%; animation-delay: -12s; opacity: 0.06; }
 
-            /* ========== TEXTOS NEÓN Y EFECTOS ========== */
-            .text-shadow { text-shadow: 0 0 20px rgba(0, 255, 204, 0.5), 0 0 40px rgba(0, 255, 204, 0.25); }
-            .text-shadow-strong { text-shadow: 0 0 15px rgba(0, 255, 204, 0.8), 0 0 30px rgba(6, 182, 212, 0.5), 0 0 60px rgba(168, 85, 247, 0.3); }
-            .text-shadow-purple { text-shadow: 0 0 15px rgba(168, 85, 247, 0.6), 0 0 30px rgba(168, 85, 247, 0.3); }
-            .text-gradient { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(90deg, #00ffcc, #06b6d4, #a855f7); background-size: 200% auto; animation: gradientMove 3s ease infinite; }
-            .text-gradient-gold { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(90deg, #fef08a, #f59e0b, #fbbf24, #fef08a); background-size: 200% auto; animation: gradientMove 4s ease infinite; }
-            .text-gradient-cyber { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(135deg, #00ff88, #00ffcc, #06b6d4); background-size: 200% auto; animation: gradientMove 3s ease infinite; }
-            .text-gradient-fire { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(135deg, #fbbf24, #f97316, #ef4444); background-size: 200% auto; animation: gradientMove 3s ease infinite; }
+@keyframes floatOrb {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(80px, -60px) scale(1.25); }
+}
 
-            /* ========== BOTONES Y EFECTOS DE INTERACCIÓN ========== */
-            .btn-primary { @apply relative px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-vault-500 via-vault-neon to-vault-neong shadow-lg shadow-vault-500/25 hover:shadow-glow-strong transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] overflow-hidden; }
-            .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.5s; }
-            .btn-primary:hover::before { left: 100%; }
-            .btn-secondary { @apply px-4 py-2 rounded-xl font-medium text-slate-200 bg-slate-800/70 border border-slate-700/80 hover:border-vault-neon/60 hover:bg-slate-700/60 transition-all duration-300 hover:shadow-glow; }
-            .btn-danger { @apply px-4 py-2 rounded-xl font-medium text-rose-300 bg-rose-950/40 border border-rose-900/60 hover:bg-rose-900/50 hover:border-rose-500/60 transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)]; }
-            .btn-gold { @apply px-4 py-2 rounded-xl font-medium text-amber-200 bg-amber-950/40 border border-amber-800/50 hover:border-amber-500/60 transition-all duration-300 hover:shadow-glow-gold; }
-            .btn-purple { @apply px-4 py-2 rounded-xl font-medium text-purple-200 bg-purple-950/40 border border-purple-900/50 hover:border-purple-500/60 transition-all duration-300 hover:shadow-glow-purple; }
-            .btn-ghost { @apply px-4 py-2 rounded-xl font-medium text-slate-300 hover:bg-slate-800/50 transition-all duration-200; }
+/* ========== VIDRIO Y TARJETAS ========== */
+.glass-panel {
+  background: linear-gradient(145deg, rgba(30, 41, 59, 0.65), rgba(15, 23, 42, 0.75));
+  border: 1px solid rgba(96, 165, 250, 0.15);
+  border-radius: var(--radius-xl);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  box-shadow: 
+    0 20px 60px rgba(15, 23, 42, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transition: all 0.35s ease;
+}
+.glass-panel:hover {
+  border-color: rgba(96, 165, 250, 0.3);
+  box-shadow: 
+    0 25px 70px rgba(15, 23, 42, 0.6),
+    0 0 30px rgba(59, 130, 246, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.glass-deep {
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.95));
+  border: 1px solid rgba(71, 85, 105, 0.4);
+  backdrop-filter: blur(20px);
+}
 
-            /* ========== SCROLL PERSONALIZADO ========== */
-            .scrollbar-hide::-webkit-scrollbar { display: none; }
-            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
-            .scrollbar-custom::-webkit-scrollbar { width: 8px; height: 8px; }
-            .scrollbar-custom::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); border-radius: 4px; }
-            .scrollbar-custom::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #06b6d4, #a855f7); border-radius: 4px; }
-            .scrollbar-custom::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #22d3ee, #c084fc); }
+/* ========== TEXTO Y TIPOGRAFÍA ========== */
+.mono { font-family: 'Roboto Mono', monospace; }
+.text-brand {
+  background: linear-gradient(90deg, #60a5fa, #3b82f6, #818cf8, #60a5fa);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: brandFlow 5s ease infinite;
+}
+@keyframes brandFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.text-gold {
+  background: linear-gradient(90deg, #fcd34d, #f59e0b, #fcd34d);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: goldFlow 4s ease infinite;
+}
+@keyframes goldFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+.heading-xl { font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; }
+.heading-lg { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.02em; }
+.heading-md { font-size: 1.125rem; font-weight: 600; }
+.small-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-muted); font-weight: 600; }
 
-            /* ========== EFECTOS DE ENTRADA Y DESTAQUE ========== */
-            .hover-lift { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease; }
-            .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(6, 182, 212, 0.15); }
-            .hover-glow:hover { box-shadow: 0 0 20px rgba(0, 255, 204, 0.4), 0 0 40px rgba(168, 85, 247, 0.2); }
-            .pulse-border { position: relative; }
-            .pulse-border::after { content: ''; position: absolute; inset: -2px; border-radius: inherit; border: 2px solid transparent; background: linear-gradient(90deg, #00ffcc, #a855f7, #06b6d4) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: borderSpin 4s linear infinite; opacity: 0; transition: opacity 0.3s; }
-            .pulse-border:hover::after { opacity: 1; }
+/* ========== LOGO NUEVO ========== */
+.logo-box {
+  width: 52px; height: 52px; border-radius: 14px;
+  background: linear-gradient(135deg, #2563eb, #4f46e5, #0ea5e9);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 20px; color: white;
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.35);
+  position: relative; overflow: hidden;
+}
+.logo-box::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
+}
 
-            /* ========== FONDOS ESPECIALES ========== */
-            .bg-grid { background-image: linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px); background-size: 40px 40px; }
-            .bg-dots { background-image: radial-gradient(rgba(6, 182, 212, 0.12) 1px, transparent 1px); background-size: 24px 24px; }
-            .bg-noise { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); background-blend-mode: overlay; opacity: 0.03; }
-            .bg-radial-glow { background: radial-gradient(ellipse at top, rgba(6, 182, 212, 0.12), transparent 60%), radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.1), transparent 60%); }
+/* ========== BOTONES REDISEÑADOS ========== */
+.btn {
+  border: 1px solid rgba(96, 165, 250, 0.2);
+  background: rgba(30, 64, 175, 0.08);
+  padding: 0.7rem 1rem; border-radius: 14px;
+  font-weight: 600; font-size: 0.85rem;
+  color: var(--text-soft);
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  cursor: pointer; transition: all 0.25s ease;
+  position: relative; overflow: hidden;
+}
+.btn::before {
+  content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent);
+  transition: left 0.4s ease;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  border-color: rgba(96, 165, 250, 0.5);
+  background: rgba(30, 64, 175, 0.15);
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+  color: white;
+}
+.btn:hover::before { left: 100%; }
+.btn:active { transform: translateY(0); }
 
-            /* ========== MARCOS Y RECORTES ========== */
-            .clip-slant { clip-path: polygon(0 0, 100% 0, 96% 100%, 4% 100%); }
-            .clip-hexagon { clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); }
-            .clip-diamond { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
-            .rounded-ultra { border-radius: 24px; }
-            .rounded-super { border-radius: 32px; }
+.btn.primary {
+  border: none;
+  background: linear-gradient(135deg, #2563eb, #4f46e5);
+  box-shadow: 0 10px 30px rgba(59, 130, 246, 0.25);
+  color: white; font-weight: 700;
+}
+.btn.primary:hover {
+  box-shadow: 0 15px 40px rgba(59, 130, 246, 0.35), 0 0 30px rgba(99, 102, 241, 0.15);
+  transform: translateY(-3px) scale(1.02);
+}
+.btn.danger {
+  border-color: rgba(244, 63, 94, 0.3);
+  background: rgba(244, 63, 94, 0.08);
+  color: #fda4af;
+}
+.btn.danger:hover {
+  border-color: rgba(244, 63, 94, 0.6);
+  background: rgba(244, 63, 94, 0.15);
+  box-shadow: 0 8px 25px rgba(244, 63, 94, 0.15);
+  color: white;
+}
+.btn.sm { padding: 0.45rem 0.75rem; font-size: 0.8rem; border-radius: 10px; }
 
-            /* ========== ESTADOS ========== */
-            .status-online { box-shadow: inset 0 0 0 2px #0f172a, 0 0 0 2px #10b981, 0 0 10px rgba(16, 185, 129, 0.5); }
-            .status-warning { box-shadow: inset 0 0 0 2px #0f172a, 0 0 0 2px #f59e0b, 0 0 10px rgba(245, 158, 11, 0.5); }
-            .status-danger { box-shadow: inset 0 0 0 2px #0f172a, 0 0 0 2px #ef4444, 0 0 10px rgba(239, 68, 68, 0.5); }
+/* ========== ZONA DE CARGA ========== */
+.drop-area {
+  border: 2px dashed rgba(96, 165, 250, 0.3);
+  border-radius: var(--radius-xl);
+  background: linear-gradient(145deg, rgba(30, 64, 175, 0.05), rgba(15, 23, 42, 0.5));
+  padding: 2rem; text-align: center; cursor: pointer;
+  transition: all 0.35s ease;
+  position: relative; overflow: hidden;
+}
+.drop-area::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(circle at center, rgba(59, 130, 246, 0.08), transparent 60%);
+  opacity: 0; transition: opacity 0.3s ease;
+}
+.drop-area:hover, .drop-area.active {
+  border-color: var(--accent-blue);
+  background: linear-gradient(145deg, rgba(30, 64, 175, 0.12), rgba(15, 23, 42, 0.7));
+  transform: translateY(-4px);
+  box-shadow: 0 0 50px rgba(59, 130, 246, 0.12);
+}
+.drop-area:hover::before, .drop-area.active::before { opacity: 1; }
 
-            /* ========== ENTRADAS DE TEXTO ========== */
-            .input-glow { @apply bg-slate-900/60 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none transition-all duration-300 focus:border-vault-neon/80 focus:shadow-[0_0_15px_rgba(0,255,204,0.2)] focus:ring-1 focus:ring-vault-neon/30; }
-            .input-advanced { @apply bg-slate-950/70 border border-slate-800/80 rounded-xl px-4 py-3 text-sm text-slate-100 outline-none transition-all duration-300 focus:border-vault-neon/70 focus:shadow-glow-inner focus:ring-2 focus:ring-cyan-500/20; }
+/* ========== VISOR DE PDF ========== */
+.viewer-box {
+  background: 
+    radial-gradient(circle at 50% 10%, rgba(59, 130, 246, 0.04), transparent 40%),
+    radial-gradient(circle at 20% 90%, rgba(99, 102, 241, 0.04), transparent 40%),
+    #020617;
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(71, 85, 105, 0.3);
+  min-height: 580px;
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.5);
+}
+.page-container {
+  display: flex; justify-content: center; padding: 2rem; min-height: 580px;
+}
+.page-container canvas {
+  max-width: 100%; height: auto !important;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255,255,255,0.05);
+  border-radius: 6px; background: white;
+  transition: transform 0.25s ease;
+}
+.page-container canvas:hover { transform: scale(1.005); }
 
-            /* ========== TARJETA DESTAQUE ========== */
-            .feature-card { @apply glass-card rounded-2xl p-5 hover-lift; }
-            .feature-icon { @apply w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 text-vault-neon; }
+/* ========== MINIATURAS ========== */
+.thumb-card {
+  width: 80px; min-width: 80px; border-radius: 12px; padding: 5px;
+  background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(71, 85, 105, 0.35);
+  cursor: pointer; transition: all 0.25s ease;
+}
+.thumb-card:hover {
+  border-color: var(--accent-blue);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3), 0 0 20px rgba(59, 130, 246, 0.15);
+}
+.thumb-card.active {
+  border-color: var(--accent-blue);
+  background: rgba(30, 64, 175, 0.15);
+  box-shadow: inset 0 0 15px rgba(59, 130, 246, 0.1);
+}
+.thumb-card canvas { width: 70px; height: 90px; object-fit: contain; background: #fff; border-radius: 4px; }
 
-            /* ========== SELECCIÓN ========== */
-            .selection-glow::selection { background: rgba(0, 255, 204, 0.35); color: #fff; }
+/* ========== BARRA DE PROGRESO ========== */
+.progress-bar {
+  height: 5px; background: rgba(15, 23, 42, 0.8); border-radius: 999px; overflow: hidden;
+  box-shadow: inset 0 1px 3px rgba(0,0,0,0.4);
+}
+.progress-bar > span {
+  display: block; height: 100%; width: 0; border-radius: inherit;
+  background: linear-gradient(90deg, #2563eb, #6366f1, #0ea5e9);
+  background-size: 200% 100%; animation: brandFlow 2s linear infinite;
+  transition: width 0.3s ease; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+}
 
-            /* ========== TOOLTIP ========== */
-            .tooltip-wrap { position: relative; }
-            .tooltip-text { visibility: hidden; opacity: 0; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%) translateY(8px); background: rgba(15, 23, 42, 0.95); color: #e2e8f0; padding: 6px 12px; border-radius: 8px; font-size: 11px; white-space: nowrap; border: 1px solid rgba(6, 182, 212, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.3); transition: all 0.25s ease; z-index: 50; }
-            .tooltip-wrap:hover .tooltip-text { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+/* ========== ESTADÍSTICAS ========== */
+.stat-card {
+  position: relative; overflow: hidden;
+  background: linear-gradient(135deg, rgba(30, 64, 175, 0.06), rgba(15, 23, 42, 0.7));
+  border: 1px solid rgba(96, 165, 250, 0.12);
+  border-radius: 16px; padding: 1rem;
+  transition: all 0.3s ease;
+}
+.stat-card:hover {
+  border-color: rgba(96, 165, 250, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.4);
+}
+.stat-card::after {
+  content: ''; position: absolute; width: 100px; height: 100px;
+  right: -30px; top: -40px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(59, 130, 246, 0.06), transparent 60%);
+}
 
-            /* ========== INDICADORES ========== */
-            .led { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-            .led-green { background: #10b981; box-shadow: 0 0 8px #10b981, 0 0 16px rgba(16,185,129,0.4); }
-            .led-cyan { background: #06b6d4; box-shadow: 0 0 8px #06b6d4, 0 0 16px rgba(6,182,212,0.4); }
-            .led-purple { background: #a855f7; box-shadow: 0 0 8px #a855f7, 0 0 16px rgba(168,85,247,0.4); }
-            .led-amber { background: #f59e0b; box-shadow: 0 0 8px #f59e0b, 0 0 16px rgba(245,158,11,0.4); }
-            .led-red { background: #ef4444; box-shadow: 0 0 8px #ef4444, 0 0 16px rgba(239,68,68,0.4); }
+/* ========== MODAL Y PANEL LATERAL ========== */
+.modal-wrap {
+  position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center;
+  padding: 1.5rem; z-index: 80;
+}
+.modal-wrap.show { display: flex; animation: fadeIn 0.25s ease; }
+.modal-content {
+  width: min(640px, 100%); max-height: 85vh; overflow: auto;
+  border-radius: var(--radius-xl); background: linear-gradient(145deg, rgba(30, 41, 59, 0.95), rgba(15, 23, 42, 0.98));
+  border: 1px solid rgba(96, 165, 250, 0.2); box-shadow: 0 30px 90px rgba(0,0,0,0.6);
+  animation: scaleIn 0.35s ease;
+}
+.side-panel {
+  position: fixed; top: 0; right: 0; width: min(400px, 100%); height: 100vh;
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
+  border-left: 1px solid rgba(96, 165, 250, 0.18);
+  transform: translateX(105%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); z-index: 70;
+  box-shadow: -10px 0 40px rgba(0,0,0,0.3);
+}
+.side-panel.open { transform: translateX(0); }
+.side-backdrop {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.5); opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease; z-index: 60;
+}
+.side-backdrop.show { opacity: 1; pointer-events: auto; }
 
-            /* ========== PROGRESOS ========== */
-            .progress-bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, #10b981, #06b6d4, #a855f7); background-size: 200% 100%; animation: gradientMove 2s linear infinite; }
-            .progress-track { background: rgba(30, 41, 59, 0.8); border-radius: 4px; overflow: hidden; }
+/* ========== NOTIFICACIONES ========== */
+.toast-item {
+  animation: slideIn 0.3s cubic-bezier(0.68,-0.55,0.265,1.55);
+}
+.toast-item.out { animation: slideOut 0.25s ease forwards; }
+.toast-success { border-left: 4px solid var(--accent-emerald); background: rgba(6, 78, 59, 0.7); }
+.toast-error { border-left: 4px solid var(--accent-rose); background: rgba(76, 5, 25, 0.7); }
+.toast-info { border-left: 4px solid var(--accent-sky); background: rgba(12, 74, 110, 0.7); }
 
-            /* ========== EFECTOS DE TEXTO ========== */
-            .text-stroke { -webkit-text-stroke: 1px rgba(0,255,204,0.5); color: transparent; }
-            .text-3d { text-shadow: 1px 1px 0 #0e7490, 2px 2px 0 #155e75, 3px 3px 10px rgba(0,0,0,0.4); }
-            .text-retro { letter-spacing: 2px; text-transform: uppercase; }
-            .mono-space { font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
-        }
-    </style>
+/* ========== ANIMACIONES ========== */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.92); } to { opacity: 1; transform: scale(1); } }
+@keyframes slideIn { from { opacity: 0; transform: translateY(-10px) scale(0.97); } to { opacity: 1; transform: none; } }
+@keyframes slideOut { to { opacity: 0; transform: translateY(-10px); } }
+
+/* ========== SCROLL PERSONALIZADO ========== */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.5); border-radius: 4px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #3b82f6, #6366f1); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #60a5fa, #818cf8); }
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 900px) {
+  .desktop-only { display: none !important; }
+  .viewer-box { min-height: 400px; }
+  .page-container { min-height: 400px; padding: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* ========== UTILIDADES ========== */
+.hidden { display: none !important; }
+.kbd-style { font-family: 'Roboto Mono', monospace; font-size: 11px; padding: 3px 7px; border-radius: 6px; background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(71, 85, 105, 0.4); color: #94a3b8; }
+</style>
 </head>
-<body class="h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection-glow overflow-x-hidden font-sans">
+<body>
 
-    <!-- FONDOS ANIMADOS -->
-    <div class="fixed inset-0 pointer-events-none bg-radial-glow opacity-70"></div>
-    <div class="fixed inset-0 pointer-events-none bg-grid opacity-40"></div>
-    <div class="fixed inset-0 pointer-events-none bg-dots opacity-30"></div>
-    <div class="fixed inset-0 pointer-events-none bg-noise"></div>
+<!-- FONDOS ANIMADOS -->
+<div class="bg-layer bg-grad"></div>
+<div class="bg-layer bg-grid"></div>
+<div class="orb-shape orb-1"></div>
+<div class="orb-shape orb-2"></div>
+<div class="orb-shape orb-3"></div>
 
-    <!-- PARTÍCULAS DE FONDO -->
-    <div id="particles" class="fixed inset-0 pointer-events-none z-0"></div>
-
-    <!-- CONTENEDOR DE NOTIFICACIONES -->
-    <div id="toast-container" class="fixed top-20 right-4 z-50 space-y-3 pointer-events-none"></div>
-
-    <!-- BARRA DE ESTADO SUPERIOR INFORMATIVA -->
-    <div class="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-800/70 py-1.5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
-            <div class="flex items-center space-x-4">
-                <span class="flex items-center space-x-1.5">
-                    <span class="led led-green animate-pulse"></span>
-                    <span>Sistema Operativo: <span class="text-vault-neon font-semibold">En Línea</span></span>
-                </span>
-                <span>•</span>
-                <span>Motor PDF: <span class="text-vault-neon font-semibold">PDF.js v3.11</span></span>
-                <span>•</span>
-                <span>Compresión: <span class="text-vault-neon font-semibold">JSZip v3.10</span></span>
-                <span>•</span>
-                <span>Generación: <span class="text-vault-neon font-semibold">jsPDF v2.5</span></span>
-            </div>
-            <div class="flex items-center space-x-4">
-                <span>Almacenamiento: <span id="storage-status" class="text-emerald-400 font-semibold">Local Activo</span></span>
-                <span>•</span>
-                <span>Versión: <span class="text-amber-400 font-bold">5.0.0 ULTIMATE</span></span>
-                <span>•</span>
-                <span id="current-time" class="mono-space text-vault-neon"></span>
-            </div>
-        </div>
+<!-- BARRA DE ESTADO SUPERIOR -->
+<div class="fixed top-0 inset-x-0 z-50 glass-deep border-b border-slate-700/40 py-2 px-4 text-xs">
+  <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2 text-slate-400">
+    <div class="flex items-center gap-4">
+      <span class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        Sistema <b class="text-emerald-300">En Línea</b>
+      </span>
+      <span class="hidden sm:inline">PDF.js · JSZip · jsPDF</span>
     </div>
+    <div class="flex items-center gap-4">
+      <span>Procesamiento Local</span>
+      <span id="clock" class="mono text-sky-300 font-medium"></span>
+    </div>
+  </div>
+</div>
 
-    <!-- BARRA PRINCIPAL DE NAVEGACIÓN -->
-    <header class="sticky top-7 z-40 glass border-b border-slate-800/80 mt-6">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <!-- LOGO -->
-            <div class="flex items-center space-x-4">
-                <div class="rgb-border-strong p-[2px] rounded-2xl shadow-glow-strong animate-pulse-slow">
-                    <div class="w-14 h-14 rounded-[18px] bg-slate-950 flex items-center justify-center">
-                        <span class="text-2xl font-black text-gradient">DV</span>
-                    </div>
-                </div>
-                <div>
-                    <h1 class="text-2xl font-black tracking-tight">
-                        <span class="text-gradient-cyber">DOCVAULT</span>
-                        <span class="ml-2 px-3 py-0.5 rounded-full bg-gradient-to-r from-vault-500/20 to-purple-500/20 border border-vault-neon/30 text-xs font-bold text-vault-neon mono-space">PRO MAX 5.0</span>
-                    </h1>
-                    <p class="text-xs text-slate-400 mt-0.5">Editor, Visor, Convertidor y Gestor Avanzado de Documentos PDF</p>
-                </div>
-            </div>
+<!-- CABECERA PRINCIPAL -->
+<header class="fixed top-10 inset-x-0 z-40 glass-deep border-b border-slate-700/40">
+  <div class="max-w-7xl mx-auto px-4 lg:px-6 h-20 flex items-center justify-between gap-4">
+    <div class="flex items-center gap-4 min-w-0">
+      <div class="logo-box">DV</div>
+      <div class="min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <h1 class="heading-lg">DOC<span class="text-brand">VAULT</span></h1>
+          <span class="px-3 py-1 rounded-full border border-amber-400/20 bg-amber-500/5 text-amber-300 text-xs font-semibold mono">EDICIÓN NOVA</span>
+        </div>
+        <p class="text-sm text-slate-400 mt-0.5">Visor y Gestor Profesional de Documentos PDF</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-2">
+      <button class="btn sm desktop-only" onclick="openHistory()"><i class="fa-solid fa-clock-rotate-left"></i> Historial <span id="historyCount" class="text-sky-300 font-bold">0</span></button>
+      <button class="btn sm desktop-only" onclick="openHelp()"><i class="fa-solid fa-circle-question"></i> Ayuda</button>
+      <button class="btn primary sm" onclick="document.getElementById('fileInput').click()"><i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Abrir PDF</span></button>
+    </div>
+  </div>
+</header>
 
-            <!-- ACCIONES IZQUIERDA -->
-            <div class="hidden lg:flex items-center space-x-2">
-                <button onclick="toggleHistoryPanel()" class="tooltip-wrap flex items-center space-x-2 px-3 py-2 rounded-xl bg-slate-900/70 border border-slate-800/80 hover:border-vault-neon/50 hover:bg-slate-800/60 transition-all text-xs text-slate-300">
-                    <i class="fa-solid fa-clock-rotate-left text-vault-neon"></i>
-                    <span>Historial</span>
-                    <span id="history-count" class="px-2 py-0.5 rounded-full bg-vault-neon/15 text-vault-neon text-[10px] font-bold mono-space">0</span>
-                    <span class="tooltip-text">Ver documentos anteriores</span>
-                </button>
-                <button onclick="showHelpPanel()" class="tooltip-wrap flex items-center space-x-2 px-3 py-2 rounded-xl bg-slate-900/70 border border-slate-800/80 hover:border-vault-neon/50 hover:bg-slate-800/60 transition-all text-xs text-slate-300">
-                    <i class="fa-solid fa-circle-question text-vault-purple"></i>
-                    <span>Ayuda</span>
-                    <span class="tooltip-text">Guía y atajos de teclado</span>
-                </button>
-                <button onclick="showSettingsPanel()" class="tooltip-wrap flex items-center space-x-2 px-3 py-2 rounded-xl bg-slate-900/70 border border-slate-800/80 hover:border-vault-neon/50 hover:bg-slate-800/60 transition-all text-xs text-slate-300">
-                    <i class="fa-solid fa-sliders text-vault-gold"></i>
-                    <span>Ajustes</span>
-                    <span class="tooltip-text">Configuración visual y comportamiento</span>
-                </button>
-            </div>
+<!-- CONTENIDO PRINCIPAL -->
+<main class="max-w-7xl mx-auto px-4 lg:px-6 pt-[140px] pb-10">
 
-            <!-- CONTADOR Y ESTADO -->
-            <div class="hidden md:flex items-center space-x-3 bg-slate-900/80 px-4 py-2 rounded-2xl border border-slate-800/80 shadow-inner-glow">
-                <span class="relative flex h-3 w-3">
-                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-vault-neon opacity-75"></span>
-                    <span class="relative inline-flex rounded-full h-3 w-3 bg-vault-neon"></span>
-                </span>
-                <div class="text-center">
-                    <p class="text-[10px] text-slate-400 uppercase tracking-wider">Auto-guardado</p>
-                    <p class="mono-space text-sm font-bold text-vault-neon" id="header-timer">24:00:00</p>
-                </div>
-                <button onclick="extend24H()" class="px-2 py-1 rounded-lg bg-slate-800/60 border border-slate-700/80 hover:border-vault-neon/50 hover:bg-slate-700/60 text-xs transition-all" title="Extender 24 horas más">
-                    <i class="fa-solid fa-clock-rotate-left"></i> +24h
-                </button>
-            </div>
+  <!-- TARJETAS DE ESTADO -->
+  <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="stat-card">
+      <p class="small-label">Documento</p>
+      <p id="statName" class="mt-2 text-lg font-bold truncate">Sin documento</p>
+      <p id="statType" class="text-xs text-slate-400 mt-1">Esperando archivo PDF</p>
+    </div>
+    <div class="stat-card">
+      <p class="small-label">Páginas</p>
+      <p id="statPages" class="mt-2 text-2xl font-bold text-brand">0</p>
+      <p class="text-xs text-slate-400 mt-1">Total del documento</p>
+    </div>
+    <div class="stat-card">
+      <p class="small-label">Página Activa</p>
+      <p id="statCurrent" class="mt-2 text-2xl font-bold">—</p>
+      <p class="text-xs text-slate-400 mt-1">Vista actual</p>
+    </div>
+    <div class="stat-card">
+      <p class="small-label">Estado</p>
+      <p id="statStatus" class="mt-2 font-bold text-emerald-300">Listo</p>
+      <p id="statMessage" class="text-xs text-slate-400 mt-1">Carga un PDF para empezar</p>
+    </div>
+  </section>
 
-            <!-- BOTONES DERECHA -->
-            <div class="flex items-center space-x-2">
-                <button id="btn-export-pdf" onclick="exportModifiedPDF()" class="hidden btn-primary tooltip-wrap">
-                    <i class="fa-solid fa-file-export mr-1.5"></i>
-                    <span class="hidden sm:inline">Exportar PDF</span>
-                    <span class="tooltip-text">Generar y descargar PDF modificado</span>
-                </button>
-                <button id="btn-export-images" onclick="exportAllImages()" class="hidden btn-secondary tooltip-wrap">
-                    <i class="fa-solid fa-images mr-1.5"></i>
-                    <span class="hidden sm:inline">Imágenes</span>
-                    <span class="tooltip-text">Descargar todas las páginas en ZIP</span>
-                </button>
-                <button id="btn-purge" onclick="confirmPurge()" class="hidden btn-danger tooltip-wrap">
-                    <i class
+  <!-- SECCIÓN PRINCIPAL: BIBLIOTECA · VISOR · HERRAMIENTAS -->
+  <section class="grid xl:grid-cols-[300px_minmax(0,1fr)_300px] gap-4">
+
+    <!-- PANEL IZQUIERDO: BIBLIOTECA -->
+    <aside class="glass-panel p-5 h-fit xl:sticky xl:top-[150px]">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <p class="small-label">Biblioteca</p>
+          <h3 class="font-bold mt-1">Tus Documentos</h3>
+        </div>
+        <button class="btn sm !p-2" title="Limpiar historial" onclick="clearHistory()">
+          <i class="fa-solid fa-trash-can text-slate-400"></i>
+        </button>
+      </div>
+
+      <label class="drop-area" id="dropZone" for="fileInput">
+        <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/20 flex items-center justify-center text-2xl text-sky-400 mb-3">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+        </div>
+        <b class="text-base">Importar Documento</b>
+        <p class="text-sm text-slate-400 mt-1">Arrastra tu PDF o haz clic aquí</p>
+        <span class="btn primary mt-4 !text-sm">Seleccionar Archivo PDF</span>
+      </label>
+      <input id="fileInput" type="file" accept="application/pdf,.pdf">
+
+      <div class="progress-bar mt-4"><span id="loadProgress"></span></div>
+      <div id="library" class="mt-5 space-y-2 max-h-[420px] overflow-auto pr-1"></div>
+    </aside>
+
+    <!-- PANEL CENTRAL: VISOR PDF -->
+    <section class="glass-panel p-0 overflow-hidden">
+      <!-- BARRA DE CONTROLES DEL VISOR -->
+      <div class="p-4 border-b border-slate-700/40 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-2">
+          <button class="btn sm" onclick="prevPage()" title="Página Anterior"><i class="fa-solid fa-chevron-left"></i></button>
+          <div class="mono text-sm px-4 py-2 rounded-xl bg-slate-900/60 border border-slate-700/50">
+            <span id="pageCurrent">0</span> / <span id="pageTotal">0</span>
+          </div>
+          <button class="btn sm" onclick="nextPage()" title="Página Siguiente"><i class="fa-solid fa-chevron-right"></i></button>
+          <span class="hidden sm:inline text-xs text-slate-400 ml-2">Zoom</span>
+          <button class="btn sm" onclick="zoom(-0.1)">−</button>
+          <span id="zoomValue" class="mono text-sm text-sky-300 w-14 text-center">100%</span>
+          <button class="btn sm" onclick="zoom(0.1)">+</button>
+        </div>
+        <div class="flex gap-2">
+          <button class="btn sm desktop-only" onclick="downloadOriginal()"><i class="fa-solid fa-download"></i> Original</button>
+          <button class="btn primary sm" onclick="exportImages()"><i class="fa-solid fa-file-zipper"></i> <span class="hidden sm:inline">Exportar Imágenes</span></button>
+        </div>
+      </div>
+
+      <!-- ÁREA DE VISUALIZACIÓN -->
+      <div id="viewer" class="viewer-box">
+        <div id="emptyViewer" class="flex flex-col items-center justify-center text-center p-8 min-h-[560px]">
+          <div class="w-24 h-24 rounded-3xl bg-gradient-to-br from-sky-500/10 to-indigo-500/10 border border-sky-400/15 flex items-center justify-center text-4xl text-sky-400 mb-5">
+            <i class="fa-regular fa-file-pdf"></i>
+          </div>
+          <h2 class="heading-lg text-brand mb-3">Tu Espacio de Trabajo</h2>
+          <p class="text-slate-400 max-w-md mb-6">Carga un documento PDF y disfruta de una vista limpia, rápida y profesional.</p>
+          <button class="btn primary" onclick="document.getElementById('fileInput').click()">
+            <i class="fa-solid fa-folder-open"></i> Abrir Primer Documento
+          </button>
+          <p class="text-xs text-slate-500 mt-6">Atajos: <span class="kbd-style">←</span> <span class="kbd-style">→</span> Navegar · <span class="kbd-style">+</span> <span class="kbd-style">−</span> Zoom</p>
+        </div>
+        <div id="pageWrap" class="page-container hidden">
+          <canvas id="pdfCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- MINIATURAS -->
+      <div class="p-4 border-t border-slate-700/40 bg-slate-900/30">
+        <div id="thumbnails" class="flex gap-2 overflow-x-auto pb-1"></div>
+      </div>
+    </section>
+
+    <!-- PANEL DERECHO: HERRAMIENTAS E INFO -->
+    <aside class="space-y-4">
+      <div class="glass-panel p-4">
+        <p class="small-label">Herramientas</p>
+        <div class="grid grid-cols-2 gap-2 mt-3">
+          <button class="btn" onclick="fitWidth()"><i class="fa-solid fa-arrows-left-right"></i> Ajustar</button>
+          <button class="btn" onclick="zoom(0.2)"><i class="fa-solid fa-magnifying-glass-plus"></i> Acercar</button>
+          <button class="btn" onclick="zoom(-0.2)"><i class="fa-solid fa-magnifying-glass-minus"></i> Alejar</button>
+          <button class="btn" onclick="resetZoom()"><i class="fa-solid fa-expand"></i> 100%</button>
+        </div>
+      </div>
+
+      <div class="glass-panel p-4">
+        <p class="small-label">Acciones Rápidas</p>
+        <div class="space-y-2 mt-3">
+          <button class="btn w-full justify-between" onclick="downloadOriginal()">
+            <span><i class="fa-solid fa-file-arrow-down mr-2 text-sky-400"></i> Descargar Original</span>
+            <i class="fa-solid fa-chevron-right text-slate-500"></i>
+          </button>
+          <button class="btn w-full justify-between" onclick="exportImages()">
+            <span><i class="fa-solid fa-images mr-2 text-indigo-400"></i> Exportar Imágenes</span>
+            <i class="fa-solid fa-chevron-right text-slate-500"></i>
+          </button>
+          <button class="btn danger w-full justify-between" onclick="removeCurrent()">
+            <span><i class="fa-solid fa-trash mr-2 text-rose-300"></i> Quitar Documento</span>
+            <i class="fa-solid fa-chevron-right text-slate-500"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="glass-panel p-4">
+        <p class="small-label">Información del Archivo</p>
+        <dl class="mt-3 space-y-3 text-sm">
+          <div class="flex justify-between gap-3">
+            <dt class="text-slate-400">Nombre</dt>
+            <dd id="infoName" class="font-semibold text-right truncate">—</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-slate-400">Tamaño</dt>
+            <dd id="infoSize">—</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-slate-400">Páginas</dt>
+            <dd id="infoPages">—</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-slate-400">Procesamiento</dt>
+            <dd class="text-emerald-300">Local · Seguro</dd>
+          </div>
+        </dl>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<!-- CONTENEDOR DE NOTIFICACIONES -->
+<div id="toast" class="fixed top-24 right-4 z-[100] space-y-2 w-[min(360px,calc(100vw-2rem))]"></div>
+
+<!-- MODAL -->
+<div id="modal" class="modal-wrap">
+  <div class="modal-content p-6" id="modalContent"></div>
+</div>
+
+<!-- PANEL LATERAL DESLIZANTE -->
+<div id="sideBack" class="side-backdrop" onclick="closeSide()"></div>
+<aside id="side" class="side-panel p-6 overflow-auto">
+  <div class="flex items-center justify-between mb-6">
+    <h2 id="sideTitle" class="heading-md">Panel</h2>
+    <button class="btn sm !p-2" onclick="closeSide()"><i class="fa-solid fa-xmark"></i></button>
+  </div>
+  <div id="sideContent"></div>
+</aside>
+
+<!-- ================================================== -->
+<!-- TODAS LAS FUNCIONES IGUALES → TODO SIGUE FUNCIONANDO -->
+<!-- ================================================== -->
+<script>
+// CONFIGURACIÓN PDF.JS
+if (typeof pdfjsLib !== 'undefined') {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+
+// VARIABLES GLOBALES
+let pdfDoc = null;
+let currentPage = 1;
+let totalPages = 0;
+let scale = 1.5;
+let baseScale = 1.5;
+let fileOriginal = null;
+let fileName = '';
+let fileSize = '';
+let history = JSON.parse(localStorage.getItem('dv_history') || '[]');
+const STORAGE_KEY = 'dv_history';
+
+// ELEMENTOS
+const canvas = document.getElementById('pdfCanvas');
+const ctx = canvas.getContext('2d');
+const fileInput = document.getElementById('fileInput');
+const dropZone = document.getElementById('dropZone');
+const emptyViewer = document.getElementById('emptyViewer');
+const pageWrap = document.getElementById('pageWrap');
+const thumbnails = document.getElementById('thumbnails');
+
+// RELOJ
+function updateClock() {
+  const d = new Date();
+  document.getElementById('clock').textContent = d.toLocaleTimeString('es-GT', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// INICIO
+document.addEventListener('DOMContentLoaded', () => {
+  renderLibrary();
+  updateHistoryCount();
+  
+  // EVENTOS DE ARRASTRE
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('active'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('active');
+    if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
+  
+  // TECLADO
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft') prevPage();
+    if (e.key === 'ArrowRight') nextPage();
+    if (e.key === '+' || e.key === '=') zoom(0.1);
+    if (e.key === '-') zoom(-0.1);
+  });
+});
+
+// CARGAR ARCHIVO
+async function loadFile(file) {
+  try {
+    fileOriginal = file;
+    fileName = file.name;
+    fileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB';
+    
+    updateStat('name', fileName);
+    updateStat('status', 'Cargando...', 'text-amber-400');
+    updateStat('message', 'Leyendo documento...');
+    
+    const arrayBuffer = await file.arrayBuffer();
+    pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    totalPages = pdfDoc.numPages;
+    currentPage = 1;
+    
+    document.getElementById('pageTotal').textContent = totalPages;
+    document.getElementById('statPages').textContent = totalPages;
+    document.getElementById('infoName').textContent = fileName;
+    document.getElementById('infoSize').textContent = fileSize;
+    document.getElementById('infoPages').textContent = totalPages;
+    
+    // Generar miniaturas
+    thumbnails.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+      const page = await pdfDoc.getPage(i);
+      const viewport = page.getViewport({ scale: 0.25 });
+      const tCanvas = document.createElement('canvas');
+      tCanvas.width = viewport.width;
+      tCanvas.height = viewport.height;
+      await page.render({ canvasContext: tCanvas.getContext('2d'), viewport }).promise;
+      
+      const div = document.createElement('div');
+      div.className = 'thumb-card' + (i === 1 ? ' active' : '');
+      div.dataset.page = i;
+      div.onclick = () => { goToPage(parseInt(div.dataset.page)); };
+      div.appendChild(tCanvas);
+      thumbnails.appendChild(div);
+    }
+    
+    addToHistory({ name: fileName, size: fileSize, pages: totalPages, time: new Date().toLocaleString('es-GT') });
+    
+    await renderPage(currentPage);
+    
+    emptyViewer.classList.add('hidden');
+    pageWrap.classList.remove('hidden');
+    updateStat('status', '¡Listo!', 'text-emerald-300');
+    updateStat('message', 'Documento cargado correctamente');
+    showToast('PDF cargado: ' + fileName, 'success');
+    
+  } catch (err) {
+    console.error(err);
+    showToast('Error: ' + err.message, 'error');
+    updateStat('status', 'Error', 'text-rose-300');
+  }
+}
+
+// RENDERIZAR PÁGINA
+async function renderPage(num) {
+  if (!pdfDoc) return;
+  currentPage = num;
+  document.getElementById('pageCurrent').textContent = num;
+  document.getElementById('statCurrent').textContent = num + '/' + totalPages;
+  
+  const page = await pdfDoc.getPage(num);
+  const viewport = page.getViewport({ scale: baseScale * scale });
+  canvas.width = viewport.width;
+  canvas.height = viewport.height;
+  
+  await page.render({ canvasContext: ctx, viewport }).promise;
+  
+  // Resaltar miniatura activa
+  document.querySelectorAll('.thumb-card').forEach((t, i) => {
+    t.classList.toggle('active', i + 1 === num);
+  });
+}
+
+// NAVEGACIÓN
+function prevPage() { if (currentPage > 1) goToPage(currentPage - 1); }
+function nextPage() { if (currentPage < totalPages) goToPage(currentPage + 1); }
+function goToPage(num) { if (num >= 1 && num <= totalPages) renderPage(num); }
+
+// ZOOM
+function zoom(delta) {
+  scale = Math.max(0.5, Math.min(3, scale + delta));
+  document.getElementById('zoomValue').textContent = Math.round(scale * 100) + '%';
+  renderPage(currentPage);
+}
+function resetZoom() { scale = 1; document.getElementById('zoomValue').textContent = '100%'; renderPage(currentPage); }
+function fitWidth() { scale = 1; baseScale = 1.3; resetZoom(); }
+
+// DESCARGA ORIGINAL
+function downloadOriginal() {
+  if (!fileOriginal) return showToast('Carga un PDF primero', 'info');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(fileOriginal);
+  a.download = fileName;
+  a.click();
+  showToast('Descargando: ' + fileName, 'success');
+}
+
+// EXPORTAR IMÁGENES EN ZIP
+async function exportImages() {
+  if (!pdfDoc) return showToast('Carga un PDF primero', 'info');
+  showToast('Generando archivo ZIP...', 'info');
+  
+  const zip = new JSZip();
+  for (let i = 1; i <= totalPages; i++) {
+    const page = await pdfDoc.getPage(i);
+    const viewport = page.getViewport({ scale: 2 });
+    const c = document.createElement('canvas');
+    c.width = viewport.width;
+    c.height = viewport.height;
+    await page.render({ canvasContext: c.getContext('2d'), viewport }).promise;
+    const base64 = c.toDataURL('image/png').slice(22);
+    zip.file(`pagina_${String(i).padStart(2,'0')}.png`, base64, { base64: true });
+  }
+  
+  const blob = await zip.generateAsync({ type: 'blob' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fileName.replace('.pdf', '') + '_imagenes.zip';
+  a.click();
+  showToast('¡ZIP generado con éxito!', 'success');
+}
+
+// QUITAR DOCUMENTO
+function removeCurrent() {
+  if (!pdfDoc) return;
+  if (!confirm('¿Quitar documento de la vista?')) return;
+  pdfDoc = null;
+  currentPage = 1;
+  totalPages = 0;
+  fileOriginal = null;
+  fileName = '';
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  emptyViewer.classList.remove('hidden');
+  pageWrap.classList.add('hidden');
+  document.getElementById('pageCurrent').textContent = '0';
+  document.getElementById('pageTotal').textContent = '0';
+  document.getElementById('statPages').textContent = '0
