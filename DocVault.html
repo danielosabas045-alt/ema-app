@@ -14,7 +14,7 @@
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
     <script>
@@ -23,15 +23,15 @@
                 extend: {
                     colors: {
                         eg: {
-                            black: '#050505',
-                            dark: '#121212',
-                            card: '#1a1a1a',
-                            border: '#2d2d2d',
-                            gold: '#d4af37',
-                            goldLight: '#f0d760',
-                            goldDark: '#b8860b',
-                            bronze: '#cd7f32',
-                            amber: '#ffb300'
+                            black: '#020202',
+                            dark: '#0f0f0f',
+                            card: '#1a1508',
+                            border: '#3d2f0f',
+                            gold: '#FFD700',
+                            goldLight: '#FFE55C',
+                            goldDark: '#B8860B',
+                            bronze: '#CD7F32',
+                            amber: '#FFB300'
                         }
                     },
                     fontFamily: {
@@ -39,8 +39,12 @@
                         sans: ['Inter', 'sans-serif']
                     },
                     boxShadow: {
-                        'gold': '0 0 20px rgba(212, 175, 55, 0.25), 0 0 40px rgba(212, 175, 55, 0.1)',
-                        'gold-strong': '0 0 30px rgba(212, 175, 55, 0.4), 0 0 60px rgba(212, 175, 55, 0.15)'
+                        'gold': '0 0 30px rgba(255, 215, 0, 0.35), 0 0 60px rgba(255, 215, 0, 0.15)',
+                        'gold-strong': '0 0 50px rgba(255, 215, 0, 0.5), 0 0 100px rgba(255, 215, 0, 0.2)'
+                    },
+                    fontSize: {
+                        'xxl': '1.75rem',
+                        'xxxl': '2.5rem'
                     }
                 }
             }
@@ -49,58 +53,70 @@
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background-color: #050505; font-family: 'Inter', sans-serif; }
+        body { background-color: #020202; font-family: 'Inter', sans-serif; color: #fff; }
 
         .egyptian-border {
-            border: 1px solid rgba(212, 175, 55, 0.35);
-            background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(18, 18, 18, 0.98));
-            backdrop-filter: blur(12px);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            background: linear-gradient(145deg, rgba(26, 21, 8, 0.96), rgba(15, 15, 15, 0.98));
+            backdrop-filter: blur(16px);
+            border-radius: 16px;
         }
         .egyptian-border:hover {
-            border-color: rgba(212, 175, 55, 0.6);
-            box-shadow: 0 0 18px rgba(212, 175, 55, 0.12);
+            border-color: rgba(255, 215, 0, 0.8);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.18);
         }
         .gold-gradient {
-            background: linear-gradient(135deg, #d4af37, #f0d760, #d4af37, #b8860b);
-            background-size: 200% auto;
-            animation: goldShine 4s ease-in-out infinite;
+            background: linear-gradient(90deg, #B8860B, #FFD700, #FFE55C, #FFD700, #B8860B);
+            background-size: 300% auto;
+            animation: goldShine 3s ease-in-out infinite;
         }
         .gold-text {
-            background: linear-gradient(90deg, #b8860b, #d4af37, #f0d760, #d4af37, #b8860b);
-            background-size: 200% auto;
+            background: linear-gradient(90deg, #B8860B, #FFD700, #FFE55C, #FFD700, #B8860B);
+            background-size: 300% auto;
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            animation: goldShine 5s ease infinite;
+            animation: goldShine 4s ease infinite;
+            font-weight: 800;
+            letter-spacing: 2px;
         }
         .btn-gold {
-            background: linear-gradient(135deg, #b8860b, #d4af37, #b8860b);
-            background-size: 200% auto;
+            background: linear-gradient(90deg, #B8860B, #FFD700, #FFE55C, #FFD700, #B8860B);
+            background-size: 300% auto;
             transition: all 0.3s ease;
+            border-radius: 12px;
+            font-weight: 700;
+            color: #000;
         }
         .btn-gold:hover {
             background-position: 100% center;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 10px 35px rgba(255, 215, 0, 0.4);
         }
         .btn-outline-gold {
-            border: 1px solid rgba(212, 175, 55, 0.5);
+            border: 2px solid rgba(255, 215, 0, 0.5);
             transition: all 0.25s ease;
+            border-radius: 10px;
+            font-weight: 600;
+            color: #FFD700;
         }
         .btn-outline-gold:hover {
-            background: rgba(212, 175, 55, 0.12);
-            border-color: #d4af37;
+            background: rgba(255, 215, 0, 0.12);
+            border-color: #FFD700;
+            transform: translateY(-2px);
         }
         .drop-zone {
-            border: 2px dashed rgba(212, 175, 55, 0.35);
+            border: 3px dashed rgba(255, 215, 0, 0.4);
             transition: all 0.3s ease;
+            border-radius: 16px;
         }
         .drop-zone.active, .drop-zone:hover {
-            border-color: #d4af37;
-            background: rgba(212, 175, 55, 0.06);
+            border-color: #FFD700;
+            background: rgba(255, 215, 0, 0.08);
         }
-        .scrollbar-gold::-webkit-scrollbar { width: 6px; height: 6px; }
-        .scrollbar-gold::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #b8860b, #d4af37); border-radius: 3px; }
+        .scrollbar-gold::-webkit-scrollbar { width: 10px; height: 10px; }
+        .scrollbar-gold::-webkit-scrollbar-track { background: #1a1508; border-radius: 5px; }
+        .scrollbar-gold::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #B8860B, #FFD700); border-radius: 5px; }
         @keyframes goldShine {
             0% { background-position: 0% center; }
             50% { background-position: 100% center; }
@@ -108,221 +124,220 @@
         }
         @keyframes float {
             0%,100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
+            50% { transform: translateY(-8px); }
         }
         .toast { animation: slideIn 0.3s ease forwards; }
         @keyframes slideIn {
-            from { opacity:0; transform: translateY(-10px); }
+            from { opacity:0; transform: translateY(-15px); }
             to { opacity:1; transform: translateY(0); }
         }
-        canvas { max-width: 100%; height: auto; }
-        #imgElement { transition: transform 0.2s ease; transform-origin: center top; }
-        #overlay { transition: opacity 0.3s ease; opacity: 0; }
-        #overlay.hidden { opacity: 0; pointer-events: none; }
-        #sidePanel { transition: transform 0.3s ease; transform: translateX(100%); }
-        #sidePanel.active { transform: translateX(0); }
-        .page-thumb { transition: all 0.2s ease; }
-        .page-thumb:hover { border-color: #d4af37 !important; }
-        .page-thumb.active { border-color: #d4af37 !important; box-shadow: 0 0 0 2px rgba(212,175,55,0.4); }
+        canvas { max-width: 100%; height: auto; border-radius: 12px; }
+        #imgElement { transition: transform 0.2s ease; transform-origin: center center; border-radius: 12px; }
+        .page-thumb { transition: all 0.2s ease; border-radius: 8px; overflow: hidden; }
+        .page-thumb:hover { border-color: #FFD700 !important; transform: scale(1.05); }
+        .page-thumb.active { border-color: #FFD700 !important; box-shadow: 0 0 0 3px rgba(255,215,0,0.5); }
+        .stat-card { transition: all 0.3s ease; }
+        .stat-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(255,215,0,0.1); }
     </style>
 </head>
-<body class="bg-eg-black text-gray-100 min-h-screen">
+<body class="bg-eg-black min-h-screen">
 
     <!-- Fondo decorativo -->
     <div class="fixed inset-0 -z-10 overflow-hidden">
-        <div class="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-eg-gold/5 blur-3xl"></div>
-        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] rounded-full bg-eg-bronze/5 blur-3xl"></div>
-        <div class="absolute inset-0 opacity-5" style="background-image: linear-gradient(rgba(212,175,55,0.08) 1px, transparent 1px), linear-gradient(90deg, rgba(212,175,55,0.08) 1px, transparent 1px); background-size: 40px 40px;"></div>
+        <div class="absolute top-0 right-0 w-[800px] h-[800px] rounded-full bg-eg-gold/8 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-[700px] h-[700px] rounded-full bg-eg-bronze/8 blur-3xl"></div>
+        <div class="absolute inset-0 opacity-6" style="background-image: linear-gradient(rgba(255,215,0,0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,215,0,0.1) 1px, transparent 1px); background-size: 50px 50px;"></div>
     </div>
 
     <!-- Barra Superior -->
-    <header class="sticky top-0 z-50 egyptian-border border-b px-4 py-3">
-        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-xl gold-gradient flex items-center justify-center font-display font-extrabold text-eg-black text-xl shadow-gold">DV</div>
+    <header class="sticky top-0 z-50 egyptian-border border-b-2 px-6 py-5 mb-6">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="w-16 h-16 rounded-2xl gold-gradient flex items-center justify-center font-display font-black text-eg-black text-2xl shadow-gold">DV</div>
                 <div>
-                    <h1 class="text-2xl font-display font-bold gold-text">DOCVAULT</h1>
-                    <p class="text-sm text-gray-400">Almacén y Visor Universal de Archivos · Estilo Egipcio</p>
+                    <h1 class="text-xxxl font-display font-black gold-text tracking-wider">DOCVAULT</h1>
+                    <p class="text-lg text-gray-400">Almacén y Visor Universal de Archivos · Estilo Egipcio</p>
                 </div>
             </div>
-            <div class="flex flex-wrap gap-2">
-                <button onclick="openHistory()" class="btn-outline-gold px-3 py-2 rounded-lg text-sm flex items-center gap-2 text-eg-gold">
-                    <i class="fa-solid fa-clock-rotate-left"></i> Historial
+            <div class="flex flex-wrap gap-3">
+                <button onclick="openHistory()" class="btn-outline-gold px-4 py-3 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left fa-lg"></i> Historial
                 </button>
-                <button onclick="openActivity()" class="btn-outline-gold px-3 py-2 rounded-lg text-sm flex items-center gap-2 text-eg-gold">
-                    <i class="fa-solid fa-chart-line"></i> Actividad
+                <button onclick="openActivity()" class="btn-outline-gold px-4 py-3 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line fa-lg"></i> Actividad
                 </button>
-                <button onclick="openUserPanel()" class="btn-outline-gold px-3 py-2 rounded-lg text-sm flex items-center gap-2 text-eg-gold">
-                    <i class="fa-solid fa-user"></i> Usuario
+                <button onclick="openUserPanel()" class="btn-outline-gold px-4 py-3 text-base flex items-center gap-2">
+                    <i class="fa-solid fa-user fa-lg"></i> Usuario
                 </button>
-                <button onclick="document.getElementById('fileInput').click()" class="btn-gold px-4 py-2 rounded-lg text-sm font-bold text-eg-black">
-                    <i class="fa-solid fa-upload mr-1"></i> Cargar Archivo
+                <button onclick="document.getElementById('fileInput').click()" class="btn-gold px-6 py-3 text-lg">
+                    <i class="fa-solid fa-upload mr-2"></i> Cargar Archivo
                 </button>
             </div>
         </div>
     </header>
 
     <!-- Contenido Principal -->
-    <main class="max-w-7xl mx-auto px-4 py-6">
+    <main class="max-w-7xl mx-auto px-6 pb-12">
 
         <!-- Tarjetas de Estado -->
-        <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div class="egyptian-border rounded-xl p-4">
-                <p class="text-xs uppercase tracking-wider text-gray-400">Archivo</p>
-                <p id="docName" class="mt-2 font-bold truncate">Sin archivo</p>
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div class="egyptian-border stat-card p-6">
+                <p class="text-base uppercase tracking-widest text-gray-400 font-semibold">Archivo</p>
+                <p id="docName" class="mt-3 text-xl font-bold truncate">Sin archivo</p>
             </div>
-            <div class="egyptian-border rounded-xl p-4">
-                <p class="text-xs uppercase tracking-wider text-gray-400">Tipo</p>
-                <p id="docType" class="mt-2 font-bold text-eg-gold">—</p>
+            <div class="egyptian-border stat-card p-6">
+                <p class="text-base uppercase tracking-widest text-gray-400 font-semibold">Tipo</p>
+                <p id="docType" class="mt-3 text-xl font-bold text-eg-gold">—</p>
             </div>
-            <div class="egyptian-border rounded-xl p-4">
-                <p class="text-xs uppercase tracking-wider text-gray-400">Páginas / Info</p>
-                <p id="docPages" class="mt-2 font-bold">—</p>
+            <div class="egyptian-border stat-card p-6">
+                <p class="text-base uppercase tracking-widest text-gray-400 font-semibold">Páginas / Info</p>
+                <p id="docPages" class="mt-3 text-xl font-bold">—</p>
             </div>
-            <div class="egyptian-border rounded-xl p-4">
-                <p class="text-xs uppercase tracking-wider text-gray-400">Estado</p>
-                <p id="docStatus" class="mt-2 font-bold text-eg-gold">Listo</p>
+            <div class="egyptian-border stat-card p-6">
+                <p class="text-base uppercase tracking-widest text-gray-400 font-semibold">Estado</p>
+                <p id="docStatus" class="mt-3 text-xl font-bold text-eg-gold">Listo</p>
             </div>
         </section>
 
         <!-- Sección Principal -->
-        <section class="grid lg:grid-cols-[320px_minmax(0,1fr)_300px] gap-4">
+        <section class="grid lg:grid-cols-[360px_minmax(0,1fr)_340px] gap-6">
 
             <!-- Panel Izquierdo: Carga e Historial -->
-            <aside class="egyptian-border rounded-xl p-4 h-fit">
-                <h3 class="font-display font-bold text-lg mb-3 gold-text">Cargar Archivos</h3>
+            <aside class="egyptian-border p-6 h-fit">
+                <h3 class="font-display font-bold text-2xl mb-5 gold-text">Cargar Archivos</h3>
 
-                <label for="fileInput" class="drop-zone rounded-xl p-5 text-center cursor-pointer block mb-4">
-                    <i class="fa-solid fa-cloud-upload-alt text-4xl text-eg-gold mb-3"></i>
-                    <p class="font-semibold">Arrastra o haz clic aquí</p>
-                    <p class="text-sm text-gray-400 mt-1">PDF · Imágenes (JPG, PNG, GIF, BMP, WebP) · Documentos · Todo tipo de archivos</p>
+                <label for="fileInput" class="drop-zone p-8 text-center cursor-pointer block mb-6">
+                    <i class="fa-solid fa-cloud-upload-alt text-6xl text-eg-gold mb-4"></i>
+                    <p class="text-xl font-semibold mb-2">Arrastra o haz clic aquí</p>
+                    <p class="text-base text-gray-400">PDF · Imágenes · Documentos · Comprimidos</p>
                 </label>
                 <input type="file" id="fileInput" class="hidden" accept=".pdf,.jpg,.jpeg,.png,.gif,.bmp,.webp,.txt,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar">
 
-                <div class="h-2 bg-eg-dark rounded-full overflow-hidden mb-4">
+                <div class="h-3 bg-eg-dark rounded-full overflow-hidden mb-6 border border-eg-border">
                     <div id="progressBar" class="h-full w-0 gold-gradient transition-all duration-300"></div>
                 </div>
 
-                <h4 class="font-semibold text-sm text-eg-gold mb-2">Archivos Recientes</h4>
-                <div id="recentList" class="space-y-2 max-h-[400px] overflow-y-auto scrollbar-gold pr-1">
-                    <p class="text-sm text-gray-500 text-center py-4">Sin archivos recientes</p>
+                <h4 class="text-lg font-semibold text-eg-gold mb-3">Archivos Recientes</h4>
+                <div id="recentList" class="space-y-3 max-h-[450px] overflow-y-auto scrollbar-gold pr-2">
+                    <p class="text-base text-gray-500 text-center py-6">Sin archivos recientes</p>
                 </div>
             </aside>
 
             <!-- Panel Central: Visor -->
-            <section class="egyptian-border rounded-xl overflow-hidden flex flex-col">
+            <section class="egyptian-border overflow-hidden flex flex-col">
                 <!-- Barra de Controles -->
-                <div class="p-3 border-b border-eg-border flex flex-wrap items-center justify-between gap-2">
-                    <div class="flex items-center gap-2">
-                        <button onclick="prevPage()" class="btn-outline-gold w-9 h-9 rounded-lg flex items-center justify-center text-eg-gold" title="Página anterior">
+                <div class="p-5 border-b-2 border-eg-border flex flex-wrap items-center justify-between gap-3 bg-eg-card/40">
+                    <div class="flex items-center gap-3">
+                        <button onclick="prevPage()" class="btn-outline-gold w-11 h-11 flex items-center justify-center text-lg" title="Página anterior">
                             <i class="fa-solid fa-chevron-left"></i>
                         </button>
-                        <span class="px-3 py-1 rounded bg-eg-card text-sm font-mono"><span id="pageNum">0</span>/<span id="pageTotal">0</span></span>
-                        <button onclick="nextPage()" class="btn-outline-gold w-9 h-9 rounded-lg flex items-center justify-center text-eg-gold" title="Página siguiente">
+                        <span class="px-4 py-2 rounded-lg bg-eg-dark text-lg font-mono font-bold"><span id="pageNum">0</span>/<span id="pageTotal">0</span></span>
+                        <button onclick="nextPage()" class="btn-outline-gold w-11 h-11 flex items-center justify-center text-lg" title="Página siguiente">
                             <i class="fa-solid fa-chevron-right"></i>
                         </button>
-                        <button onclick="zoomOut()" class="btn-outline-gold w-9 h-9 rounded-lg flex items-center justify-center text-eg-gold">−</button>
-                        <span id="zoomLevel" class="text-sm font-mono w-12 text-center">100%</span>
-                        <button onclick="zoomIn()" class="btn-outline-gold w-9 h-9 rounded-lg flex items-center justify-center text-eg-gold">+</button>
+                        <button onclick="zoomOut()" class="btn-outline-gold w-11 h-11 flex items-center justify-center text-lg font-bold">−</button>
+                        <span id="zoomLevel" class="text-lg font-mono w-20 text-center font-bold">100%</span>
+                        <button onclick="zoomIn()" class="btn-outline-gold w-11 h-11 flex items-center justify-center text-lg font-bold">+</button>
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button onclick="downloadOriginal()" class="btn-outline-gold px-3 py-1.5 rounded-lg text-sm text-eg-gold">
-                            <i class="fa-solid fa-download mr-1"></i> Descargar
+                        <button onclick="downloadOriginal()" class="btn-outline-gold px-4 py-2 text-base">
+                            <i class="fa-solid fa-download mr-2"></i> Descargar
                         </button>
-                        <button onclick="exportAsPDF()" class="btn-outline-gold px-3 py-1.5 rounded-lg text-sm text-eg-gold">
-                            <i class="fa-solid fa-file-pdf mr-1"></i> PDF
+                        <button onclick="exportAsPDF()" class="btn-outline-gold px-4 py-2 text-base">
+                            <i class="fa-solid fa-file-pdf mr-2"></i> PDF
                         </button>
-                        <button onclick="exportAsImage()" class="btn-outline-gold px-3 py-1.5 rounded-lg text-sm text-eg-gold">
-                            <i class="fa-solid fa-file-image mr-1"></i> Imagen
+                        <button onclick="exportAsImage()" class="btn-outline-gold px-4 py-2 text-base">
+                            <i class="fa-solid fa-file-image mr-2"></i> Imagen
                         </button>
-                        <button onclick="closeViewer()" class="btn-outline-gold px-3 py-1.5 rounded-lg text-sm text-red-400">
-                            <i class="fa-solid fa-times mr-1"></i> Cerrar
+                        <button onclick="closeViewer()" class="btn-outline-gold px-4 py-2 text-base text-red-400 border-red-400/50 hover:bg-red-900/20">
+                            <i class="fa-solid fa-times mr-2"></i> Cerrar
                         </button>
                     </div>
                 </div>
 
                 <!-- Área de Visualización -->
-                <div id="viewerArea" class="flex-1 min-h-[500px] flex items-center justify-center p-4 bg-black/40 overflow-auto">
-                    <div id="emptyState" class="text-center max-w-md">
-                        <i class="fa-solid fa-scroll text-6xl text-eg-gold/40 mb-4"></i>
-                        <h2 class="text-xl font-display font-bold gold-text mb-2">Bienvenido a DOCVAULT</h2>
-                        <p class="text-gray-400 mb-5">Carga cualquier archivo: PDF, imágenes y más. Todo funciona aquí mismo.</p>
-                        <button onclick="document.getElementById('fileInput').click()" class="btn-gold px-5 py-2.5 rounded-lg font-bold text-eg-black">
-                            <i class="fa-solid fa-folder-open mr-2"></i> Cargar Mi Primer Archivo
+                <div id="viewerArea" class="flex-1 min-h-[600px] flex items-center justify-center p-6 bg-black/50 overflow-auto">
+                    <div id="emptyState" class="text-center max-w-lg">
+                        <i class="fa-solid fa-scroll text-8xl text-eg-gold/40 mb-6"></i>
+                        <h2 class="text-3xl font-display font-bold gold-text mb-4">Bienvenido a DOCVAULT</h2>
+                        <p class="text-lg text-gray-400 mb-8">Carga cualquier archivo: PDF, imágenes y más. Todo funciona aquí mismo, en tu equipo.</p>
+                        <button onclick="document.getElementById('fileInput').click()" class="btn-gold px-8 py-4 text-xl">
+                            <i class="fa-solid fa-folder-open mr-3"></i> Cargar Mi Primer Archivo
                         </button>
                     </div>
-                    <div id="pdfView" class="hidden text-center">
-                        <canvas id="pdfCanvas" class="mx-auto rounded-lg shadow-lg bg-white"></canvas>
+                    <div id="pdfView" class="hidden text-center w-full">
+                        <canvas id="pdfCanvas" class="mx-auto shadow-gold-strong"></canvas>
                     </div>
-                    <div id="imageView" class="hidden text-center">
-                        <img id="imgElement" class="max-w-full rounded-lg shadow-lg" alt="Vista previa" style="transform: scale(1);">
+                    <div id="imageView" class="hidden text-center w-full">
+                        <img id="imgElement" class="max-w-full shadow-gold" alt="Vista previa" style="transform: scale(1);">
                     </div>
                     <div id="fileView" class="hidden text-center p-8">
-                        <i id="fileIcon" class="fa-solid fa-file-alt text-6xl text-eg-gold mb-4"></i>
-                        <p class="font-bold text-lg" id="fileNameDisplay"></p>
-                        <p class="text-gray-400 text-sm mt-2" id="fileInfoDisplay"></p>
+                        <i id="fileIcon" class="fa-solid fa-file-alt text-8xl text-eg-gold mb-6"></i>
+                        <p class="text-2xl font-bold" id="fileNameDisplay"></p>
+                        <p class="text-lg text-gray-400 mt-4" id="fileInfoDisplay"></p>
                     </div>
                 </div>
 
                 <!-- Miniaturas -->
-                <div id="thumbsBar" class="p-3 border-t border-eg-border bg-eg-card/50 hidden">
-                    <div id="thumbs" class="flex gap-2 overflow-x-auto scrollbar-gold"></div>
+                <div id="thumbsBar" class="p-4 border-t-2 border-eg-border bg-eg-card/40 hidden">
+                    <h4 class="text-base font-semibold text-eg-gold mb-3">Páginas</h4>
+                    <div id="thumbs" class="flex gap-3 overflow-x-auto scrollbar-gold pb-2"></div>
                 </div>
             </section>
 
             <!-- Panel Derecho: Información -->
-            <aside class="space-y-4">
-                <div class="egyptian-border rounded-xl p-4">
-                    <h4 class="font-semibold text-eg-gold mb-3">Información del Archivo</h4>
-                    <dl class="space-y-2 text-sm">
-                        <div class="flex justify-between"><dt class="text-gray-400">Nombre</dt><dd id="infoName" class="text-right truncate max-w-[140px]">—</dd></div>
-                        <div class="flex justify-between"><dt class="text-gray-400">Tipo</dt><dd id="infoType" class="text-right">—</dd></div>
-                        <div class="flex justify-between"><dt class="text-gray-400">Tamaño</dt><dd id="infoSize" class="text-right">—</dd></div>
-                        <div class="flex justify-between"><dt class="text-gray-400">Última Modificación</dt><dd id="infoDate" class="text-right text-xs">—</dd></div>
+            <aside class="space-y-6">
+                <div class="egyptian-border p-6">
+                    <h4 class="text-xl font-semibold text-eg-gold mb-4">Información del Archivo</h4>
+                    <dl class="space-y-3 text-base">
+                        <div class="flex justify-between items-center"><dt class="text-gray-400">Nombre</dt><dd id="infoName" class="text-right truncate max-w-[180px] font-medium">—</dd></div>
+                        <div class="flex justify-between items-center"><dt class="text-gray-400">Tipo</dt><dd id="infoType" class="text-right font-medium">—</dd></div>
+                        <div class="flex justify-between items-center"><dt class="text-gray-400">Tamaño</dt><dd id="infoSize" class="text-right font-medium">—</dd></div>
+                        <div class="flex justify-between items-center"><dt class="text-gray-400">Última Modificación</dt><dd id="infoDate" class="text-right text-sm font-medium">—</dd></div>
                     </dl>
                 </div>
-                <div class="egyptian-border rounded-xl p-4">
-                    <h4 class="font-semibold text-eg-gold mb-3">Acciones Rápidas</h4>
-                    <div class="space-y-2">
-                        <button onclick="resetZoomLevel()" class="btn-outline-gold w-full px-3 py-2 rounded-lg text-sm text-left text-eg-gold">
-                            <i class="fa-solid fa-expand mr-2"></i> Tamaño Original
+                <div class="egyptian-border p-6">
+                    <h4 class="text-xl font-semibold text-eg-gold mb-4">Acciones Rápidas</h4>
+                    <div class="space-y-3">
+                        <button onclick="resetZoomLevel()" class="btn-outline-gold w-full px-4 py-3 text-base text-left">
+                            <i class="fa-solid fa-expand mr-3"></i> Tamaño Original
                         </button>
-                        <button onclick="fitToScreen()" class="btn-outline-gold w-full px-3 py-2 rounded-lg text-sm text-left text-eg-gold">
-                            <i class="fa-solid fa-arrows-left-right mr-2"></i> Ajustar a Pantalla
+                        <button onclick="fitToScreen()" class="btn-outline-gold w-full px-4 py-3 text-base text-left">
+                            <i class="fa-solid fa-arrows-left-right mr-3"></i> Ajustar a Pantalla
                         </button>
-                        <button onclick="clearAllData()" class="btn-outline-gold w-full px-3 py-2 rounded-lg text-sm text-left text-red-400">
-                            <i class="fa-solid fa-eraser mr-2"></i> Limpiar Todo
+                        <button onclick="clearAllData()" class="btn-outline-gold w-full px-4 py-3 text-base text-left text-red-400 border-red-400/50 hover:bg-red-900/20">
+                            <i class="fa-solid fa-eraser mr-3"></i> Limpiar Todo
                         </button>
                     </div>
                 </div>
-                <div class="egyptian-border rounded-xl p-4">
-                    <h4 class="font-semibold text-eg-gold mb-2">Seguridad</h4>
-                    <p class="text-sm text-gray-400">Todo se procesa en tu equipo. Nada se envía a internet. Tú tienes el control total.</p>
+                <div class="egyptian-border p-6">
+                    <h4 class="text-xl font-semibold text-eg-gold mb-3">🔒 Seguridad</h4>
+                    <p class="text-base text-gray-400 leading-relaxed">Todo se procesa en tu equipo. Nada se envía a internet. Tú tienes el control total de tus archivos.</p>
                 </div>
             </aside>
         </section>
     </main>
 
     <!-- Notificaciones -->
-    <div id="toastContainer" class="fixed top-20 right-4 z-50 space-y-2 w-[min(360px,calc(100vw-2rem))]"></div>
+    <div id="toastContainer" class="fixed top-28 right-6 z-50 space-y-3 w-[min(420px,calc(100vw-3rem))]"></div>
 
     <!-- Panel Lateral -->
-    <div id="overlay" class="fixed inset-0 bg-black/70 z-50 hidden transition-opacity" onclick="closeSidePanel()"></div>
-    <aside id="sidePanel" class="fixed top-0 right-0 h-screen w-[min(420px,100vw)] egyptian-border border-l z-50 transition-transform">
-        <div class="p-5 h-full flex flex-col">
-            <div class="flex items-center justify-between mb-5">
-                <h2 id="panelTitle" class="text-lg font-display font-bold gold-text">Panel</h2>
-                <button onclick="closeSidePanel()" class="btn-outline-gold w-9 h-9 rounded-lg flex items-center justify-center text-eg-gold">
+    <div id="overlay" class="fixed inset-0 bg-black/80 z-50 hidden transition-opacity duration-300" onclick="closeSidePanel()"></div>
+    <aside id="sidePanel" class="fixed top-0 right-0 h-screen w-[min(460px,100vw)] egyptian-border border-l-2 z-50 transition-transform duration-300 transform translate-x-full">
+        <div class="p-6 h-full flex flex-col">
+            <div class="flex items-center justify-between mb-6">
+                <h2 id="panelTitle" class="text-2xl font-display font-bold gold-text">Panel</h2>
+                <button onclick="closeSidePanel()" class="btn-outline-gold w-11 h-11 flex items-center justify-center text-lg">
                     <i class="fa-solid fa-times"></i>
                 </button>
             </div>
-            <div id="panelContent" class="flex-1 overflow-y-auto scrollbar-gold pr-1"></div>
+            <div id="panelContent" class="flex-1 overflow-y-auto scrollbar-gold pr-2"></div>
         </div>
     </aside>
 
     <script>
         // ==================================================
-        // CONFIGURACIÓN INICIAL
+        // VARIABLES GLOBALES
         // ==================================================
         const { jsPDF } = window.jspdf;
         const pdfjsLib = window['pdfjs-dist/build/pdf'];
@@ -335,7 +350,7 @@
         let baseScale = 1.5;
         let currentFile = null;
         let fileURL = null;
-        let fileTypeCategory = null; // 'pdf' | 'image' | 'other'
+        let fileTypeCategory = null;
         let isProcessing = false;
 
         const canvas = document.getElementById('pdfCanvas');
@@ -350,7 +365,6 @@
             setupFileInput();
             setupDragDrop();
             loadHistory();
-            loadUserData();
         });
 
         // ==================================================
@@ -359,30 +373,41 @@
         function setupFileInput() {
             const input = document.getElementById('fileInput');
             input.addEventListener('change', e => {
-                if (e.target.files[0]) handleFile(e.target.files[0]);
+                if (e.target.files && e.target.files[0]) {
+                    handleFile(e.target.files[0]);
+                }
             });
         }
 
         function setupDragDrop() {
             const zone = document.querySelector('.drop-zone');
-            zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('active'); });
+            if (!zone) return;
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                zone.classList.add('active');
+            });
             zone.addEventListener('dragleave', () => zone.classList.remove('active'));
             zone.addEventListener('drop', e => {
                 e.preventDefault();
                 zone.classList.remove('active');
-                if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+                if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                    handleFile(e.dataTransfer.files[0]);
+                }
             });
         }
 
         async function handleFile(file) {
-            if (isProcessing) return showToast('Por favor, espera...', 'warning');
+            if (isProcessing) {
+                showToast('⏳ Por favor, espera un momento...', 'warning');
+                return;
+            }
             try {
                 isProcessing = true;
                 currentFile = file;
                 resetViewer();
                 setProgress(15);
 
-                // Datos básicos
+                // Datos básicos del archivo
                 const fileName = file.name;
                 const fileSize = formatSize(file.size);
                 const mimeType = file.type || getMimeType(fileName);
@@ -394,36 +419,36 @@
                 document.getElementById('infoSize').textContent = fileSize;
                 document.getElementById('infoDate').textContent = lastMod;
 
-                setProgress(30);
+                setProgress(35);
 
                 // DETECTAR TIPO DE ARCHIVO
                 if (file.type === 'application/pdf' || fileName.toLowerCase().endsWith('.pdf')) {
                     fileTypeCategory = 'pdf';
-                    document.getElementById('docType').textContent = 'PDF';
+                    document.getElementById('docType').textContent = '📄 PDF';
                     await loadPDF(file);
                 }
                 else if (file.type.startsWith('image/') || /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(fileName)) {
                     fileTypeCategory = 'image';
-                    document.getElementById('docType').textContent = 'Imagen';
+                    document.getElementById('docType').textContent = '🖼️ Imagen';
                     loadImage(file);
                 }
                 else {
                     fileTypeCategory = 'other';
-                    document.getElementById('docType').textContent = 'Archivo';
+                    document.getElementById('docType').textContent = '📁 Archivo';
                     loadGenericFile(file, mimeType);
                 }
 
-                // Guardar historial y actividad
+                // Guardar historial
                 saveToHistory({ nombre: fileName, tipo: mimeType, tamaño: fileSize, fecha: new Date().toLocaleString('es-GT') });
                 registerActivity('Cargó archivo', `${fileName} (${fileSize})`);
 
                 setProgress(100);
                 showToast('✅ Archivo cargado correctamente: ' + fileName, 'success');
-                setTimeout(() => setProgress(0), 700);
+                setTimeout(() => setProgress(0), 800);
 
             } catch (err) {
-                console.error(err);
-                showToast('❌ Error al cargar: ' + err.message, 'error');
+                console.error('Error:', err);
+                showToast('❌ Error: ' + err.message, 'error');
                 setProgress(0);
             } finally {
                 isProcessing = false;
@@ -438,10 +463,12 @@
                 const arrayBuffer = await file.arrayBuffer();
                 setProgress(50);
 
-                pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                pdfDoc = await loadingTask.promise;
                 totalPages = pdfDoc.numPages;
                 currentPage = 1;
-                document.getElementById('docPages').textContent = totalPages + ' págs.';
+
+                document.getElementById('docPages').textContent = totalPages + ' páginas';
                 document.getElementById('pageTotal').textContent = totalPages;
                 document.getElementById('pageNum').textContent = currentPage;
 
@@ -479,15 +506,16 @@
             container.innerHTML = '';
             for (let i = 1; i <= totalPages; i++) {
                 const page = await pdfDoc.getPage(i);
-                const viewport = page.getViewport({ scale: 0.15 });
+                const viewport = page.getViewport({ scale: 0.12 });
                 const tCanvas = document.createElement('canvas');
                 tCanvas.width = viewport.width;
                 tCanvas.height = viewport.height;
                 await page.render({ canvasContext: tCanvas.getContext('2d'), viewport }).promise;
 
                 const btn = document.createElement('button');
-                btn.className = `page-thumb rounded overflow-hidden border border-eg-border ${i === currentPage ? 'active' : ''}`;
+                btn.className = `page-thumb border-2 border-eg-border p-1 ${i === currentPage ? 'active' : ''}`;
                 btn.dataset.page = i;
+                btn.title = 'Ir a página ' + i;
                 btn.onclick = () => { currentPage = i; renderCurrentPage(); };
                 btn.appendChild(tCanvas);
                 container.appendChild(btn);
@@ -516,11 +544,11 @@
             const img = document.getElementById('imgElement');
             img.style.transform = 'scale(1)';
             scale = 1.0;
-            img.src = fileURL;
             img.onload = () => {
                 document.getElementById('imageView').classList.remove('hidden');
                 document.getElementById('zoomLevel').textContent = '100%';
             };
+            img.src = fileURL;
         }
 
         // ==================================================
@@ -537,13 +565,13 @@
             document.getElementById('thumbsBar').classList.add('hidden');
 
             let iconClass = 'fa-file-alt';
-            if (/zip|rar|7z/.test(mimeType) || /\.(zip|rar|7z)$/i.test(file.name)) iconClass = 'fa-file-archive';
-            else if (/word|document/.test(mimeType) || /\.(doc|docx)$/i.test(file.name)) iconClass = 'fa-file-word';
-            else if (/excel|sheet/.test(mimeType) || /\.(xls|xlsx)$/i.test(file.name)) iconClass = 'fa-file-excel';
-            else if (/powerpoint|presentation/.test(mimeType) || /\.(ppt|pptx)$/i.test(file.name)) iconClass = 'fa-file-powerpoint';
+            if (/\.(zip|rar|7z)$/i.test(file.name)) iconClass = 'fa-file-archive';
+            else if (/\.(doc|docx)$/i.test(file.name)) iconClass = 'fa-file-word';
+            else if (/\.(xls|xlsx)$/i.test(file.name)) iconClass = 'fa-file-excel';
+            else if (/\.(ppt|pptx)$/i.test(file.name)) iconClass = 'fa-file-powerpoint';
             else if (/text/.test(mimeType)) iconClass = 'fa-file-code';
 
-            document.getElementById('fileIcon').className = `fa-solid ${iconClass} text-6xl text-eg-gold mb-4`;
+            document.getElementById('fileIcon').className = `fa-solid ${iconClass} text-8xl text-eg-gold mb-6`;
             document.getElementById('fileNameDisplay').textContent = file.name;
             document.getElementById('fileInfoDisplay').textContent = 'Tipo: ' + mimeType + ' · Haz clic en Descargar para obtenerlo';
             document.getElementById('fileView').classList.remove('hidden');
@@ -593,23 +621,23 @@
         // DESCARGAS Y EXPORTACIÓN
         // ==================================================
         function downloadOriginal() {
-            if (!currentFile || !fileURL) return showToast('Primero carga un archivo', 'warning');
+            if (!currentFile || !fileURL) return showToast('⚠️ Primero carga un archivo', 'warning');
             const a = document.createElement('a');
             a.href = fileURL;
             a.download = currentFile.name;
             a.click();
-            showToast('Descargando: ' + currentFile.name, 'success');
+            showToast('⬇️ Descargando: ' + currentFile.name, 'success');
             registerActivity('Descargó archivo', currentFile.name);
         }
 
         async function exportAsPDF() {
-            if (!currentFile) return showToast('Primero carga un archivo', 'warning');
+            if (!currentFile) return showToast('⚠️ Primero carga un archivo', 'warning');
             if (fileTypeCategory === 'pdf') {
                 downloadOriginal();
                 return;
             }
             if (fileTypeCategory === 'image') {
-                showToast('Generando PDF desde imagen...', 'info');
+                showToast('🔄 Generando PDF desde imagen...', 'info');
                 try {
                     const img = document.getElementById('imgElement');
                     const w = img.naturalWidth * 0.2645;
@@ -622,16 +650,16 @@
                     const imgData = canvasTemp.toDataURL('image/jpeg', 0.95);
                     pdf.addImage(imgData, 'JPEG', 0, 0, w, h);
                     pdf.save(currentFile.name.replace(/\.(jpg|jpeg|png|gif|webp)$/i, '') + '.pdf');
-                    showToast('✅ PDF generado', 'success');
+                    showToast('✅ PDF generado correctamente', 'success');
                     registerActivity('Exportó imagen a PDF', currentFile.name);
-                } catch (e) { showToast('Error: ' + e.message, 'error'); }
+                } catch (e) { showToast('❌ Error: ' + e.message, 'error'); }
                 return;
             }
-            showToast('Este tipo de archivo no se puede convertir a PDF directamente', 'warning');
+            showToast('⚠️ Este tipo de archivo no se puede convertir a PDF', 'warning');
         }
 
         async function exportAsImage() {
-            if (!currentFile) return showToast('Primero carga un archivo', 'warning');
+            if (!currentFile) return showToast('⚠️ Primero carga un archivo', 'warning');
             if (fileTypeCategory === 'image') {
                 const a = document.createElement('a');
                 a.href = document.getElementById('imgElement').src;
@@ -641,7 +669,7 @@
                 return;
             }
             if (fileTypeCategory === 'pdf') {
-                showToast('Generando imagen desde PDF...', 'info');
+                showToast('🔄 Generando imágenes desde PDF...', 'info');
                 try {
                     const zip = new JSZip();
                     for (let p = 1; p <= totalPages; p++) {
@@ -661,10 +689,10 @@
                     a.click();
                     showToast('✅ Imágenes generadas en ZIP', 'success');
                     registerActivity('Exportó PDF a imágenes', currentFile.name);
-                } catch (e) { showToast('Error: ' + e.message, 'error'); }
+                } catch (e) { showToast('❌ Error: ' + e.message, 'error'); }
                 return;
             }
-            showToast('No se puede convertir este archivo a imagen', 'warning');
+            showToast('⚠️ No se puede convertir este archivo', 'warning');
         }
 
         // ==================================================
@@ -674,7 +702,7 @@
             resetViewer();
             if (fileURL) { URL.revokeObjectURL(fileURL); fileURL = null; }
             currentFile = null;
-            showToast('Visor cerrado', 'info');
+            showToast('✅ Visor cerrado', 'info');
         }
 
         function resetViewer() {
@@ -749,13 +777,13 @@
             const history = JSON.parse(localStorage.getItem(STORAGE.HISTORY) || '[]');
             const container = document.getElementById('recentList');
             if (history.length === 0) {
-                container.innerHTML = '<p class="text-sm text-gray-500 text-center py-4">Sin archivos recientes</p>';
+                container.innerHTML = '<p class="text-lg text-gray-500 text-center py-6">Sin archivos recientes</p>';
                 return;
             }
             container.innerHTML = history.map(item => `
-                <div class="p-2 rounded-lg bg-eg-card border border-eg-border text-sm">
-                    <p class="font-semibold truncate text-eg-gold">${item.nombre}</p>
-                    <p class="text-xs text-gray-400 mt-1">${item.tamaño} · ${(item.tipo||'').split('/')[1] || item.tipo}</p>
+                <div class="p-3 rounded-xl bg-eg-card border-2 border-eg-border">
+                    <p class="font-bold text-lg text-eg-gold truncate">${item.nombre}</p>
+                    <p class="text-sm text-gray-400 mt-1">${item.tamaño} · ${(item.tipo||'').split('/')[1] || item.tipo}</p>
                     <p class="text-xs text-gray-500 mt-1">${item.fecha}</p>
                 </div>
             `).join('');
@@ -764,13 +792,13 @@
         function openHistory() {
             const history = JSON.parse(localStorage.getItem(STORAGE.HISTORY) || '[]');
             if (history.length === 0) {
-                openSidePanel('Historial', '<p class="text-gray-400 text-center py-8">Sin archivos en historial.</p>');
+                openSidePanel('Historial', '<p class="text-gray-400 text-center py-10 text-lg">Sin archivos en historial.</p>');
                 return;
             }
-            openSidePanel('Historial de Archivos', history.map(item => `
-                <div class="p-3 rounded-lg bg-eg-card border border-eg-border mb-2">
-                    <p class="font-semibold text-eg-gold">${item.nombre}</p>
-                    <p class="text-xs text-gray-400 mt-1">${item.tipo} · ${item.tamaño}</p>
+            openSidePanel('📜 Historial de Archivos', history.map(item => `
+                <div class="p-4 rounded-xl bg-eg-card border-2 border-eg-border mb-3">
+                    <p class="font-bold text-lg text-eg-gold">${item.nombre}</p>
+                    <p class="text-sm text-gray-300 mt-1">${item.tipo} · ${item.tamaño}</p>
                     <p class="text-xs text-gray-500 mt-1">${item.fecha}</p>
                 </div>
             `).join(''));
@@ -790,30 +818,26 @@
         function openActivity() {
             const activity = JSON.parse(localStorage.getItem(STORAGE.ACTIVITY) || '[]');
             if (activity.length === 0) {
-                openSidePanel('Actividad', '<p class="text-gray-400 text-center py-8">Sin actividad registrada.</p>');
+                openSidePanel('Actividad', '<p class="text-gray-400 text-center py-10 text-lg">Sin actividad registrada.</p>');
                 return;
             }
-            openSidePanel('Registro de Actividad', activity.map(item => `
-                <div class="p-3 rounded-lg bg-eg-card border border-eg-border mb-2">
-                    <p class="font-semibold text-eg-gold">${item.accion}</p>
-                    <p class="text-xs text-gray-300 mt-1">${item.detalle}</p>
+            openSidePanel('📊 Registro de Actividad', activity.map(item => `
+                <div class="p-4 rounded-xl bg-eg-card border-2 border-eg-border mb-3">
+                    <p class="font-bold text-lg text-eg-gold">${item.accion}</p>
+                    <p class="text-sm text-gray-300 mt-1">${item.detalle}</p>
                     <p class="text-xs text-gray-500 mt-1">${item.usuario} · ${item.fecha}</p>
                 </div>
             `).join(''));
         }
 
-        function loadUserData() {
-            // Carga silenciosa
-        }
-
         function openUserPanel() {
             const saved = JSON.parse(localStorage.getItem(STORAGE.USER) || '{}');
-            openSidePanel('Configuración de Usuario', `
-                <div class="space-y-4">
-                    <p class="text-sm text-gray-400">Tu correo se usa para registrar quién usa el sistema.</p>
+            openSidePanel('👤 Configuración de Usuario', `
+                <div class="space-y-5">
+                    <p class="text-base text-gray-400">Tu correo se usa para registrar quién usa el sistema.</p>
                     <input type="email" id="userEmailInput" placeholder="tu@correo.com" value="${saved.email || ''}"
-                        class="w-full px-3 py-2 rounded-lg bg-eg-black border border-eg-border text-sm focus:outline-none focus:border-eg-gold">
-                    <button onclick="saveUserSettings()" class="btn-gold w-full py-2 rounded-lg font-bold text-eg-black">Guardar</button>
+                        class="w-full px-4 py-3 rounded-xl bg-eg-black border-2 border-eg-border text-base focus:outline-none focus:border-eg-gold">
+                    <button onclick="saveUserSettings()" class="btn-gold w-full py-3 text-lg">💾 Guardar</button>
                 </div>
             `);
         }
@@ -821,10 +845,10 @@
         function saveUserSettings() {
             const email = document.getElementById('userEmailInput').value.trim();
             if (!email || !email.includes('@') || !email.includes('.')) {
-                return showToast('Ingresa un correo válido', 'warning');
+                return showToast('⚠️ Ingresa un correo válido', 'warning');
             }
             localStorage.setItem(STORAGE.USER, JSON.stringify({ email }));
-            showToast('✅ Usuario guardado', 'success');
+            showToast('✅ Usuario guardado correctamente', 'success');
             registerActivity('Configuró usuario', email);
             closeSidePanel();
         }
@@ -841,7 +865,7 @@
             setTimeout(() => {
                 overlay.style.opacity = '1';
                 panel.style.transform = 'translateX(0)';
-            }, 10);
+            }, 15);
         }
 
         function closeSidePanel() {
@@ -855,18 +879,18 @@
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
             const colors = {
-                success: 'bg-green-900/80 border border-green-500/50',
-                error: 'bg-red-900/80 border border-red-500/50',
-                warning: 'bg-yellow-900/80 border border-yellow-500/50',
-                info: 'bg-eg-card border border-eg-gold/50'
+                success: 'bg-green-900/90 border-2 border-green-500/60',
+                error: 'bg-red-900/90 border-2 border-red-500/60',
+                warning: 'bg-yellow-900/90 border-2 border-yellow-500/60',
+                info: 'bg-eg-card border-2 border-eg-gold/60'
             };
             const toast = document.createElement('div');
-            toast.className = `toast p-3 rounded-lg ${colors[type]} text-sm`;
+            toast.className = `toast p-4 rounded-xl ${colors[type]} text-base font-medium`;
             toast.textContent = message;
             container.appendChild(toast);
             setTimeout(() => {
                 toast.style.opacity = '0';
-                toast.style.transform = 'translateY(-5px)';
+                toast.style.transform = 'translateY(-10px)';
                 toast.style.transition = 'all 0.3s ease';
                 setTimeout(() => toast.remove(), 300);
             }, 4000);
