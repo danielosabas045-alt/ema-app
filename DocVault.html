@@ -4,19 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DOCVAULT · Estilo Egipcio</title>
-    
+
     <!-- Librerías -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
+
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -46,11 +46,11 @@
             }
         }
     </script>
-    
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #050505; font-family: 'Inter', sans-serif; }
-        
+
         .egyptian-border {
             border: 1px solid rgba(212, 175, 55, 0.35);
             background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(18, 18, 18, 0.98));
@@ -116,6 +116,14 @@
             to { opacity:1; transform: translateY(0); }
         }
         canvas { max-width: 100%; height: auto; }
+        #imgElement { transition: transform 0.2s ease; transform-origin: center top; }
+        #overlay { transition: opacity 0.3s ease; opacity: 0; }
+        #overlay.hidden { opacity: 0; pointer-events: none; }
+        #sidePanel { transition: transform 0.3s ease; transform: translateX(100%); }
+        #sidePanel.active { transform: translateX(0); }
+        .page-thumb { transition: all 0.2s ease; }
+        .page-thumb:hover { border-color: #d4af37 !important; }
+        .page-thumb.active { border-color: #d4af37 !important; box-shadow: 0 0 0 2px rgba(212,175,55,0.4); }
     </style>
 </head>
 <body class="bg-eg-black text-gray-100 min-h-screen">
@@ -183,7 +191,7 @@
             <!-- Panel Izquierdo: Carga e Historial -->
             <aside class="egyptian-border rounded-xl p-4 h-fit">
                 <h3 class="font-display font-bold text-lg mb-3 gold-text">Cargar Archivos</h3>
-                
+
                 <label for="fileInput" class="drop-zone rounded-xl p-5 text-center cursor-pointer block mb-4">
                     <i class="fa-solid fa-cloud-upload-alt text-4xl text-eg-gold mb-3"></i>
                     <p class="font-semibold">Arrastra o haz clic aquí</p>
@@ -234,7 +242,7 @@
                 </div>
 
                 <!-- Área de Visualización -->
-                <div id="viewerArea" class="flex-1 min-h-[500px] flex items-center justify-center p-4 bg-black/40">
+                <div id="viewerArea" class="flex-1 min-h-[500px] flex items-center justify-center p-4 bg-black/40 overflow-auto">
                     <div id="emptyState" class="text-center max-w-md">
                         <i class="fa-solid fa-scroll text-6xl text-eg-gold/40 mb-4"></i>
                         <h2 class="text-xl font-display font-bold gold-text mb-2">Bienvenido a DOCVAULT</h2>
@@ -247,10 +255,10 @@
                         <canvas id="pdfCanvas" class="mx-auto rounded-lg shadow-lg bg-white"></canvas>
                     </div>
                     <div id="imageView" class="hidden text-center">
-                        <img id="imgElement" class="max-w-full rounded-lg shadow-lg" alt="Vista previa">
+                        <img id="imgElement" class="max-w-full rounded-lg shadow-lg" alt="Vista previa" style="transform: scale(1);">
                     </div>
                     <div id="fileView" class="hidden text-center p-8">
-                        <i id="fileIcon" class="text-6xl text-eg-gold mb-4"></i>
+                        <i id="fileIcon" class="fa-solid fa-file-alt text-6xl text-eg-gold mb-4"></i>
                         <p class="font-bold text-lg" id="fileNameDisplay"></p>
                         <p class="text-gray-400 text-sm mt-2" id="fileInfoDisplay"></p>
                     </div>
@@ -299,8 +307,8 @@
     <div id="toastContainer" class="fixed top-20 right-4 z-50 space-y-2 w-[min(360px,calc(100vw-2rem))]"></div>
 
     <!-- Panel Lateral -->
-    <div id="overlay" class="fixed inset-0 bg-black/70 z-50 hidden opacity-0 transition-opacity" onclick="closeSidePanel()"></div>
-    <aside id="sidePanel" class="fixed top-0 right-0 h-screen w-[min(420px,100vw)] egyptian-border border-l z-50 transform translate-x-full transition-transform">
+    <div id="overlay" class="fixed inset-0 bg-black/70 z-50 hidden transition-opacity" onclick="closeSidePanel()"></div>
+    <aside id="sidePanel" class="fixed top-0 right-0 h-screen w-[min(420px,100vw)] egyptian-border border-l z-50 transition-transform">
         <div class="p-5 h-full flex flex-col">
             <div class="flex items-center justify-between mb-5">
                 <h2 id="panelTitle" class="text-lg font-display font-bold gold-text">Panel</h2>
@@ -317,6 +325,7 @@
         // CONFIGURACIÓN INICIAL
         // ==================================================
         const { jsPDF } = window.jspdf;
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js';
 
         let pdfDoc = null;
@@ -327,6 +336,7 @@
         let currentFile = null;
         let fileURL = null;
         let fileTypeCategory = null; // 'pdf' | 'image' | 'other'
+        let isProcessing = false;
 
         const canvas = document.getElementById('pdfCanvas');
         const ctx = canvas.getContext('2d');
@@ -365,7 +375,9 @@
         }
 
         async function handleFile(file) {
+            if (isProcessing) return showToast('Por favor, espera...', 'warning');
             try {
+                isProcessing = true;
                 currentFile = file;
                 resetViewer();
                 setProgress(15);
@@ -374,11 +386,13 @@
                 const fileName = file.name;
                 const fileSize = formatSize(file.size);
                 const mimeType = file.type || getMimeType(fileName);
+                const lastMod = file.lastModified ? new Date(file.lastModified).toLocaleString('es-GT') : '—';
+
                 document.getElementById('docName').textContent = fileName;
                 document.getElementById('infoName').textContent = fileName;
                 document.getElementById('infoType').textContent = mimeType;
                 document.getElementById('infoSize').textContent = fileSize;
-                document.getElementById('infoDate').textContent = file.lastModifiedDate ? new Date(file.lastModifiedDate).toLocaleString('es-GT') : '—';
+                document.getElementById('infoDate').textContent = lastMod;
 
                 setProgress(30);
 
@@ -411,6 +425,8 @@
                 console.error(err);
                 showToast('❌ Error al cargar: ' + err.message, 'error');
                 setProgress(0);
+            } finally {
+                isProcessing = false;
             }
         }
 
@@ -455,6 +471,7 @@
             await page.render({ canvasContext: ctx, viewport }).promise;
             document.getElementById('pageNum').textContent = currentPage;
             document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
+            updateThumbnailActive();
         }
 
         async function renderThumbnails() {
@@ -469,11 +486,18 @@
                 await page.render({ canvasContext: tCanvas.getContext('2d'), viewport }).promise;
 
                 const btn = document.createElement('button');
-                btn.className = `rounded overflow-hidden border border-eg-border ${i === currentPage ? 'border-eg-gold ring-1 ring-eg-gold' : ''}`;
+                btn.className = `page-thumb rounded overflow-hidden border border-eg-border ${i === currentPage ? 'active' : ''}`;
+                btn.dataset.page = i;
                 btn.onclick = () => { currentPage = i; renderCurrentPage(); };
                 btn.appendChild(tCanvas);
                 container.appendChild(btn);
             }
+        }
+
+        function updateThumbnailActive() {
+            document.querySelectorAll('.page-thumb').forEach(b => {
+                b.classList.toggle('active', Number(b.dataset.page) === currentPage);
+            });
         }
 
         // ==================================================
@@ -490,6 +514,8 @@
             document.getElementById('thumbsBar').classList.add('hidden');
 
             const img = document.getElementById('imgElement');
+            img.style.transform = 'scale(1)';
+            scale = 1.0;
             img.src = fileURL;
             img.onload = () => {
                 document.getElementById('imageView').classList.remove('hidden');
@@ -526,15 +552,38 @@
         // ==================================================
         // NAVEGACIÓN Y ZOOM
         // ==================================================
-        function prevPage() { if (fileTypeCategory === 'pdf' && currentPage > 1) { currentPage--; renderCurrentPage(); renderThumbnails(); } }
-        function nextPage() { if (fileTypeCategory === 'pdf' && currentPage < totalPages) { currentPage++; renderCurrentPage(); renderThumbnails(); } }
-        function zoomIn() { scale = Math.min(3, scale + 0.15); applyZoom(); }
-        function zoomOut() { scale = Math.max(0.3, scale - 0.15); applyZoom(); }
-        function resetZoomLevel() { scale = 1.0; applyZoom(); }
-        function fitToScreen() { scale = 0.8; applyZoom(); }
+        function prevPage() {
+            if (fileTypeCategory === 'pdf' && currentPage > 1) {
+                currentPage--;
+                renderCurrentPage();
+            }
+        }
+        function nextPage() {
+            if (fileTypeCategory === 'pdf' && currentPage < totalPages) {
+                currentPage++;
+                renderCurrentPage();
+            }
+        }
+        function zoomIn() {
+            scale = Math.min(3, scale + 0.15);
+            applyZoom();
+        }
+        function zoomOut() {
+            scale = Math.max(0.3, scale - 0.15);
+            applyZoom();
+        }
+        function resetZoomLevel() {
+            scale = 1.0;
+            applyZoom();
+        }
+        function fitToScreen() {
+            scale = 0.8;
+            applyZoom();
+        }
         function applyZoom() {
-            if (fileTypeCategory === 'pdf') renderCurrentPage();
-            else if (fileTypeCategory === 'image') {
+            if (fileTypeCategory === 'pdf') {
+                renderCurrentPage();
+            } else if (fileTypeCategory === 'image') {
                 document.getElementById('imgElement').style.transform = `scale(${scale})`;
                 document.getElementById('zoomLevel').textContent = Math.round(scale * 100) + '%';
             }
@@ -706,7 +755,7 @@
             container.innerHTML = history.map(item => `
                 <div class="p-2 rounded-lg bg-eg-card border border-eg-border text-sm">
                     <p class="font-semibold truncate text-eg-gold">${item.nombre}</p>
-                    <p class="text-xs text-gray-400 mt-1">${item.tamaño} · ${item.tipo.split('/')[1] || item.tipo}</p>
+                    <p class="text-xs text-gray-400 mt-1">${item.tamaño} · ${(item.tipo||'').split('/')[1] || item.tipo}</p>
                     <p class="text-xs text-gray-500 mt-1">${item.fecha}</p>
                 </div>
             `).join('');
@@ -771,7 +820,9 @@
 
         function saveUserSettings() {
             const email = document.getElementById('userEmailInput').value.trim();
-            if (!email || !email.includes('@')) return showToast('Ingresa un correo válido', 'warning');
+            if (!email || !email.includes('@') || !email.includes('.')) {
+                return showToast('Ingresa un correo válido', 'warning');
+            }
             localStorage.setItem(STORAGE.USER, JSON.stringify({ email }));
             showToast('✅ Usuario guardado', 'success');
             registerActivity('Configuró usuario', email);
@@ -784,22 +835,31 @@
         function openSidePanel(title, content) {
             document.getElementById('panelTitle').textContent = title;
             document.getElementById('panelContent').innerHTML = content;
-            document.getElementById('overlay').classList.remove('hidden');
+            const overlay = document.getElementById('overlay');
+            const panel = document.getElementById('sidePanel');
+            overlay.classList.remove('hidden');
             setTimeout(() => {
-                document.getElementById('overlay').style.opacity = '1';
-                document.getElementById('sidePanel').style.transform = 'translateX(0)';
+                overlay.style.opacity = '1';
+                panel.style.transform = 'translateX(0)';
             }, 10);
         }
 
         function closeSidePanel() {
-            document.getElementById('overlay').style.opacity = '0';
-            document.getElementById('sidePanel').style.transform = 'translateX(100%)';
-            setTimeout(() => document.getElementById('overlay').classList.add('hidden'), 300);
+            const overlay = document.getElementById('overlay');
+            const panel = document.getElementById('sidePanel');
+            overlay.style.opacity = '0';
+            panel.style.transform = 'translateX(100%)';
+            setTimeout(() => overlay.classList.add('hidden'), 300);
         }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toastContainer');
-            const colors = { success: 'bg-green-900/80 border border-green-500/50', error: 'bg-red-900/80 border border-red-500/50', warning: 'bg-yellow-900/80 border border-yellow-500/50', info: 'bg-eg-card border border-eg-gold/50' };
+            const colors = {
+                success: 'bg-green-900/80 border border-green-500/50',
+                error: 'bg-red-900/80 border border-red-500/50',
+                warning: 'bg-yellow-900/80 border border-yellow-500/50',
+                info: 'bg-eg-card border border-eg-gold/50'
+            };
             const toast = document.createElement('div');
             toast.className = `toast p-3 rounded-lg ${colors[type]} text-sm`;
             toast.textContent = message;
