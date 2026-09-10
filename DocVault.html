@@ -3,15 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="description" content="DOCVAULT PRO MAX — Visor y Gestor Profesional de PDF · Diseño Renovado">
+<meta name="description" content="DOCVAULT PRO MAX — Visor y Gestor Profesional de PDF · Diseño Renovado · Registro de Actividad">
 <meta name="theme-color" content="#0f172a">
 <title>DOCVAULT PRO MAX · EDICIÓN NOVA</title>
 
-<!-- LIBRERÍAS -->
+<!-- === LIBRERÍAS === -->
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Roboto+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -38,7 +40,6 @@
   --radius-xl: 20px;
   --radius-2xl: 28px;
 }
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -50,7 +51,7 @@ body {
   line-height: 1.6;
 }
 
-/* ========== FONDOS Y EFECTOS DE PROFUNDIDAD ========== */
+/* ========== FONDOS Y EFECTOS ========== */
 .bg-layer {
   position: fixed; inset: 0; z-index: -1; pointer-events: none;
 }
@@ -75,7 +76,6 @@ body {
 .orb-1 { width: 450px; height: 450px; background: var(--accent-blue); top: -150px; right: -100px; }
 .orb-2 { width: 380px; height: 380px; background: var(--accent-indigo); bottom: -100px; left: -80px; animation-delay: -6s; }
 .orb-3 { width: 320px; height: 320px; background: var(--accent-gold); top: 40%; left: 30%; animation-delay: -12s; opacity: 0.06; }
-
 @keyframes floatOrb {
   0% { transform: translate(0, 0) scale(1); }
   100% { transform: translate(80px, -60px) scale(1.25); }
@@ -138,7 +138,7 @@ body {
 .heading-md { font-size: 1.125rem; font-weight: 600; }
 .small-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--text-muted); font-weight: 600; }
 
-/* ========== LOGO NUEVO ========== */
+/* ========== LOGO ========== */
 .logo-box {
   width: 52px; height: 52px; border-radius: 14px;
   background: linear-gradient(135deg, #2563eb, #4f46e5, #0ea5e9);
@@ -152,7 +152,7 @@ body {
   background: linear-gradient(135deg, transparent, rgba(255,255,255,0.2), transparent);
 }
 
-/* ========== BOTONES REDISEÑADOS ========== */
+/* ========== BOTONES ========== */
 .btn {
   border: 1px solid rgba(96, 165, 250, 0.2);
   background: rgba(30, 64, 175, 0.08);
@@ -177,7 +177,6 @@ body {
 }
 .btn:hover::before { left: 100%; }
 .btn:active { transform: translateY(0); }
-
 .btn.primary {
   border: none;
   background: linear-gradient(135deg, #2563eb, #4f46e5);
@@ -199,7 +198,20 @@ body {
   box-shadow: 0 8px 25px rgba(244, 63, 94, 0.15);
   color: white;
 }
+.btn.success {
+  border-color: rgba(16, 185, 129, 0.3);
+  background: rgba(16, 185, 129, 0.08);
+  color: #6ee7b7;
+}
+.btn.success:hover {
+  border-color: rgba(16, 185, 129, 0.6);
+  background: rgba(16, 185, 129, 0.15);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.15);
+  color: white;
+}
 .btn.sm { padding: 0.45rem 0.75rem; font-size: 0.8rem; border-radius: 10px; }
+.btn.w-full { width: 100%; }
+.btn.justify-between { justify-content: space-between; }
 
 /* ========== ZONA DE CARGA ========== */
 .drop-area {
@@ -275,7 +287,7 @@ body {
   transition: width 0.3s ease; box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
 
-/* ========== ESTADÍSTICAS ========== */
+/* ========== TARJETAS DE ESTADÍSTICAS ========== */
 .stat-card {
   position: relative; overflow: hidden;
   background: linear-gradient(135deg, rgba(30, 64, 175, 0.06), rgba(15, 23, 42, 0.7));
@@ -294,7 +306,7 @@ body {
   background: radial-gradient(circle, rgba(59, 130, 246, 0.06), transparent 60%);
 }
 
-/* ========== MODAL Y PANEL LATERAL ========== */
+/* ========== MODAL Y PANEL ========== */
 .modal-wrap {
   position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8);
   backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center;
@@ -308,7 +320,7 @@ body {
   animation: scaleIn 0.35s ease;
 }
 .side-panel {
-  position: fixed; top: 0; right: 0; width: min(400px, 100%); height: 100vh;
+  position: fixed; top: 0; right: 0; width: min(420px, 100%); height: 100vh;
   background: linear-gradient(180deg, rgba(30, 41, 59, 0.96), rgba(15, 23, 42, 0.98));
   border-left: 1px solid rgba(96, 165, 250, 0.18);
   transform: translateX(105%); transition: transform 0.35s cubic-bezier(0.4,0,0.2,1); z-index: 70;
@@ -329,6 +341,7 @@ body {
 .toast-success { border-left: 4px solid var(--accent-emerald); background: rgba(6, 78, 59, 0.7); }
 .toast-error { border-left: 4px solid var(--accent-rose); background: rgba(76, 5, 25, 0.7); }
 .toast-info { border-left: 4px solid var(--accent-sky); background: rgba(12, 74, 110, 0.7); }
+.toast-warning { border-left: 4px solid var(--accent-gold); background: rgba(120, 53, 15, 0.7); }
 
 /* ========== ANIMACIONES ========== */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -355,6 +368,132 @@ body {
 /* ========== UTILIDADES ========== */
 .hidden { display: none !important; }
 .kbd-style { font-family: 'Roboto Mono', monospace; font-size: 11px; padding: 3px 7px; border-radius: 6px; background: rgba(30, 41, 59, 0.8); border: 1px solid rgba(71, 85, 105, 0.4); color: #94a3b8; }
+.truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.mr-2 { margin-right: 0.5rem; }
+.text-right { text-align: right; }
+.text-amber-400 { color: #fbbf24; }
+.text-emerald-300 { color: #6ee7b7; }
+.text-rose-300 { color: #fda4af; }
+.text-sky-300 { color: #7dd3fc; }
+.text-slate-400 { color: #94a3b8; }
+.text-slate-500 { color: #64748b; }
+.text-slate-700\/40 { border-color: rgba(51, 65, 85, 0.4); }
+.border-slate-700\/50 { border-color: rgba(51, 65, 85, 0.5); }
+.bg-slate-900\/60 { background: rgba(15, 23, 42, 0.6); }
+.bg-slate-900\/30 { background: rgba(15, 23, 42, 0.3); }
+.bg-sky-500\/10 { background: rgba(14, 165, 233, 0.1); }
+.bg-sky-500\/15 { background: rgba(14, 165, 233, 0.15); }
+.bg-amber-500\/5 { background: rgba(245, 158, 11, 0.05); }
+.border-amber-400\/20 { border-color: rgba(251, 191, 36, 0.2); }
+.border-sky-400\/15 { border-color: rgba(56, 189, 248, 0.15); }
+.border-sky-400\/20 { border-color: rgba(56, 189, 248, 0.2); }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.gap-4 { gap: 1rem; }
+.space-y-2 > * + * { margin-top: 0.5rem; }
+.space-y-3 > * + * { margin-top: 0.75rem; }
+.space-y-4 > * + * { margin-top: 1rem; }
+.space-x-2 > * + * { margin-left: 0.5rem; }
+.grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.grid-cols-1fr-auto { grid-template-columns: 1fr auto; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.justify-center { justify-content: center; }
+.flex-wrap { flex-wrap: wrap; }
+.flex-1 { flex: 1; }
+.flex-col { flex-direction: column; }
+.fixed { position: fixed; }
+.sticky { position: sticky; }
+.top-0 { top: 0; }
+.top-10 { top: 2.5rem; }
+.top-\[150px\] { top: 150px; }
+.inset-0 { inset: 0; }
+.inset-x-0 { left: 0; right: 0; }
+.right-4 { right: 1rem; }
+.z-40 { z-index: 40; }
+.z-50 { z-index: 50; }
+.z-60 { z-index: 60; }
+.z-70 { z-index: 70; }
+.z-80 { z-index: 80; }
+.z-\[100\] { z-index: 100; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.pb-1 { padding-bottom: 0.25rem; }
+.pb-6 { padding-bottom: 1.5rem; }
+.pr-1 { padding-right: 0.25rem; }
+.pt-\[140px\] { padding-top: 140px; }
+.pb-10 { padding-bottom: 2.5rem; }
+.mb-3 { margin-bottom: 0.75rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-5 { margin-bottom: 1.25rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mt-1 { margin-top: 0.25rem; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.mt-5 { margin-top: 1.25rem; }
+.mt-6 { margin-top: 1.5rem; }
+.min-h-\[560px\] { min-height: 560px; }
+.min-w-0 { min-width: 0; }
+.w-14 { width: 3.5rem; }
+.w-24 { width: 6rem; }
+.w-full { width: 100%; }
+.w-\[min\(360px\,calc\(100vw-2rem\)\)\] { width: min(360px,calc(100vw-2rem)); }
+.max-w-md { max-width: 28rem; }
+.max-w-7xl { max-width: 80rem; }
+.max-w-full { max-width: 100%; }
+.max-h-\[420px\] { max-height: 420px; }
+.max-h-\[85vh\] { max-height: 85vh; }
+.min-w-0 { min-width: 0; }
+.truncate { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.rounded-full { border-radius: 9999px; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-3xl { border-radius: 1.5rem; }
+.border-b { border-bottom-width: 1px; }
+.border-t { border-top-width: 1px; }
+.border-l { border-left-width: 4px; }
+.border-b-2 { border-bottom-width: 2px; }
+.p-2 { padding: 0.5rem; }
+.p-4 { padding: 1rem; }
+.p-5 { padding: 1.25rem; }
+.p-6 { padding: 1.5rem; }
+.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+.py-1 { padding-top: 0.25rem; padding-bottom: 0.25rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.h-20 { height: 5rem; }
+.h-14 { height: 3.5rem; }
+.h-24 { height: 6rem; }
+.h-5 { height: 1.25rem; }
+.w-2 { width: 0.5rem; }
+.h-2 { height: 0.5rem; }
+.rounded-full { border-radius: 9999px; }
+.animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+.text-xs { font-size: 0.75rem; line-height: 1rem; }
+.text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.text-base { font-size: 1rem; line-height: 1.5rem; }
+.text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.text-2xl { font-size: 1.5rem; line-height: 2rem; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+.font-extrabold { font-weight: 800; }
+.uppercase { text-transform: uppercase; }
+.leading-tight { line-height: 1.25; }
+.opacity-0 { opacity: 0; }
+.opacity-100 { opacity: 1; }
+.transition-all { transition: all 0.3s ease; }
+.duration-300 { transition-duration: 300ms; }
+.ease-in-out { transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); }
+.hover\:scale-105:hover { transform: scale(1.05); }
+.hover\:shadow-lg:hover { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
+.focus\:outline-none:focus { outline: 2px solid transparent; outline-offset: 2px; }
+.focus\:ring-2:focus { box-shadow: inset 0 0 0 2px rgba(59, 130, 246, 0.5); }
 </style>
 </head>
 <body>
@@ -377,7 +516,7 @@ body {
       <span class="hidden sm:inline">PDF.js · JSZip · jsPDF</span>
     </div>
     <div class="flex items-center gap-4">
-      <span>Procesamiento Local</span>
+      <span>Procesamiento Local · Seguro</span>
       <span id="clock" class="mono text-sky-300 font-medium"></span>
     </div>
   </div>
@@ -397,9 +536,16 @@ body {
       </div>
     </div>
     <div class="flex items-center gap-2">
-      <button class="btn sm desktop-only" onclick="openHistory()"><i class="fa-solid fa-clock-rotate-left"></i> Historial <span id="historyCount" class="text-sky-300 font-bold">0</span></button>
-      <button class="btn sm desktop-only" onclick="openHelp()"><i class="fa-solid fa-circle-question"></i> Ayuda</button>
-      <button class="btn primary sm" onclick="document.getElementById('fileInput').click()"><i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Abrir PDF</span></button>
+      <button class="btn sm desktop-only" onclick="openHistory()">
+        <i class="fa-solid fa-clock-rotate-left"></i> Historial 
+        <span id="historyCount" class="text-sky-300 font-bold">0</span>
+      </button>
+      <button class="btn sm desktop-only" onclick="openHelp()">
+        <i class="fa-solid fa-circle-question"></i> Ayuda
+      </button>
+      <button class="btn primary sm" onclick="document.getElementById('fileInput').click()">
+        <i class="fa-solid fa-plus"></i> <span class="hidden sm:inline">Abrir PDF</span>
+      </button>
     </div>
   </div>
 </header>
@@ -431,8 +577,8 @@ body {
     </div>
   </section>
 
-  <!-- SECCIÓN PRINCIPAL: BIBLIOTECA · VISOR · HERRAMIENTAS -->
-  <section class="grid xl:grid-cols-[300px_minmax(0,1fr)_300px] gap-4">
+  <!-- SECCIÓN PRINCIPAL -->
+  <section class="grid xl:grid-cols-[300px_minmax(0,1fr)_320px] gap-4">
 
     <!-- PANEL IZQUIERDO: BIBLIOTECA -->
     <aside class="glass-panel p-5 h-fit xl:sticky xl:top-[150px]">
@@ -447,22 +593,22 @@ body {
       </div>
 
       <label class="drop-area" id="dropZone" for="fileInput">
-        <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/20 flex items-center justify-center text-2xl text-sky-400 mb-3">
+        <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/15 flex items-center justify-center text-2xl text-sky-400 mb-3">
           <i class="fa-solid fa-cloud-arrow-up"></i>
         </div>
         <b class="text-base">Importar Documento</b>
         <p class="text-sm text-slate-400 mt-1">Arrastra tu PDF o haz clic aquí</p>
         <span class="btn primary mt-4 !text-sm">Seleccionar Archivo PDF</span>
       </label>
-      <input id="fileInput" type="file" accept="application/pdf,.pdf">
 
+      <input id="fileInput" type="file" accept="application/pdf,.pdf" class="hidden">
       <div class="progress-bar mt-4"><span id="loadProgress"></span></div>
       <div id="library" class="mt-5 space-y-2 max-h-[420px] overflow-auto pr-1"></div>
     </aside>
 
     <!-- PANEL CENTRAL: VISOR PDF -->
     <section class="glass-panel p-0 overflow-hidden">
-      <!-- BARRA DE CONTROLES DEL VISOR -->
+      <!-- BARRA DE CONTROLES -->
       <div class="p-4 border-b border-slate-700/40 flex flex-wrap items-center justify-between gap-3">
         <div class="flex items-center gap-2">
           <button class="btn sm" onclick="prevPage()" title="Página Anterior"><i class="fa-solid fa-chevron-left"></i></button>
@@ -477,7 +623,9 @@ body {
         </div>
         <div class="flex gap-2">
           <button class="btn sm desktop-only" onclick="downloadOriginal()"><i class="fa-solid fa-download"></i> Original</button>
-          <button class="btn primary sm" onclick="exportImages()"><i class="fa-solid fa-file-zipper"></i> <span class="hidden sm:inline">Exportar Imágenes</span></button>
+          <button class="btn sm desktop-only" onclick="exportAsPDF()"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+          <button class="btn sm desktop-only" onclick="exportAsJPG()"><i class="fa-solid fa-file-image"></i> JPG</button>
+          <button class="btn primary sm" onclick="exportImages()"><i class="fa-solid fa-file-zipper"></i> <span class="hidden sm:inline">Imágenes</span></button>
         </div>
       </div>
 
@@ -509,275 +657,4 @@ body {
     <aside class="space-y-4">
       <div class="glass-panel p-4">
         <p class="small-label">Herramientas</p>
-        <div class="grid grid-cols-2 gap-2 mt-3">
-          <button class="btn" onclick="fitWidth()"><i class="fa-solid fa-arrows-left-right"></i> Ajustar</button>
-          <button class="btn" onclick="zoom(0.2)"><i class="fa-solid fa-magnifying-glass-plus"></i> Acercar</button>
-          <button class="btn" onclick="zoom(-0.2)"><i class="fa-solid fa-magnifying-glass-minus"></i> Alejar</button>
-          <button class="btn" onclick="resetZoom()"><i class="fa-solid fa-expand"></i> 100%</button>
-        </div>
-      </div>
-
-      <div class="glass-panel p-4">
-        <p class="small-label">Acciones Rápidas</p>
-        <div class="space-y-2 mt-3">
-          <button class="btn w-full justify-between" onclick="downloadOriginal()">
-            <span><i class="fa-solid fa-file-arrow-down mr-2 text-sky-400"></i> Descargar Original</span>
-            <i class="fa-solid fa-chevron-right text-slate-500"></i>
-          </button>
-          <button class="btn w-full justify-between" onclick="exportImages()">
-            <span><i class="fa-solid fa-images mr-2 text-indigo-400"></i> Exportar Imágenes</span>
-            <i class="fa-solid fa-chevron-right text-slate-500"></i>
-          </button>
-          <button class="btn danger w-full justify-between" onclick="removeCurrent()">
-            <span><i class="fa-solid fa-trash mr-2 text-rose-300"></i> Quitar Documento</span>
-            <i class="fa-solid fa-chevron-right text-slate-500"></i>
-          </button>
-        </div>
-      </div>
-
-      <div class="glass-panel p-4">
-        <p class="small-label">Información del Archivo</p>
-        <dl class="mt-3 space-y-3 text-sm">
-          <div class="flex justify-between gap-3">
-            <dt class="text-slate-400">Nombre</dt>
-            <dd id="infoName" class="font-semibold text-right truncate">—</dd>
-          </div>
-          <div class="flex justify-between">
-            <dt class="text-slate-400">Tamaño</dt>
-            <dd id="infoSize">—</dd>
-          </div>
-          <div class="flex justify-between">
-            <dt class="text-slate-400">Páginas</dt>
-            <dd id="infoPages">—</dd>
-          </div>
-          <div class="flex justify-between">
-            <dt class="text-slate-400">Procesamiento</dt>
-            <dd class="text-emerald-300">Local · Seguro</dd>
-          </div>
-        </dl>
-      </div>
-    </aside>
-  </section>
-</main>
-
-<!-- CONTENEDOR DE NOTIFICACIONES -->
-<div id="toast" class="fixed top-24 right-4 z-[100] space-y-2 w-[min(360px,calc(100vw-2rem))]"></div>
-
-<!-- MODAL -->
-<div id="modal" class="modal-wrap">
-  <div class="modal-content p-6" id="modalContent"></div>
-</div>
-
-<!-- PANEL LATERAL DESLIZANTE -->
-<div id="sideBack" class="side-backdrop" onclick="closeSide()"></div>
-<aside id="side" class="side-panel p-6 overflow-auto">
-  <div class="flex items-center justify-between mb-6">
-    <h2 id="sideTitle" class="heading-md">Panel</h2>
-    <button class="btn sm !p-2" onclick="closeSide()"><i class="fa-solid fa-xmark"></i></button>
-  </div>
-  <div id="sideContent"></div>
-</aside>
-
-<!-- ================================================== -->
-<!-- TODAS LAS FUNCIONES IGUALES → TODO SIGUE FUNCIONANDO -->
-<!-- ================================================== -->
-<script>
-// CONFIGURACIÓN PDF.JS
-if (typeof pdfjsLib !== 'undefined') {
-  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-}
-
-// VARIABLES GLOBALES
-let pdfDoc = null;
-let currentPage = 1;
-let totalPages = 0;
-let scale = 1.5;
-let baseScale = 1.5;
-let fileOriginal = null;
-let fileName = '';
-let fileSize = '';
-let history = JSON.parse(localStorage.getItem('dv_history') || '[]');
-const STORAGE_KEY = 'dv_history';
-
-// ELEMENTOS
-const canvas = document.getElementById('pdfCanvas');
-const ctx = canvas.getContext('2d');
-const fileInput = document.getElementById('fileInput');
-const dropZone = document.getElementById('dropZone');
-const emptyViewer = document.getElementById('emptyViewer');
-const pageWrap = document.getElementById('pageWrap');
-const thumbnails = document.getElementById('thumbnails');
-
-// RELOJ
-function updateClock() {
-  const d = new Date();
-  document.getElementById('clock').textContent = d.toLocaleTimeString('es-GT', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
-}
-setInterval(updateClock, 1000);
-updateClock();
-
-// INICIO
-document.addEventListener('DOMContentLoaded', () => {
-  renderLibrary();
-  updateHistoryCount();
-  
-  // EVENTOS DE ARRASTRE
-  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('active'); });
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('active'));
-  dropZone.addEventListener('drop', e => {
-    e.preventDefault();
-    dropZone.classList.remove('active');
-    if (e.dataTransfer.files[0]) loadFile(e.dataTransfer.files[0]);
-  });
-  fileInput.addEventListener('change', e => { if (e.target.files[0]) loadFile(e.target.files[0]); });
-  
-  // TECLADO
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowLeft') prevPage();
-    if (e.key === 'ArrowRight') nextPage();
-    if (e.key === '+' || e.key === '=') zoom(0.1);
-    if (e.key === '-') zoom(-0.1);
-  });
-});
-
-// CARGAR ARCHIVO
-async function loadFile(file) {
-  try {
-    fileOriginal = file;
-    fileName = file.name;
-    fileSize = (file.size / 1024 / 1024).toFixed(2) + ' MB';
-    
-    updateStat('name', fileName);
-    updateStat('status', 'Cargando...', 'text-amber-400');
-    updateStat('message', 'Leyendo documento...');
-    
-    const arrayBuffer = await file.arrayBuffer();
-    pdfDoc = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
-    totalPages = pdfDoc.numPages;
-    currentPage = 1;
-    
-    document.getElementById('pageTotal').textContent = totalPages;
-    document.getElementById('statPages').textContent = totalPages;
-    document.getElementById('infoName').textContent = fileName;
-    document.getElementById('infoSize').textContent = fileSize;
-    document.getElementById('infoPages').textContent = totalPages;
-    
-    // Generar miniaturas
-    thumbnails.innerHTML = '';
-    for (let i = 1; i <= totalPages; i++) {
-      const page = await pdfDoc.getPage(i);
-      const viewport = page.getViewport({ scale: 0.25 });
-      const tCanvas = document.createElement('canvas');
-      tCanvas.width = viewport.width;
-      tCanvas.height = viewport.height;
-      await page.render({ canvasContext: tCanvas.getContext('2d'), viewport }).promise;
-      
-      const div = document.createElement('div');
-      div.className = 'thumb-card' + (i === 1 ? ' active' : '');
-      div.dataset.page = i;
-      div.onclick = () => { goToPage(parseInt(div.dataset.page)); };
-      div.appendChild(tCanvas);
-      thumbnails.appendChild(div);
-    }
-    
-    addToHistory({ name: fileName, size: fileSize, pages: totalPages, time: new Date().toLocaleString('es-GT') });
-    
-    await renderPage(currentPage);
-    
-    emptyViewer.classList.add('hidden');
-    pageWrap.classList.remove('hidden');
-    updateStat('status', '¡Listo!', 'text-emerald-300');
-    updateStat('message', 'Documento cargado correctamente');
-    showToast('PDF cargado: ' + fileName, 'success');
-    
-  } catch (err) {
-    console.error(err);
-    showToast('Error: ' + err.message, 'error');
-    updateStat('status', 'Error', 'text-rose-300');
-  }
-}
-
-// RENDERIZAR PÁGINA
-async function renderPage(num) {
-  if (!pdfDoc) return;
-  currentPage = num;
-  document.getElementById('pageCurrent').textContent = num;
-  document.getElementById('statCurrent').textContent = num + '/' + totalPages;
-  
-  const page = await pdfDoc.getPage(num);
-  const viewport = page.getViewport({ scale: baseScale * scale });
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-  
-  await page.render({ canvasContext: ctx, viewport }).promise;
-  
-  // Resaltar miniatura activa
-  document.querySelectorAll('.thumb-card').forEach((t, i) => {
-    t.classList.toggle('active', i + 1 === num);
-  });
-}
-
-// NAVEGACIÓN
-function prevPage() { if (currentPage > 1) goToPage(currentPage - 1); }
-function nextPage() { if (currentPage < totalPages) goToPage(currentPage + 1); }
-function goToPage(num) { if (num >= 1 && num <= totalPages) renderPage(num); }
-
-// ZOOM
-function zoom(delta) {
-  scale = Math.max(0.5, Math.min(3, scale + delta));
-  document.getElementById('zoomValue').textContent = Math.round(scale * 100) + '%';
-  renderPage(currentPage);
-}
-function resetZoom() { scale = 1; document.getElementById('zoomValue').textContent = '100%'; renderPage(currentPage); }
-function fitWidth() { scale = 1; baseScale = 1.3; resetZoom(); }
-
-// DESCARGA ORIGINAL
-function downloadOriginal() {
-  if (!fileOriginal) return showToast('Carga un PDF primero', 'info');
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(fileOriginal);
-  a.download = fileName;
-  a.click();
-  showToast('Descargando: ' + fileName, 'success');
-}
-
-// EXPORTAR IMÁGENES EN ZIP
-async function exportImages() {
-  if (!pdfDoc) return showToast('Carga un PDF primero', 'info');
-  showToast('Generando archivo ZIP...', 'info');
-  
-  const zip = new JSZip();
-  for (let i = 1; i <= totalPages; i++) {
-    const page = await pdfDoc.getPage(i);
-    const viewport = page.getViewport({ scale: 2 });
-    const c = document.createElement('canvas');
-    c.width = viewport.width;
-    c.height = viewport.height;
-    await page.render({ canvasContext: c.getContext('2d'), viewport }).promise;
-    const base64 = c.toDataURL('image/png').slice(22);
-    zip.file(`pagina_${String(i).padStart(2,'0')}.png`, base64, { base64: true });
-  }
-  
-  const blob = await zip.generateAsync({ type: 'blob' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = fileName.replace('.pdf', '') + '_imagenes.zip';
-  a.click();
-  showToast('¡ZIP generado con éxito!', 'success');
-}
-
-// QUITAR DOCUMENTO
-function removeCurrent() {
-  if (!pdfDoc) return;
-  if (!confirm('¿Quitar documento de la vista?')) return;
-  pdfDoc = null;
-  currentPage = 1;
-  totalPages = 0;
-  fileOriginal = null;
-  fileName = '';
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  emptyViewer.classList.remove('hidden');
-  pageWrap.classList.add('hidden');
-  document.getElementById('pageCurrent').textContent = '0';
-  document.getElementById('pageTotal').textContent = '0';
-  document.getElementById('statPages').textContent = '0
+        <div class="grid grid-cols-2 gap
