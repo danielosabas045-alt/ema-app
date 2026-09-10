@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-950 text-slate-100 dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="DocVault Pro MAX — Editor, Visor, Convertidor y Gestor de PDF Avanzado">
+    <meta name="theme-color" content="#0f172a">
+    <title>DOCVAULT PRO MAX · EDICIÓN DEFINITIVA</title>
+
+    <!-- LIBRERÍAS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles-preset-firefly@2.12.0/tsparticles.preset.firefly.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@100;200;300;400;500;600;700;800&family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+    <!-- CONFIGURACIÓN TAILWIND -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        vault: {
+                            50: '#ecfeff', 100: '#cffafe', 200: '#a5f3fc', 300: '#67e8f9', 400: '#22d3ee',
+                            500: '#06b6d4', 600: '#0891b2', 700: '#0e7490', 800: '#155e75', 900: '#164e63', 950: '#083344',
+                            neon: '#00ffcc',
+                            neong: '#00ff88',
+                            neonr: '#ff0080',
+                            neonv: '#a855f7',
+                            gold: '#f59e0b',
+                            danger: '#ef4444',
+                            success: '#10b981',
+                            warning: '#f59e0b',
+                            info: '#3b82f6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
+                    },
+                    boxShadow: {
+                        'glow': '0 0 15px rgba(6, 182, 212, 0.4), 0 0 30px rgba(6, 182, 212, 0.2), 0 0 45px rgba(6, 182, 212, 0.1)',
+                        'glow-strong': '0 0 20px rgba(0, 255, 204, 0.5), 0 0 40px rgba(0, 255, 204, 0.3), 0 0 60px rgba(0, 255, 204, 0.15)',
+                        'glow-purple': '0 0 15px rgba(168, 85, 247, 0.4), 0 0 30px rgba(168, 85, 247, 0.2)',
+                        'glow-gold': '0 0 12px rgba(245, 158, 11, 0.5), 0 0 25px rgba(245, 158, 11, 0.25)',
+                        'inner-glow': 'inset 0 0 20px rgba(6, 182, 212, 0.15)',
+                    },
+                    animation: {
+                        'border-spin': 'borderSpin 6s linear infinite',
+                        'glow-pulse': 'glowPulse 2.5s ease-in-out infinite alternate',
+                        'float': 'float 4s ease-in-out infinite',
+                        'float-slow': 'floatSlow 6s ease-in-out infinite',
+                        'pulse-slow': 'pulseSlow 3s ease-in-out infinite',
+                        'bounce-in': 'bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+                        'slide-up': 'slideUp 0.5s ease-out forwards',
+                        'slide-down': 'slideDown 0.4s ease-out forwards',
+                        'scale-in': 'scaleIn 0.35s ease-out forwards',
+                        'shimmer': 'shimmer 2s linear infinite',
+                        'ripple': 'ripple 0.7s ease-out forwards',
+                        'heartbeat': 'heartbeat 1.5s ease-in-out infinite',
+                        'shake': 'shake 0.5s ease-in-out',
+                        'wobble': 'wobble 1s ease-in-out',
+                        'spin-slow': 'spin 8s linear infinite',
+                        'fade-in': 'fadeIn 0.6s ease-out forwards',
+                        'fade-out': 'fadeOut 0.3s ease-out forwards',
+                        'flip-in-x': 'flipInX 0.5s ease-out forwards',
+                        'zoom-in': 'zoomIn 0.4s ease-out forwards',
+                        'blur-in': 'blurIn 0.7s ease-out forwards',
+                        'gradient-move': 'gradientMove 4s ease infinite',
+                        'typing': 'typing 2s steps(40, end)',
+                        'blink-caret': 'blinkCaret 0.75s step-end infinite',
+                        'orbit': 'orbit 10s linear infinite',
+                        'pulse-ring': 'pulseRing 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite',
+                        'fall': 'fall 1s ease-in forwards',
+                        'rise': 'rise 1s ease-out forwards',
+                        'swing': 'swing 1s ease-in-out',
+                        'wobble-horizon': 'wobbleHorizon 1s ease-in-out',
+                        'bounce-flash': 'bounceFlash 1s ease infinite',
+                        'stretch': 'stretch 0.5s ease-out',
+                        'jello': 'jello 1s ease-in-out',
+                        'roll-in': 'rollIn 0.6s ease-out forwards',
+                        'rotate-in': 'rotateIn 0.5s ease-out forwards',
+                        'slit-in': 'slitIn 0.5s ease-out forwards',
+                        'vibrate': 'vibrate 0.3s ease-in-out infinite',
+                        'passion': 'passion 0.8s ease-in-out infinite alternate',
+                        'stagger-1': 'slideUp 0.5s ease-out 0.1s both',
+                        'stagger-2': 'slideUp 0.5s ease-out 0.2s both',
+                        'stagger-3': 'slideUp 0.5s ease-out 0.3s both',
+                        'stagger-4': 'slideUp 0.5s ease-out 0.4s both',
+                        'stagger-5': 'slideUp 0.5s ease-out 0.5s both',
+                    },
+                    keyframes: {
+                        borderSpin: {
+                            '0%': { backgroundPosition: '0% 0%, 100% 0%, 100% 100%, 0% 100%' },
+                            '100%': { backgroundPosition: '0% 0%, 100% 0%, 100% 100%, 0% 100%' }
+                        },
+                        glowPulse: {
+                            '0%': { boxShadow: '0 0 15px rgba(6, 182, 212, 0.35), 0 0 30px rgba(6, 182, 212, 0.15)' },
+                            '100%': { boxShadow: '0 0 30px rgba(0, 255, 204, 0.6), 0 0 60px rgba(0, 255, 204, 0.3), 0 0 90px rgba(168, 85, 247, 0.15)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' }
+                        },
+                        floatSlow: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-18px) rotate(1deg)' }
+                        },
+                        pulseSlow: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.6' }
+                        },
+                        bounceIn: {
+                            '0%': { transform: 'scale(0.2)', opacity: '0' },
+                            '20%': { transform: 'scale(0.9)' },
+                            '40%': { transform: 'scale(1.1)' },
+                            '60%': { transform: 'scale(0.95)' },
+                            '80%': { transform: 'scale(1.02)' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(40px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        slideDown: {
+                            '0%': { transform: 'translateY(-30px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        scaleIn: {
+                            '0%': { transform: 'scale(0.8)', opacity: '0' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        shimmer: {
+                            '0%': { backgroundPosition: '-1000px 0' },
+                            '100%': { backgroundPosition: '1000px 0' }
+                        },
+                        ripple: {
+                            '0%': { transform: 'scale(0)', opacity: '1' },
+                            '100%': { transform: 'scale(4)', opacity: '0' }
+                        },
+                        heartbeat: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '14%': { transform: 'scale(1.1)' },
+                            '28%': { transform: 'scale(1)' },
+                            '42%': { transform: 'scale(1.1)' },
+                            '70%': { transform: 'scale(1)' }
+                        },
+                        shake: {
+                            '0%, 100%': { transform: 'translateX(0)' },
+                            '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-5px)' },
+                            '20%, 40%, 60%, 80%': { transform: 'translateX(5px)' }
+                        },
+                        wobble: {
+                            '0%': { transform: 'translateX(0%) rotate(0deg)' },
+                            '15%': { transform: 'translateX(-10px) rotate(-5deg)' },
+                            '30%': { transform: 'translateX(8px) rotate(3deg)' },
+                            '45%': { transform: 'translateX(-5px) rotate(-3deg)' },
+                            '60%': { transform: 'translateX(3px) rotate(2deg)' },
+                            '75%': { transform: 'translateX(-2px) rotate(-1deg)' },
+                            '100%': { transform: 'translateX(0%) rotate(0deg)' }
+                        },
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        fadeOut: {
+                            '0%': { opacity: '1' },
+                            '100%': { opacity: '0' }
+                        },
+                        flipInX: {
+                            '0%': { transform: 'perspective(400px) rotateX(90deg)', opacity: '0' },
+                            '40%': { transform: 'perspective(400px) rotateX(-10deg)' },
+                            '70%': { transform: 'perspective(400px) rotateX(10deg)' },
+                            '100%': { transform: 'perspective(400px) rotateX(0deg)', opacity: '1' }
+                        },
+                        zoomIn: {
+                            '0%': { transform: 'scale(0.3)', opacity: '0' },
+                            '50%': { opacity: '1' },
+                            '100%': { transform: 'scale(1)', opacity: '1' }
+                        },
+                        blurIn: {
+                            '0%': { filter: 'blur(12px)', opacity: '0' },
+                            '100%': { filter: 'blur(0)', opacity: '1' }
+                        },
+                        gradientMove: {
+                            '0%': { backgroundPosition: '0% 50%' },
+                            '50%': { backgroundPosition: '100% 50%' },
+                            '100%': { backgroundPosition: '0% 50%' }
+                        },
+                        typing: {
+                            'from': { width: '0' },
+                            'to': { width: '100%' }
+                        },
+                        blinkCaret: {
+                            'from, to': { borderColor: 'transparent' },
+                            '50%': { borderColor: 'currentColor' }
+                        },
+                        orbit: {
+                            'from': { transform: 'rotate(0deg) translateX(120px) rotate(0deg)' },
+                            'to': { transform: 'rotate(360deg) translateX(120px) rotate(-360deg)' }
+                        },
+                        pulseRing: {
+                            '0%': { transform: 'scale(0.33)', opacity: '1' },
+                            '80%, 100%': { transform: 'scale(1.5)', opacity: '0' }
+                        },
+                        fall: {
+                            '0%': { transform: 'translateY(-100px) rotate(0deg)', opacity: '0' },
+                            '100%': { transform: 'translateY(0) rotate(360deg)', opacity: '1' }
+                        },
+                        rise: {
+                            '0%': { transform: 'translateY(100px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        swing: {
+                            '20%': { transform: 'rotate3d(0, 0, 1, 15deg)' },
+                            '40%': { transform: 'rotate3d(0, 0, 1, -10deg)' },
+                            '60%': { transform: 'rotate3d(0, 0, 1, 5deg)' },
+                            '80%': { transform: 'rotate3d(0, 0, 1, -5deg)' },
+                            '100%': { transform: 'rotate3d(0, 0, 1, 0deg)' }
+                        },
+                        wobbleHorizon: {
+                            '0%': { transform: 'translateX(0%) rotate(0deg)' },
+                            '15%': { transform: 'translateX(-25%) rotate(-5deg)' },
+                            '30%': { transform: 'translateX(20%) rotate(3deg)' },
+                            '45%': { transform: 'translateX(-15%) rotate(-3deg)' },
+                            '60%': { transform: 'translateX(10%) rotate(2deg)' },
+                            '75%': { transform: 'translateX(-5%) rotate(-1deg)' },
+                            '100%': { transform: 'translateX(0%) rotate(0deg)' }
+                        },
+                        bounceFlash: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '50%': { transform: 'scale(1.2)' }
+                        },
+                        stretch: {
+                            '0%': { transform: 'scaleX(0.5)' },
+                            '100%': { transform: 'scaleX(1)' }
+                        },
+                        jello: {
+                            '0%, 100%': { transform: 'skewX(0deg) skewY(0deg)' },
+                            '25%': { transform: 'skewX(-10deg) skewY(-10deg)' },
+                            '50%': { transform: 'skewX(5deg) skewY(5deg)' },
+                            '75%': { transform: 'skewX(-3deg) skewY(-3deg)' }
+                        },
+                        rollIn: {
+                            '0%': { transform: 'translateX(-100%) rotate(-120deg)', opacity: '0' },
+                            '100%': { transform: 'translateX(0) rotate(0deg)', opacity: '1' }
+                        },
+                        rotateIn: {
+                            '0%': { transform: 'rotate(-200deg)', opacity: '0' },
+                            '100%': { transform: 'rotate(0)', opacity: '1' }
+                        },
+                        slitIn: {
+                            '0%': { transform: 'translateZ(-1000px) rotateY(-90deg)', opacity: '0' },
+                            '50%': { transform: 'translateZ(-500px) rotateY(-45deg)', opacity: '0.5' },
+                            '100%': { transform: 'translateZ(0) rotateY(0)', opacity: '1' }
+                        },
+                        vibrate: {
+                            '0%, 100%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-2px, 2px)' },
+                            '40%': { transform: 'translate(-2px, -2px)' },
+                            '60%': { transform: 'translate(2px, 2px)' },
+                            '80%': { transform: 'translate(2px, -2px)' }
+                        },
+                        passion: {
+                            '0%': { transform: 'scale(1)' },
+                            '100%': { transform: 'scale(1.15)' }
+                        }
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style type="text/tailwindcss">
+        @layer utilities {
+            /* ========== UTILIDADES DE VIDRIO Y FONDO ========== */
+            .glass { background: rgba(2, 6, 23, 0.8); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(51, 65, 85, 0.45); }
+            .glass-card { background: linear-gradient(135deg, rgba(15, 23, 42, 0.85), rgba(30, 41, 59, 0.75)); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(51, 65, 85, 0.55); box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.05); transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+            .glass-card:hover { border-color: rgba(0, 255, 204, 0.35); box-shadow: 0 12px 50px rgba(6, 182, 212, 0.18), inset 0 1px 0 rgba(255,255,255,0.08); transform: translateY(-3px); }
+            .glass-ultra { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border: 1px solid rgba(148, 163, 184, 0.2); }
+            .glass-deep { background: rgba(15, 23, 42, 0.92); backdrop-filter: blur(16px); border: 1px solid rgba(30, 58, 95, 0.6); }
+            .glass-light { background: rgba(30, 64, 175, 0.08); backdrop-filter: blur(12px); border: 1px solid rgba(96, 165, 250, 0.18); }
+
+            /* ========== BORDES NEÓN ANIMADOS ========== */
+            .rgb-border { position: relative; border-radius: 18px; }
+            .rgb-border::before {
+                content: ""; position: absolute; inset: -3px; border-radius: 20px;
+                background: linear-gradient(45deg, #00ff88, #00ffcc, #06b6d4, #a855f7, #ec4899, #f59e0b, #00ff88);
+                background-size: 400% 400%; animation: borderSpin 7s linear infinite; z-index: -1;
+            }
+            .rgb-border-strong { position: relative; border-radius: 20px; }
+            .rgb-border-strong::before {
+                content: ""; position: absolute; inset: -4px; border-radius: 22px;
+                background: linear-gradient(45deg, #ff0080, #a855f7, #06b6d4, #00ffcc, #f59e0b, #ff0080);
+                background-size: 500% 500%; animation: borderSpin 5s linear infinite; z-index: -1; filter: blur(0.5px);
+            }
+            .neon-border { border: 1px solid transparent; background-clip: padding-box; position: relative; }
+            .neon-border::after {
+                content: ''; position: absolute; inset: 0; border-radius: inherit; margin: -1px;
+                background: linear-gradient(135deg, rgba(0,255,204,0.7), rgba(168,85,247,0.6), rgba(6,182,212,0.7));
+                z-index: -1; opacity: 0.6; transition: opacity 0.3s;
+            }
+            .neon-border:hover::after { opacity: 1; }
+
+            /* ========== TEXTOS NEÓN Y EFECTOS ========== */
+            .text-shadow { text-shadow: 0 0 20px rgba(0, 255, 204, 0.5), 0 0 40px rgba(0, 255, 204, 0.25); }
+            .text-shadow-strong { text-shadow: 0 0 15px rgba(0, 255, 204, 0.8), 0 0 30px rgba(6, 182, 212, 0.5), 0 0 60px rgba(168, 85, 247, 0.3); }
+            .text-shadow-purple { text-shadow: 0 0 15px rgba(168, 85, 247, 0.6), 0 0 30px rgba(168, 85, 247, 0.3); }
+            .text-gradient { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(90deg, #00ffcc, #06b6d4, #a855f7); background-size: 200% auto; animation: gradientMove 3s ease infinite; }
+            .text-gradient-gold { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(90deg, #fef08a, #f59e0b, #fbbf24, #fef08a); background-size: 200% auto; animation: gradientMove 4s ease infinite; }
+            .text-gradient-cyber { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(135deg, #00ff88, #00ffcc, #06b6d4); background-size: 200% auto; animation: gradientMove 3s ease infinite; }
+            .text-gradient-fire { background-clip: text; -webkit-background-clip: text; color: transparent; background-image: linear-gradient(135deg, #fbbf24, #f97316, #ef4444); background-size: 200% auto; animation: gradientMove 3s ease infinite; }
+
+            /* ========== BOTONES Y EFECTOS DE INTERACCIÓN ========== */
+            .btn-primary { @apply relative px-5 py-2.5 rounded-xl font-semibold text-white bg-gradient-to-r from-vault-500 via-vault-neon to-vault-neong shadow-lg shadow-vault-500/25 hover:shadow-glow-strong transition-all duration-300 hover:scale-[1.03] active:scale-[0.97] overflow-hidden; }
+            .btn-primary::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent); transition: left 0.5s; }
+            .btn-primary:hover::before { left: 100%; }
+            .btn-secondary { @apply px-4 py-2 rounded-xl font-medium text-slate-200 bg-slate-800/70 border border-slate-700/80 hover:border-vault-neon/60 hover:bg-slate-700/60 transition-all duration-300 hover:shadow-glow; }
+            .btn-danger { @apply px-4 py-2 rounded-xl font-medium text-rose-300 bg-rose-950/40 border border-rose-900/60 hover:bg-rose-900/50 hover:border-rose-500/60 transition-all duration-300 hover:shadow-[0_0_15px_rgba(239,68,68,0.3)]; }
+            .btn-gold { @apply px-4 py-2 rounded-xl font-medium text-amber-200 bg-amber-950/40 border border-amber-800/50 hover:border-amber-500/60 transition-all duration-300 hover:shadow-glow-gold; }
+            .btn-purple { @apply px-4 py-2 rounded-xl font-medium text-purple-200 bg-purple-950/40 border border-purple-900/50 hover:border-purple-500/60 transition-all duration-300 hover:shadow-glow-purple; }
+            .btn-ghost { @apply px-4 py-2 rounded-xl font-medium text-slate-300 hover:bg-slate-800/50 transition-all duration-200; }
+
+            /* ========== SCROLL PERSONALIZADO ========== */
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+            .scrollbar-custom::-webkit-scrollbar { width: 8px; height: 8px; }
+            .scrollbar-custom::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); border-radius: 4px; }
+            .scrollbar-custom::-webkit-scrollbar-thumb { background: linear-gradient(180deg, #06b6d4, #a855f7); border-radius: 4px; }
+            .scrollbar-custom::-webkit-scrollbar-thumb:hover { background: linear-gradient(180deg, #22d3ee, #c084fc); }
+
+            /* ========== EFECTOS DE ENTRADA Y DESTAQUE ========== */
+            .hover-lift { transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease; }
+            .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(6, 182, 212, 0.15); }
+            .hover-glow:hover { box-shadow: 0 0 20px rgba(0, 255, 204, 0.4), 0 0 40px rgba(168, 85, 247, 0.2); }
+            .pulse-border { position: relative; }
+            .pulse-border::after { content: ''; position: absolute; inset: -2px; border-radius: inherit; border: 2px solid transparent; background: linear-gradient(90deg, #00ffcc, #a855f7, #06b6d4) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; mask-composite: exclude; animation: borderSpin 4s linear infinite; opacity: 0; transition: opacity 0.3s; }
+            .pulse-border:hover::after { opacity: 1; }
+
+            /* ========== FONDOS ESPECIALES ========== */
+            .bg-grid { background-image: linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px); background-size: 40px 40px; }
+            .bg-dots { background-image: radial-gradient(rgba(6, 182, 212, 0.12) 1px, transparent 1px); background-size: 24px 24px; }
+            .bg-noise { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); background-blend-mode: overlay; opacity: 0.03; }
+            .bg-radial-glow { background: radial-gradient(ellipse at top, rgba(6, 182, 212, 0.12), transparent 60%), radial-gradient(ellipse at bottom right, rgba(168, 85, 247, 0.1), transparent 60%); }
+
+            /* ========== MARCOS Y RECORTES ========== */
+            .clip-slant { clip-path: polygon(0 0, 100% 0, 96% 100%, 4% 100%); }
+            .clip-hexagon { clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%); }
+            .clip-diamond { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); }
+            .rounded-ultra { border-radius: 24px; }
+            .rounded-super { border-radius: 32px; }
+
+            /* ========== ESTADOS ========== */
+            .status-online { box-shadow: inset 0 0 0 2px #0f172a, 0 0 0 2px #10b981, 0 0 10px rgba(16, 185, 129, 0.5); }
+            .status-warning { box-shadow: inset 0 0 0 2px #0f172a, 0 0 0 2px #f59e0b, 0 0 10px rgba(245, 158, 11, 0.5); }
+            .status-danger { box-shadow: inset 0 0 0 2px #0f172a, 0 0 0 2px #ef4444, 0 0 10px rgba(239, 68, 68, 0.5); }
+
+            /* ========== ENTRADAS DE TEXTO ========== */
+            .input-glow { @apply bg-slate-900/60 border border-slate-700/80 rounded-xl px-4 py-2.5 text-sm text-slate-100 outline-none transition-all duration-300 focus:border-vault-neon/80 focus:shadow-[0_0_15px_rgba(0,255,204,0.2)] focus:ring-1 focus:ring-vault-neon/30; }
+            .input-advanced { @apply bg-slate-950/70 border border-slate-800/80 rounded-xl px-4 py-3 text-sm text-slate-100 outline-none transition-all duration-300 focus:border-vault-neon/70 focus:shadow-glow-inner focus:ring-2 focus:ring-cyan-500/20; }
+
+            /* ========== TARJETA DESTAQUE ========== */
+            .feature-card { @apply glass-card rounded-2xl p-5 hover-lift; }
+            .feature-icon { @apply w-12 h-12 rounded-xl flex items-center justify-center text-xl bg-gradient-to-br from-cyan-500/20 to-purple-500/20 text-vault-neon; }
+
+            /* ========== SELECCIÓN ========== */
+            .selection-glow::selection { background: rgba(0, 255, 204, 0.35); color: #fff; }
+
+            /* ========== TOOLTIP ========== */
+            .tooltip-wrap { position: relative; }
+            .tooltip-text { visibility: hidden; opacity: 0; position: absolute; bottom: 120%; left: 50%; transform: translateX(-50%) translateY(8px); background: rgba(15, 23, 42, 0.95); color: #e2e8f0; padding: 6px 12px; border-radius: 8px; font-size: 11px; white-space: nowrap; border: 1px solid rgba(6, 182, 212, 0.3); box-shadow: 0 8px 24px rgba(0,0,0,0.3); transition: all 0.25s ease; z-index: 50; }
+            .tooltip-wrap:hover .tooltip-text { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+
+            /* ========== INDICADORES ========== */
+            .led { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+            .led-green { background: #10b981; box-shadow: 0 0 8px #10b981, 0 0 16px rgba(16,185,129,0.4); }
+            .led-cyan { background: #06b6d4; box-shadow: 0 0 8px #06b6d4, 0 0 16px rgba(6,182,212,0.4); }
+            .led-purple { background: #a855f7; box-shadow: 0 0 8px #a855f7, 0 0 16px rgba(168,85,247,0.4); }
+            .led-amber { background: #f59e0b; box-shadow: 0 0 8px #f59e0b, 0 0 16px rgba(245,158,11,0.4); }
+            .led-red { background: #ef4444; box-shadow: 0 0 8px #ef4444, 0 0 16px rgba(239,68,68,0.4); }
+
+            /* ========== PROGRESOS ========== */
+            .progress-bar { height: 8px; border-radius: 4px; background: linear-gradient(90deg, #10b981, #06b6d4, #a855f7); background-size: 200% 100%; animation: gradientMove 2s linear infinite; }
+            .progress-track { background: rgba(30, 41, 59, 0.8); border-radius: 4px; overflow: hidden; }
+
+            /* ========== EFECTOS DE TEXTO ========== */
+            .text-stroke { -webkit-text-stroke: 1px rgba(0,255,204,0.5); color: transparent; }
+            .text-3d { text-shadow: 1px 1px 0 #0e7490, 2px 2px 0 #155e75, 3px 3px 10px rgba(0,0,0,0.4); }
+            .text-retro { letter-spacing: 2px; text-transform: uppercase; }
+            .mono-space { font-family: 'JetBrains Mono', monospace; letter-spacing: 1px; }
+        }
+    </style>
+</head>
+<body class="h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection-glow overflow-x-hidden font-sans">
+
+    <!-- FONDOS ANIMADOS -->
+    <div class="fixed inset-0 pointer-events-none bg-radial-glow opacity-70"></div>
+    <div class="fixed inset-0 pointer-events-none bg-grid opacity-40"></div>
+    <div class="fixed inset-0 pointer-events-none bg-dots opacity-30"></div>
+    <div class="fixed inset-0 pointer-events-none bg-noise"></div>
+
+    <!-- PARTÍCULAS DE FONDO -->
+    <div id="particles" class="fixed inset-0 pointer-events-none z-0"></div>
+
+    <!-- CONTENEDOR DE NOTIFICACIONES -->
+    <div id="toast-container" class="fixed top-20 right-4 z-50 space-y-3 pointer-events-none"></div>
+
+    <!-- BARRA DE ESTADO SUPERIOR INFORMATIVA -->
+    <div class="fixed top-0 left-0 right-0 z-50 glass border-b border-slate-800/70 py-1.5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400">
+            <div class="flex items-center space-x-4">
+                <span class="flex items-center space-x-1.5">
+                    <span class="led led-green animate-pulse"></span>
+                    <span>Sistema Operativo: <span class="text-vault-neon font-semibold">En Línea</span></span>
+                </span>
+                <span>•</span>
+                <span>Motor PDF: <span class="text-vault-neon font-semibold">PDF.js v3.11</span></span>
+                <span>•</span>
+                <span>Compresión: <span class="text-vault-neon font-semibold">JSZip v3.10</span></span>
+                <span>•</span>
+                <span>Generación: <span class="text-vault-neon font-semibold">jsPDF v2.5</span></span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span>Almacenamiento: <span id="storage-status" class="text-emerald-400 font-semibold">Local Activo</span></span>
+                <span>•</span>
+                <span>Versión: <span class="text-amber-400 font-bold">5.0.0 ULTIMATE</span></span>
+                <span>•</span>
+                <span id="current-time" class="mono-space text-vault-neon"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- BARRA PRINCIPAL DE NAVEGACIÓN -->
+    <header class="sticky top-7 z-40 glass border-b border-slate-800/80 mt-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- LOGO -->
+            <div class="flex items-center space-x-4">
+                <div class="rgb-border-strong p-[2px] rounded-2xl shadow-glow-strong animate-pulse-slow">
+                    <div class="w-14 h-14 rounded-[18px] bg-slate-950 flex items-center justify-center">
+                        <span class="text-2xl font-black text-gradient">DV</span>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-black tracking-tight">
+                        <span class="text-gradient-cyber">DOCVAULT</span>
+                        <span class="ml-2 px-3 py-0.5 rounded-full bg-gradient-to-r from-vault-500/20 to-purple-500/20 border border-vault-neon/30 text-xs font-bold text-vault-neon mono-space">PRO MAX 5.0</span>
+                    </h1>
+                    <p class="text-xs text-slate-400 mt-0.5">Editor, Visor, Convertidor y Gestor Avanzado de Documentos PDF</p>
+                </div>
+            </div>
+
+            <!-- ACCIONES IZQUIERDA -->
+            <div class="hidden lg:flex items-center space-x-2">
+                <button onclick="toggleHistoryPanel()" class="tooltip-wrap flex items-center space-x-2 px-3 py-2 rounded-xl bg-slate-900/70 border border-slate-800/80 hover:border-vault-neon/50 hover:bg-slate-800/60 transition-all text-xs text-slate-300">
+                    <i class="fa-solid fa-clock-rotate-left text-vault-neon"></i>
+                    <span>Historial</span>
+                    <span id="history-count" class="px-2 py-0.5 rounded-full bg-vault-neon/15 text-vault-neon text-[10px] font-bold mono-space">0</span>
+                    <span class="tooltip-text">Ver documentos anteriores</span>
+                </button>
+                <button onclick="showHelpPanel()" class="tooltip-wrap flex items-center space-x-2 px-3 py-2 rounded-xl bg-slate-900/70 border border-slate-800/80 hover:border-vault-neon/50 hover:bg-slate-800/60 transition-all text-xs text-slate-300">
+                    <i class="fa-solid fa-circle-question text-vault-purple"></i>
+                    <span>Ayuda</span>
+                    <span class="tooltip-text">Guía y atajos de teclado</span>
+                </button>
+                <button onclick="showSettingsPanel()" class="tooltip-wrap flex items-center space-x-2 px-3 py-2 rounded-xl bg-slate-900/70 border border-slate-800/80 hover:border-vault-neon/50 hover:bg-slate-800/60 transition-all text-xs text-slate-300">
+                    <i class="fa-solid fa-sliders text-vault-gold"></i>
+                    <span>Ajustes</span>
+                    <span class="tooltip-text">Configuración visual y comportamiento</span>
+                </button>
+            </div>
+
+            <!-- CONTADOR Y ESTADO -->
+            <div class="hidden md:flex items-center space-x-3 bg-slate-900/80 px-4 py-2 rounded-2xl border border-slate-800/80 shadow-inner-glow">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-vault-neon opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-vault-neon"></span>
+                </span>
+                <div class="text-center">
+                    <p class="text-[10px] text-slate-400 uppercase tracking-wider">Auto-guardado</p>
+                    <p class="mono-space text-sm font-bold text-vault-neon" id="header-timer">24:00:00</p>
+                </div>
+                <button onclick="extend24H()" class="px-2 py-1 rounded-lg bg-slate-800/60 border border-slate-700/80 hover:border-vault-neon/50 hover:bg-slate-700/60 text-xs transition-all" title="Extender 24 horas más">
+                    <i class="fa-solid fa-clock-rotate-left"></i> +24h
+                </button>
+            </div>
+
+            <!-- BOTONES DERECHA -->
+            <div class="flex items-center space-x-2">
+                <button id="btn-export-pdf" onclick="exportModifiedPDF()" class="hidden btn-primary tooltip-wrap">
+                    <i class="fa-solid fa-file-export mr-1.5"></i>
+                    <span class="hidden sm:inline">Exportar PDF</span>
+                    <span class="tooltip-text">Generar y descargar PDF modificado</span>
+                </button>
+                <button id="btn-export-images" onclick="exportAllImages()" class="hidden btn-secondary tooltip-wrap">
+                    <i class="fa-solid fa-images mr-1.5"></i>
+                    <span class="hidden sm:inline">Imágenes</span>
+                    <span class="tooltip-text">Descargar todas las páginas en ZIP</span>
+                </button>
+                <button id="btn-purge" onclick="confirmPurge()" class="hidden btn-danger tooltip-wrap">
+                    <i class
