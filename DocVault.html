@@ -1,5 +1,5 @@
 <html style="margin:0;padding:0;">
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4/fonts/remixicon.css">
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.min.js"></script>
@@ -8,153 +8,141 @@
   var s = document.createElement('style');
   s.textContent = `
     :root{
-      --bg:#202024;
-      --bg2:#1a1a1d;
-      --card:#2a2a2f;
-      --card-hover:#323238;
-      --text:#e8e5df;
-      --muted:#9a978f;
-      --accent:#c47046;
-      --accent-soft:rgba(196,112,70,.18);
-      --accent2:#7ba8b8;
-      --accent2-soft:rgba(123,168,184,.18);
-      --border:rgba(232,229,223,.12);
-      --success:#4ade80;
-      --danger:#f87171;
+      --bg:#0b0f1a;
+      --bg2:#111827;
+      --bg3:#0d1321;
+      --card:#1a2235;
+      --card-hover:#22304a;
+      --text:#e6f1ff;
+      --muted:#7a8ba8;
+      --accent:#00d4ff;
+      --accent-soft:rgba(0,212,255,.15);
+      --accent2:#a855f7;
+      --accent2-soft:rgba(168,85,247,.15);
+      --border:rgba(0,212,255,.12);
+      --success:#22d3ee;
+      --danger:#ff6b6b;
       --warning:#fbbf24;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
-      font-family:'Sora',sans-serif;
+      font-family:'Chakra Petch',sans-serif;
       background:var(--bg);
       color:var(--text);
-      overflow-x:hidden;
+      min-height:100%;
+      background-image:
+        radial-gradient(ellipse at 20% 0%, rgba(0,212,255,.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(168,85,247,.08) 0%, transparent 50%);
     }
     ::-webkit-scrollbar{width:8px;height:8px}
     ::-webkit-scrollbar-track{background:var(--bg2)}
-    ::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-    ::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+    ::-webkit-scrollbar-thumb{background:linear-gradient(var(--accent),var(--accent2));border-radius:4px}
     
-    .app-wrapper{
-      display:flex;
-      min-height:100%;
-      background:radial-gradient(1200px 600px at 80% -10%, color-mix(in srgb, var(--accent) 8%, transparent), transparent 60%), var(--bg);
+    .app{
+      max-width:1400px;
+      margin:0 auto;
+      padding:20px;
     }
     
-    /* Sidebar */
-    .sidebar{
-      width:280px;
-      min-width:280px;
-      background:var(--bg2);
-      border-right:1px solid var(--border);
-      display:flex;
-      flex-direction:column;
-      transition:width .3s ease, min-width .3s ease;
-      overflow:hidden;
-    }
-    .sidebar.collapsed{width:0;min-width:0;border-right:none}
-    
-    .sidebar-header{
-      padding:20px 16px;
-      border-bottom:1px solid var(--border);
+    /* HEADER */
+    .header{
       display:flex;
       align-items:center;
-      gap:10px;
+      justify-content:space-between;
+      padding:20px 28px;
+      background:linear-gradient(135deg,rgba(26,34,53,.9),rgba(17,24,39,.9));
+      border:1px solid var(--border);
+      border-radius:16px;
+      margin-bottom:20px;
+      backdrop-filter:blur(10px);
+    }
+    .logo{
+      display:flex;align-items:center;gap:14px;
     }
     .logo-icon{
-      width:40px;height:40px;
-      border-radius:10px;
-      background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 60%,var(--accent2)));
+      width:48px;height:48px;
+      border-radius:12px;
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
       display:flex;align-items:center;justify-content:center;
-      color:#fff;font-size:20px;
+      font-size:24px;color:#0b0f1a;
+      box-shadow:0 0 30px rgba(0,212,255,.35);
+    }
+    .logo-text{font-size:26px;font-weight:700;letter-spacing:.02em}
+    .logo-text span{
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      -webkit-background-clip:text;background-clip:text;color:transparent;
+    }
+    .logo-sub{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.2em;margin-top:2px}
+    
+    .header-actions{display:flex;gap:8px}
+    .icon-btn{
+      width:42px;height:42px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      background:var(--card);
+      color:var(--text);
+      cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      font-size:18px;
+      transition:all .25s ease;
+    }
+    .icon-btn:hover{
+      background:var(--accent-soft);
+      border-color:var(--accent);
+      color:var(--accent);
+      transform:translateY(-2px);
       box-shadow:0 4px 20px var(--accent-soft);
     }
-    .logo-text{font-weight:800;font-size:18px;letter-spacing:-.02em}
-    .logo-sub{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.15em}
     
-    .sidebar-tabs{
-      display:flex;
-      padding:4px;
-      margin:12px;
-      background:var(--bg);
-      border-radius:8px;
+    /* LAYOUT PRINCIPAL */
+    .main-layout{
+      display:grid;
+      grid-template-columns:260px 1fr;
+      gap:20px;
+    }
+    @media(max-width:900px){
+      .main-layout{grid-template-columns:1fr}
+      .sidebar{display:none}
+    }
+    
+    /* SIDEBAR */
+    .sidebar{
+      background:var(--bg2);
       border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      height:fit-content;
+      position:sticky;top:20px;
     }
-    .sidebar-tab{
-      flex:1;
-      padding:8px 6px;
-      text-align:center;
+    .sidebar-title{
       font-size:11px;
-      font-weight:600;
-      color:var(--muted);
-      border-radius:6px;
-      cursor:pointer;
-      transition:all .2s ease;
       text-transform:uppercase;
-      letter-spacing:.05em;
-    }
-    .sidebar-tab:hover{color:var(--text)}
-    .sidebar-tab.active{
-      background:var(--accent-soft);
+      letter-spacing:.18em;
       color:var(--accent);
+      font-weight:700;
+      margin-bottom:12px;
+      padding:0 4px;
     }
-    
-    .sidebar-content{flex:1;overflow-y:auto;padding:0 12px 12px}
-    .sidebar-section-title{
-      font-size:10px;
-      text-transform:uppercase;
-      letter-spacing:.15em;
-      color:var(--muted);
-      padding:12px 8px 8px;
-      font-weight:600;
-    }
-    
-    .thumbnail-item{
-      padding:8px;
-      border-radius:8px;
+    .history-item{
+      display:flex;align-items:center;gap:10px;
+      padding:10px;
+      border-radius:10px;
       cursor:pointer;
       margin-bottom:6px;
-      border:2px solid transparent;
-      transition:all .2s ease;
-      background:var(--card);
-    }
-    .thumbnail-item:hover{background:var(--card-hover)}
-    .thumbnail-item.active{
-      border-color:var(--accent);
-      background:var(--accent-soft);
-    }
-    .thumbnail-item canvas{
-      width:100%;
-      border-radius:4px;
-      display:block;
-    }
-    .thumbnail-label{
-      font-size:10px;
-      text-align:center;
-      color:var(--muted);
-      margin-top:6px;
-      font-weight:600;
-    }
-    
-    .history-item{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      padding:10px;
-      border-radius:8px;
-      cursor:pointer;
-      margin-bottom:4px;
       transition:all .2s ease;
       border:1px solid transparent;
     }
-    .history-item:hover{background:var(--card);border-color:var(--border)}
+    .history-item:hover{
+      background:var(--card);
+      border-color:var(--border);
+    }
     .history-icon{
-      width:32px;height:32px;
-      border-radius:6px;
-      background:var(--accent-soft);
+      width:34px;height:34px;
+      border-radius:8px;
+      background:linear-gradient(135deg,var(--accent-soft),var(--accent2-soft));
       display:flex;align-items:center;justify-content:center;
-      color:var(--accent);font-size:14px;
+      color:var(--accent);font-size:16px;
       flex-shrink:0;
     }
     .history-info{flex:1;min-width:0}
@@ -163,146 +151,92 @@
       white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
     .history-meta{font-size:10px;color:var(--muted);margin-top:2px}
+    .history-empty{
+      text-align:center;
+      color:var(--muted);
+      font-size:12px;
+      padding:24px 8px;
+    }
     .history-clear{
-      font-size:11px;color:var(--muted);cursor:pointer;
-      padding:6px 10px;text-align:center;
-      border-radius:6px;margin-top:8px;
+      margin-top:12px;
+      padding:8px;
+      text-align:center;
+      font-size:11px;
+      color:var(--muted);
       border:1px solid var(--border);
+      border-radius:8px;
+      cursor:pointer;
       transition:all .2s ease;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-weight:600;
     }
     .history-clear:hover{color:var(--danger);border-color:var(--danger)}
     
-    /* Main content */
-    .main-content{
-      flex:1;
-      display:flex;
-      flex-direction:column;
-      min-width:0;
-    }
+    /* CONTENT AREA */
+    .content{min-width:0}
     
-    /* Top bar */
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:14px 24px;
-      border-bottom:1px solid var(--border);
-      background:rgba(26,26,29,.8);
-      backdrop-filter:blur(10px);
-      position:sticky;top:0;z-index:10;
-    }
-    .topbar-left{display:flex;align-items:center;gap:12px}
-    .topbar-right{display:flex;align-items:center;gap:8px}
-    
-    .icon-btn{
-      width:38px;height:38px;
-      border-radius:8px;
-      border:1px solid var(--border);
-      background:var(--card);
-      color:var(--text);
-      cursor:pointer;
-      display:flex;align-items:center;justify-content:center;
-      font-size:16px;
-      transition:all .2s ease;
-    }
-    .icon-btn:hover{
-      background:var(--accent-soft);
-      border-color:var(--accent);
-      color:var(--accent);
-    }
-    .icon-btn.active{
-      background:var(--accent-soft);
-      border-color:var(--accent);
-      color:var(--accent);
-    }
-    
-    .search-box{
-      display:flex;
-      align-items:center;
-      gap:8px;
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:8px;
-      padding:6px 12px;
-      transition:all .2s ease;
-    }
-    .search-box:focus-within{
-      border-color:var(--accent);
-      box-shadow:0 0 0 3px var(--accent-soft);
-    }
-    .search-box input{
-      background:transparent;border:none;outline:none;
-      color:var(--text);font-family:'Sora',sans-serif;
-      font-size:13px;width:180px;
-    }
-    .search-box input::placeholder{color:var(--muted)}
-    .search-count{
-      font-size:11px;color:var(--muted);
-      background:var(--bg);
-      padding:2px 8px;border-radius:4px;
-    }
-    
-    /* Upload area */
-    .upload-zone{
-      margin:24px;
+    /* UPLOAD ZONE */
+    .upload{
       border:2px dashed var(--border);
       border-radius:16px;
-      padding:60px 40px;
+      padding:50px 30px;
       text-align:center;
       cursor:pointer;
       transition:all .3s ease;
-      background:var(--bg2);
+      background:linear-gradient(135deg,rgba(26,34,53,.5),rgba(17,24,39,.5));
       position:relative;
       overflow:hidden;
+      margin-bottom:20px;
     }
-    .upload-zone:hover, .upload-zone.drag-over{
+    .upload:hover,.upload.drag{
       border-color:var(--accent);
-      background:var(--accent-soft);
-      box-shadow:0 0 40px var(--accent-soft);
+      background:linear-gradient(135deg,var(--accent-soft),var(--accent2-soft));
+      box-shadow:0 0 40px rgba(0,212,255,.2);
     }
-    .upload-zone.drag-over::before{
+    .upload.drag::after{
       content:'';
       position:absolute;inset:0;
-      background:var(--accent-soft);
-      animation:pulse 1.5s ease-infinite;
+      background:linear-gradient(45deg,transparent 40%,var(--accent-soft) 50%,transparent 60%);
+      animation:scan 1.5s linear infinite;
     }
-    @keyframes pulse{
-      0%,100%{opacity:.3}
-      50%{opacity:.6}
+    @keyframes scan{
+      0%{transform:translateY(-100%)}
+      100%{transform:translateY(100%)}
     }
     .upload-icon{
-      width:80px;height:80px;
-      border-radius:20px;
+      width:72px;height:72px;
+      border-radius:18px;
       background:linear-gradient(135deg,var(--accent-soft),var(--accent2-soft));
-      display:flex;align-items:center;justify-content:center;
-      margin:0 auto 20px;
-      font-size:36px;color:var(--accent);
       border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      margin:0 auto 16px;
+      font-size:32px;
+      color:var(--accent);
     }
-    .upload-title{font-size:22px;font-weight:700;margin-bottom:8px}
-    .upload-sub{color:var(--muted);font-size:14px;margin-bottom:16px}
-    .upload-formats{
-      display:flex;flex-wrap:wrap;gap:6px;
-      justify-content:center;
-    }
-    .format-tag{
-      font-size:11px;
+    .upload-title{font-size:20px;font-weight:700;margin-bottom:6px}
+    .upload-sub{color:var(--muted);font-size:13px;margin-bottom:16px}
+    .upload-tags{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+    .tag{
+      font-size:10px;
       padding:4px 10px;
       border-radius:20px;
       background:var(--card);
       border:1px solid var(--border);
       color:var(--muted);
-      font-weight:600;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.05em;
     }
     
-    /* Progress bar */
-    .progress-wrap{
-      margin:0 24px 24px;
+    /* PROGRESS */
+    .progress{
+      margin-bottom:20px;
       display:none;
     }
-    .progress-wrap.show{display:block}
+    .progress.show{display:block}
     .progress-track{
-      width:100%;height:6px;
+      height:6px;
       background:var(--bg2);
       border-radius:3px;
       overflow:hidden;
@@ -313,185 +247,178 @@
       background:linear-gradient(90deg,var(--accent),var(--accent2));
       transition:width .3s ease;
       border-radius:3px;
+      box-shadow:0 0 10px var(--accent);
     }
     .progress-text{
       font-size:11px;color:var(--muted);
       margin-top:6px;text-align:center;
+      letter-spacing:.05em;
     }
     
-    /* File info bar */
-    .info-bar{
-      display:flex;flex-wrap:wrap;gap:16px;
-      margin:0 24px 16px;
-      padding:16px 20px;
-      background:var(--card);
-      border:1px solid var(--border);
-      border-radius:12px;
+    /* FILE INFO */
+    .fileinfo{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(160px,1fr));
+      gap:12px;
+      margin-bottom:16px;
       display:none;
     }
-    .info-bar.show{display:flex}
-    .info-item{
-      display:flex;align-items:center;gap:8px;
-      font-size:13px;
-    }
-    .info-item i{color:var(--accent);font-size:16px}
-    .info-label{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}
-    .info-value{font-weight:600}
-    
-    /* Viewer area */
-    .viewer-container{
-      flex:1;
-      margin:0 24px 24px;
+    .fileinfo.show{display:grid}
+    .info-card{
       background:var(--card);
       border:1px solid var(--border);
       border-radius:12px;
-      min-height:500px;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:relative;
-      overflow:hidden;
+      padding:14px 16px;
     }
-    .viewer-container.fullscreen-mode{
-      position:fixed;inset:0;
-      margin:0;border-radius:0;
-      z-index:9999;
-    }
-    
-    .empty-state{
-      text-align:center;
+    .info-label{
+      font-size:10px;
+      text-transform:uppercase;
+      letter-spacing:.12em;
       color:var(--muted);
-      padding:40px;
+      font-weight:700;
+      margin-bottom:4px;
     }
-    .empty-state i{
-      font-size:64px;
-      margin-bottom:16px;
-      opacity:.4;
-    }
-    
-    #pdfCanvas{
-      max-width:100%;
-      max-height:70vh;
-      border-radius:6px;
-      box-shadow:0 10px 40px rgba(0,0,0,.4);
-      transition:transform .2s ease;
-    }
-    #imageView{
-      max-width:100%;
-      max-height:70vh;
-      border-radius:6px;
-      box-shadow:0 10px 40px rgba(0,0,0,.4);
-      transition:transform .2s ease;
-    }
-    #textView{
-      width:100%;
-      max-height:70vh;
-      overflow:auto;
-      padding:24px;
-      font-family:'JetBrains Mono','Fira Code',monospace;
-      font-size:13px;
-      line-height:1.7;
-      text-align:left;
-      white-space:pre-wrap;
-      word-break:break-word;
+    .info-value{
+      font-size:14px;
+      font-weight:700;
       color:var(--text);
-      background:var(--bg2);
-      border-radius:8px;
-      margin:20px;
-    }
-    #audioView,#videoView{
-      max-width:100%;
-      border-radius:8px;
-      margin:20px;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
     }
     
-    /* Toolbar */
+    /* TOOLBAR */
     .toolbar{
       display:flex;flex-wrap:wrap;gap:8px;
-      margin:0 24px 24px;
-      padding:12px 16px;
+      padding:12px;
       background:var(--card);
       border:1px solid var(--border);
       border-radius:12px;
+      margin-bottom:16px;
       align-items:center;
       display:none;
     }
     .toolbar.show{display:flex}
-    .toolbar-divider{
-      width:1px;height:28px;
-      background:var(--border);
-      margin:0 4px;
-    }
-    .tool-btn{
+    .tbtn{
       display:flex;align-items:center;gap:6px;
       padding:8px 14px;
       border-radius:8px;
       border:1px solid var(--border);
       background:var(--bg2);
       color:var(--text);
-      font-family:'Sora',sans-serif;
-      font-size:13px;font-weight:600;
+      font-family:'Chakra Petch',sans-serif;
+      font-size:13px;font-weight:700;
       cursor:pointer;
       transition:all .2s ease;
       white-space:nowrap;
     }
-    .tool-btn:hover{
+    .tbtn:hover{
       background:var(--accent-soft);
       border-color:var(--accent);
       color:var(--accent);
     }
-    .tool-btn.primary{
-      background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 70%,var(--accent2)));
+    .tbtn.primary{
+      background:linear-gradient(135deg,var(--accent),var(--accent2));
       border-color:transparent;
-      color:#fff;
+      color:#0b0f1a;
     }
-    .tool-btn.primary:hover{
-      filter:brightness(1.1);
+    .tbtn.primary:hover{
+      filter:brightness(1.15);
       transform:translateY(-1px);
-      box-shadow:0 4px 16px var(--accent-soft);
+      box-shadow:0 4px 20px rgba(0,212,255,.3);
     }
-    .tool-btn.danger{color:var(--danger)}
-    .tool-btn.danger:hover{background:rgba(248,113,113,.1);border-color:var(--danger)}
+    .tbtn.danger:hover{background:rgba(255,107,107,.1);border-color:var(--danger);color:var(--danger)}
+    .tdiv{width:1px;height:28px;background:var(--border);margin:0 4px}
     
-    .zoom-slider{
-      display:flex;align-items:center;gap:8px;
-      padding:0 8px;
-    }
-    .zoom-slider input[type=range]{
-      width:100px;
-      accent-color:var(--accent);
-    }
-    .zoom-value{
-      font-size:12px;
-      color:var(--muted);
-      min-width:48px;
-      text-align:center;
-      font-weight:600;
-    }
-    
-    .page-nav{
-      display:flex;align-items:center;gap:6px;
-    }
+    .page-nav{display:flex;align-items:center;gap:6px}
     .page-input{
-      width:50px;
+      width:52px;
       padding:6px 8px;
       border-radius:6px;
       border:1px solid var(--border);
       background:var(--bg2);
       color:var(--text);
-      font-family:'Sora',sans-serif;
+      font-family:'Chakra Petch',sans-serif;
       font-size:13px;
       text-align:center;
-      font-weight:600;
+      font-weight:700;
     }
-    .page-input:focus{outline:none;border-color:var(--accent)}
-    .page-sep{color:var(--muted);font-size:13px}
+    .page-input:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+    .page-sep{color:var(--muted);font-size:13px;font-weight:600}
     
-    /* Toast notifications */
-    .toast-container{
+    .zoom-wrap{display:flex;align-items:center;gap:8px}
+    .zoom-wrap input[type=range]{
+      width:100px;
+      accent-color:var(--accent);
+    }
+    .zoom-val{
+      font-size:12px;
+      color:var(--accent);
+      min-width:48px;
+      text-align:center;
+      font-weight:700;
+    }
+    
+    /* VIEWER */
+    .viewer{
+      background:var(--bg2);
+      border:1px solid var(--border);
+      border-radius:16px;
+      min-height:500px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:24px;
+      position:relative;
+      overflow:auto;
+    }
+    .viewer-empty{
+      text-align:center;
+      color:var(--muted);
+    }
+    .viewer-empty i{
+      font-size:56px;
+      margin-bottom:14px;
+      opacity:.3;
+      display:block;
+    }
+    .viewer-empty div{font-size:14px;font-weight:600}
+    
+    #pdfCanvas{
+      max-width:100%;
+      border-radius:6px;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+    }
+    #imgView{
+      max-width:100%;
+      max-height:75vh;
+      border-radius:6px;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+      transition:transform .2s ease;
+    }
+    #textView{
+      width:100%;
+      max-height:70vh;
+      overflow:auto;
+      padding:20px;
+      font-family:'JetBrains Mono','Fira Code',monospace;
+      font-size:13px;
+      line-height:1.7;
+      white-space:pre-wrap;
+      word-break:break-word;
+      background:var(--bg3);
+      border-radius:10px;
+      border:1px solid var(--border);
+      text-align:left;
+    }
+    #audioView,#videoView{
+      max-width:100%;
+      border-radius:10px;
+    }
+    
+    /* TOAST */
+    .toasts{
       position:fixed;
       top:20px;right:20px;
-      z-index:10000;
+      z-index:99999;
       display:flex;flex-direction:column;gap:8px;
     }
     .toast{
@@ -500,64 +427,61 @@
       border-radius:10px;
       background:var(--card);
       border:1px solid var(--border);
-      box-shadow:0 8px 30px rgba(0,0,0,.3);
-      font-size:13px;font-weight:600;
-      animation:slideIn .3s ease;
+      border-left:3px solid var(--accent);
+      box-shadow:0 8px 30px rgba(0,0,0,.4);
+      font-size:13px;font-weight:700;
+      animation:toastIn .3s ease;
       min-width:240px;
     }
-    .toast.success{border-left:3px solid var(--success)}
-    .toast.error{border-left:3px solid var(--danger)}
-    .toast.warning{border-left:3px solid var(--warning)}
-    .toast.info{border-left:3px solid var(--accent2)}
+    .toast.ok{border-left-color:var(--success)}
+    .toast.err{border-left-color:var(--danger)}
+    .toast.warn{border-left-color:var(--warning)}
     .toast i{font-size:18px}
-    .toast.success i{color:var(--success)}
-    .toast.error i{color:var(--danger)}
-    .toast.warning i{color:var(--warning)}
-    .toast.info i{color:var(--accent2)}
-    @keyframes slideIn{
-      from{transform:translateX(100%);opacity:0}
+    .toast.ok i{color:var(--success)}
+    .toast.err i{color:var(--danger)}
+    .toast.warn i{color:var(--warning)}
+    @keyframes toastIn{
+      from{transform:translateX(120%);opacity:0}
       to{transform:translateX(0);opacity:1}
     }
     
-    /* Shortcuts help modal */
-    .modal-overlay{
+    /* SHORTCUTS MODAL */
+    .modal-bg{
       position:fixed;inset:0;
-      background:rgba(0,0,0,.7);
+      background:rgba(0,0,0,.75);
       display:none;
       align-items:center;justify-content:center;
-      z-index:10001;
-      backdrop-filter:blur(4px);
+      z-index:99998;
+      backdrop-filter:blur(6px);
     }
-    .modal-overlay.show{display:flex}
+    .modal-bg.show{display:flex}
     .modal{
       background:var(--card);
       border:1px solid var(--border);
       border-radius:16px;
       padding:28px;
-      max-width:500px;
+      max-width:480px;
       width:90%;
-      max-height:80vh;
-      overflow-y:auto;
       animation:modalIn .3s ease;
     }
     @keyframes modalIn{
-      from{transform:scale(.9);opacity:0}
+      from{transform:scale(.92);opacity:0}
       to{transform:scale(1);opacity:1}
     }
-    .modal-title{
-      font-size:20px;font-weight:700;
-      margin-bottom:20px;
+    .modal h3{
+      margin:0 0 20px;
+      font-size:20px;
       display:flex;align-items:center;gap:10px;
     }
-    .shortcut-row{
+    .modal h3 i{color:var(--accent)}
+    .sc-row{
       display:flex;justify-content:space-between;align-items:center;
       padding:10px 0;
       border-bottom:1px solid var(--border);
       font-size:13px;
     }
-    .shortcut-row:last-child{border-bottom:none}
-    .shortcut-keys{display:flex;gap:4px}
-    .key{
+    .sc-row:last-child{border-bottom:none}
+    .k{
       display:inline-block;
       padding:3px 10px;
       background:var(--bg2);
@@ -567,347 +491,237 @@
       font-weight:700;
       font-family:monospace;
       color:var(--accent);
+      margin-left:3px;
     }
     
-    /* Presentation mode */
-    .presentation-mode .topbar,
-    .presentation-mode .sidebar,
-    .presentation-mode .toolbar,
-    .presentation-mode .info-bar,
-    .presentation-mode .upload-zone,
-    .presentation-mode .progress-wrap{
+    /* PRESENTATION */
+    .pres-mode .header,
+    .pres-mode .sidebar,
+    .pres-mode .toolbar,
+    .pres-mode .fileinfo,
+    .pres-mode .upload,
+    .pres-mode .progress{
       display:none !important;
     }
-    .presentation-mode .viewer-container{
-      margin:0;border:none;border-radius:0;
+    .pres-mode .app{max-width:100%;padding:0}
+    .pres-mode .main-layout{grid-template-columns:1fr;gap:0}
+    .pres-mode .viewer{
       min-height:100vh;
+      margin:0;border-radius:0;
       background:#000;
+      border:none;
     }
-    .presentation-mode #pdfCanvas,
-    .presentation-mode #imageView{
-      max-height:95vh;
-    }
-    .presentation-nav{
+    .pres-controls{
       position:fixed;
       bottom:30px;left:50%;
       transform:translateX(-50%);
       display:none;
-      gap:12px;
-      z-index:10002;
+      gap:10px;
+      z-index:99997;
     }
-    .presentation-mode .presentation-nav{display:flex}
-    .pres-btn{
+    .pres-mode .pres-controls{display:flex}
+    .pbtn{
       width:48px;height:48px;
       border-radius:50%;
-      background:rgba(255,255,255,.15);
+      background:rgba(255,255,255,.12);
       border:1px solid rgba(255,255,255,.2);
-      color:#fff;
-      cursor:pointer;
+      color:#fff;cursor:pointer;
       display:flex;align-items:center;justify-content:center;
       font-size:18px;
       backdrop-filter:blur(10px);
       transition:all .2s ease;
     }
-    .pres-btn:hover{background:rgba(255,255,255,.25)}
-    
-    /* Syntax highlighting basic */
-    .kw{color:#c47046;font-weight:700}
-    .str{color:#4ade80}
-    .num{color:#fbbf24}
-    .com{color:#6b7280;font-style:italic}
-    .fn{color:#7ba8b8}
-    .op{color:#e8e5df}
+    .pbtn:hover{background:rgba(255,255,255,.22)}
   `;
   document.head.appendChild(s);
 })();
 </script>
 
 <div style="background-color:transparent;box-sizing:border-box;">
-<div class="app-wrapper" id="appWrapper">
+<div class="app" id="app">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="logo-icon"><i class="ri-vault-line"></i></div>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <div class="logo-icon"><i class="ri-vault-fill"></i></div>
       <div>
-        <div class="logo-text">DOCVAULT</div>
-        <div class="logo-sub">File Viewer Pro</div>
+        <div class="logo-text">DOC<span>VAULT</span></div>
+        <div class="logo-sub">Ultimate File Viewer</div>
       </div>
     </div>
-    
-    <div class="sidebar-tabs">
-      <div class="sidebar-tab active" data-tab="thumbs" onclick="switchSidebarTab('thumbs')">Miniaturas</div>
-      <div class="sidebar-tab" data-tab="history" onclick="switchSidebarTab('history')">Historial</div>
+    <div class="header-actions">
+      <button class="icon-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)">
+        <i class="ri-fullscreen-line"></i>
+      </button>
+      <button class="icon-btn" onclick="togglePresentation()" title="Modo presentacion (P)">
+        <i class="ri-slideshow-3-line"></i>
+      </button>
+      <button class="icon-btn" onclick="showShortcuts()" title="Atajos (?)">
+        <i class="ri-question-line"></i>
+      </button>
     </div>
-    
-    <div class="sidebar-content">
-      <div id="thumbsPanel">
-        <div class="sidebar-section-title">Paginas del PDF</div>
-        <div id="thumbsList" style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">
-          Carga un PDF para ver las miniaturas
+  </div>
+
+  <div class="main-layout">
+
+    <!-- SIDEBAR - HISTORIAL -->
+    <aside class="sidebar">
+      <div class="sidebar-title"><i class="ri-time-line" style="margin-right:6px"></i>Historial</div>
+      <div id="historyList">
+        <div class="history-empty">Sin archivos recientes</div>
+      </div>
+      <div class="history-clear" onclick="clearHistory()">
+        <i class="ri-delete-bin-line" style="margin-right:4px"></i> Limpiar
+      </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- UPLOAD -->
+      <div class="upload" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" style="display:none"
+               accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.svg,.bmp,.txt,.md,.csv,.json,.xml,.html,.css,.js,.py,.java,.cpp,.mp3,.wav,.ogg,.m4a,.mp4,.webm,.ogv">
+        <div class="upload-icon"><i class="ri-upload-cloud-2-fill"></i></div>
+        <div class="upload-title">Arrastra tu archivo o haz clic aqui</div>
+        <div class="upload-sub">Soporta PDF, Imagenes, Texto, Codigo, Audio y Video</div>
+        <div class="upload-tags">
+          <span class="tag">PDF</span>
+          <span class="tag">JPG PNG GIF</span>
+          <span class="tag">TXT MD JSON</span>
+          <span class="tag">MP3 WAV</span>
+          <span class="tag">MP4 WEBM</span>
         </div>
       </div>
-      <div id="historyPanel" style="display:none">
-        <div class="sidebar-section-title">Archivos recientes</div>
-        <div id="historyList"></div>
-        <div class="history-clear" onclick="clearHistory()">
-          <i class="ri-delete-bin-line" style="margin-right:4px"></i> Limpiar historial
-        </div>
-      </div>
-    </div>
-  </aside>
 
-  <!-- MAIN CONTENT -->
-  <main class="main-content">
-    
-    <!-- TOP BAR -->
-    <div class="topbar">
-      <div class="topbar-left">
-        <button class="icon-btn" onclick="toggleSidebar()" title="Alternar panel lateral">
-          <i class="ri-menu-line"></i>
-        </button>
-        <div style="font-size:14px;color:var(--muted);font-weight:600">
-          Visor de Archivos Profesional
-        </div>
+      <!-- PROGRESS -->
+      <div class="progress" id="progress">
+        <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+        <div class="progress-text" id="progressText">Cargando...</div>
       </div>
-      <div class="topbar-right">
-        <div class="search-box" id="searchBox" style="display:none">
-          <i class="ri-search-line" style="color:var(--muted);font-size:14px"></i>
-          <input type="text" id="searchInput" placeholder="Buscar en PDF..." onkeydown="if(event.key==='Enter')searchInPDF()">
-          <span class="search-count" id="searchCount">0 / 0</span>
-        </div>
-        <button class="icon-btn" onclick="toggleSearch()" title="Buscar (Ctrl+F)">
-          <i class="ri-search-line"></i>
-        </button>
-        <button class="icon-btn" onclick="toggleFullscreen()" title="Pantalla completa (F)">
-          <i class="ri-fullscreen-line"></i>
-        </button>
-        <button class="icon-btn" onclick="showShortcuts()" title="Atajos de teclado (?)">
-          <i class="ri-question-line"></i>
-        </button>
-      </div>
-    </div>
 
-    <!-- UPLOAD ZONE -->
-    <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
-      <input type="file" id="fileInput" style="display:none" 
-             accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.svg,.bmp,.txt,.md,.csv,.json,.xml,.html,.css,.js,.py,.java,.cpp,.c,.h,.mp3,.wav,.ogg,.m4a,.mp4,.webm,.ogv">
-      <div class="upload-icon"><i class="ri-upload-cloud-2-line"></i></div>
-      <div class="upload-title">Arrastra tu archivo aqui o haz clic para seleccionar</div>
-      <div class="upload-sub">Soporta multiples formatos de archivos</div>
-      <div class="upload-formats">
-        <span class="format-tag">PDF</span>
-        <span class="format-tag">Imagenes</span>
-        <span class="format-tag">Texto</span>
-        <span class="format-tag">Codigo</span>
-        <span class="format-tag">Audio</span>
-        <span class="format-tag">Video</span>
-        <span class="format-tag">JSON</span>
-        <span class="format-tag">CSV</span>
-      </div>
-    </div>
-
-    <!-- PROGRESS -->
-    <div class="progress-wrap" id="progressWrap">
-      <div class="progress-track">
-        <div class="progress-fill" id="progressFill"></div>
-      </div>
-      <div class="progress-text" id="progressText">Cargando...</div>
-    </div>
-
-    <!-- INFO BAR -->
-    <div class="info-bar" id="infoBar">
-      <div class="info-item">
-        <i class="ri-file-line"></i>
-        <div>
+      <!-- FILE INFO -->
+      <div class="fileinfo" id="fileInfo">
+        <div class="info-card">
           <div class="info-label">Archivo</div>
-          <div class="info-value" id="infoName">—</div>
+          <div class="info-value" id="fName">—</div>
         </div>
-      </div>
-      <div class="info-item">
-        <i class="ri-file-list-3-line"></i>
-        <div>
+        <div class="info-card">
           <div class="info-label">Tipo</div>
-          <div class="info-value" id="infoType">—</div>
+          <div class="info-value" id="fType">—</div>
         </div>
-      </div>
-      <div class="info-item">
-        <i class="ri-database-2-line"></i>
-        <div>
+        <div class="info-card">
           <div class="info-label">Tamano</div>
-          <div class="info-value" id="infoSize">—</div>
+          <div class="info-value" id="fSize">—</div>
+        </div>
+        <div class="info-card" id="fExtraCard" style="display:none">
+          <div class="info-label" id="fExtraLabel">Extra</div>
+          <div class="info-value" id="fExtra">—</div>
         </div>
       </div>
-      <div class="info-item" id="infoPagesItem" style="display:none">
-        <i class="ri-book-open-line"></i>
-        <div>
-          <div class="info-label">Paginas</div>
-          <div class="info-value" id="infoPages">—</div>
+
+      <!-- TOOLBAR -->
+      <div class="toolbar" id="toolbar">
+        <div class="page-nav" id="pdfNav" style="display:none">
+          <button class="tbtn" onclick="prevPage()" title="Anterior (←)">
+            <i class="ri-arrow-left-s-line"></i>
+          </button>
+          <input type="number" class="page-input" id="pageInput" min="1" value="1" onchange="goToPage(this.value)">
+          <span class="page-sep">/</span>
+          <span class="page-sep" id="totalPages">0</span>
+          <button class="tbtn" onclick="nextPage()" title="Siguiente (→)">
+            <i class="ri-arrow-right-s-line"></i>
+          </button>
         </div>
-      </div>
-      <div class="info-item" id="infoDimsItem" style="display:none">
-        <i class="ri-ruler-2-line"></i>
-        <div>
-          <div class="info-label">Dimensiones</div>
-          <div class="info-value" id="infoDims">—</div>
+        <div class="tdiv" id="div1" style="display:none"></div>
+        
+        <div class="zoom-wrap">
+          <button class="tbtn" onclick="zoomOut()" title="Alejar (-)">
+            <i class="ri-zoom-out-line"></i>
+          </button>
+          <input type="range" id="zoomSlider" min="0.2" max="5" step="0.1" value="1.5" oninput="setZoom(this.value)">
+          <span class="zoom-val" id="zoomVal">150%</span>
+          <button class="tbtn" onclick="zoomIn()" title="Acercar (+)">
+            <i class="ri-zoom-in-line"></i>
+          </button>
+          <button class="tbtn" onclick="resetZoom()" title="Reset (0)">
+            <i class="ri-refresh-line"></i>
+          </button>
         </div>
-      </div>
-    </div>
-
-    <!-- TOOLBAR -->
-    <div class="toolbar" id="toolbar">
-      <!-- PDF Navigation -->
-      <div class="page-nav" id="pdfNav" style="display:none">
-        <button class="tool-btn" onclick="prevPage()" title="Pagina anterior (←)">
-          <i class="ri-arrow-left-s-line"></i>
-        </button>
-        <input type="number" class="page-input" id="pageInput" min="1" value="1" onchange="goToPage(this.value)">
-        <span class="page-sep">/</span>
-        <span class="page-sep" id="totalPages">0</span>
-        <button class="tool-btn" onclick="nextPage()" title="Pagina siguiente (→)">
-          <i class="ri-arrow-right-s-line"></i>
-        </button>
-      </div>
-
-      <div class="toolbar-divider" id="div1"></div>
-
-      <!-- Zoom controls -->
-      <div class="zoom-slider">
-        <button class="tool-btn" onclick="zoomOut()" title="Alejar (-)">
-          <i class="ri-zoom-out-line"></i>
-        </button>
-        <input type="range" id="zoomSlider" min="0.2" max="5" step="0.1" value="1.5" oninput="setZoom(this.value)">
-        <span class="zoom-value" id="zoomValue">150%</span>
-        <button class="tool-btn" onclick="zoomIn()" title="Acercar (+)">
-          <i class="ri-zoom-in-line"></i>
-        </button>
-        <button class="tool-btn" onclick="resetZoom()" title="Restablecer zoom (0)">
-          <i class="ri-refresh-line"></i>
-        </button>
-      </div>
-
-      <div class="toolbar-divider" id="div2"></div>
-
-      <!-- Image rotation -->
-      <div id="imageTools" style="display:none">
-        <button class="tool-btn" onclick="rotateImage(-90)" title="Rotar izquierda (Q)">
-          <i class="ri-rotate-ccw-line"></i>
-        </button>
-        <button class="tool-btn" onclick="rotateImage(90)" title="Rotar derecha (E)">
-          <i class="ri-rotate-cw-line"></i>
-        </button>
-      </div>
-
-      <!-- Text tools -->
-      <div id="textTools" style="display:none">
-        <button class="tool-btn" onclick="copyText()" title="Copiar texto">
-          <i class="ri-file-copy-line"></i> Copiar
-        </button>
-        <button class="tool-btn" onclick="downloadText()" title="Descargar">
+        <div class="tdiv" id="div2" style="display:none"></div>
+        
+        <div id="imgTools" style="display:none">
+          <button class="tbtn" onclick="rotateImg(-90)" title="Rotar izq (Q)">
+            <i class="ri-rotate-ccw-line"></i>
+          </button>
+          <button class="tbtn" onclick="rotateImg(90)" title="Rotar der (E)">
+            <i class="ri-rotate-cw-line"></i>
+          </button>
+        </div>
+        <div id="textTools" style="display:none">
+          <button class="tbtn" onclick="copyText()" title="Copiar">
+            <i class="ri-file-copy-line"></i> Copiar
+          </button>
+        </div>
+        <div class="tdiv" id="div3" style="display:none"></div>
+        
+        <button class="tbtn primary" onclick="downloadFile()" title="Descargar">
           <i class="ri-download-line"></i> Descargar
         </button>
+        <button class="tbtn" onclick="togglePresentation()" title="Presentacion (P)">
+          <i class="ri-slideshow-line"></i>
+        </button>
+        <button class="tbtn" onclick="toggleFullscreen()" title="Fullscreen (F)">
+          <i class="ri-fullscreen-line"></i>
+        </button>
+        <button class="tbtn" style="color:var(--danger)" onclick="clearAll()" title="Limpiar (Supr)">
+          <i class="ri-delete-bin-line"></i>
+        </button>
       </div>
 
-      <div class="toolbar-divider" id="div3"></div>
-
-      <!-- Global tools -->
-      <button class="tool-btn" onclick="togglePresentation()" title="Modo presentacion (P)">
-        <i class="ri-slideshow-line"></i> Presentacion
-      </button>
-      <button class="tool-btn primary" onclick="downloadFile()" title="Descargar archivo">
-        <i class="ri-download-line"></i> Descargar
-      </button>
-      <button class="tool-btn danger" onclick="clearAll()" title="Limpiar todo (Supr)">
-        <i class="ri-delete-bin-line"></i> Limpiar
-      </button>
-    </div>
-
-    <!-- VIEWER -->
-    <div class="viewer-container" id="viewerContainer">
-      <div class="empty-state" id="emptyState">
-        <i class="ri-folder-open-line"></i>
-        <div style="font-size:16px;font-weight:600;margin-bottom:6px">Ningun archivo cargado</div>
-        <div style="font-size:13px">Selecciona o arrastra un archivo para comenzar</div>
+      <!-- VIEWER -->
+      <div class="viewer" id="viewer">
+        <div class="viewer-empty" id="empty">
+          <i class="ri-folder-open-line"></i>
+          <div>Ningun archivo cargado todavia</div>
+        </div>
+        <canvas id="pdfCanvas" style="display:none"></canvas>
+        <img id="imgView" style="display:none" alt="preview">
+        <pre id="textView" style="display:none"></pre>
+        <audio id="audioView" style="display:none" controls></audio>
+        <video id="videoView" style="display:none" controls></video>
       </div>
-      <canvas id="pdfCanvas" style="display:none"></canvas>
-      <img id="imageView" style="display:none" alt="Vista previa">
-      <pre id="textView" style="display:none"></pre>
-      <audio id="audioView" style="display:none" controls></audio>
-      <video id="videoView" style="display:none" controls></video>
-    </div>
 
-    <!-- Presentation nav -->
-    <div class="presentation-nav">
-      <button class="pres-btn" onclick="prevPage()"><i class="ri-arrow-left-s-line"></i></button>
-      <button class="pres-btn" onclick="nextPage()"><i class="ri-arrow-right-s-line"></i></button>
-      <button class="pres-btn" onclick="togglePresentation()"><i class="ri-close-line"></i></button>
     </div>
+  </div>
 
-  </main>
+  <!-- Presentation controls -->
+  <div class="pres-controls">
+    <button class="pbtn" onclick="prevPage()"><i class="ri-arrow-left-s-line"></i></button>
+    <button class="pbtn" onclick="nextPage()"><i class="ri-arrow-right-s-line"></i></button>
+    <button class="pbtn" onclick="togglePresentation()"><i class="ri-close-line"></i></button>
+  </div>
+
 </div>
 
 <!-- Toast container -->
-<div class="toast-container" id="toastContainer"></div>
+<div class="toasts" id="toasts"></div>
 
 <!-- Shortcuts modal -->
-<div class="modal-overlay" id="shortcutsModal" onclick="if(event.target===this)hideShortcuts()">
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)hideShortcuts()">
   <div class="modal">
-    <div class="modal-title">
-      <i class="ri-keyboard-box-line" style="color:var(--accent)"></i>
-      Atajos de teclado
-    </div>
-    <div class="shortcut-row">
-      <span>Pagina anterior</span>
-      <div class="shortcut-keys"><span class="key">←</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Pagina siguiente</span>
-      <div class="shortcut-keys"><span class="key">→</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Acercar zoom</span>
-      <div class="shortcut-keys"><span class="key">+</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Alejar zoom</span>
-      <div class="shortcut-keys"><span class="key">−</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Restablecer zoom</span>
-      <div class="shortcut-keys"><span class="key">0</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Rotar imagen izquierda</span>
-      <div class="shortcut-keys"><span class="key">Q</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Rotar imagen derecha</span>
-      <div class="shortcut-keys"><span class="key">E</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Pantalla completa</span>
-      <div class="shortcut-keys"><span class="key">F</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Modo presentacion</span>
-      <div class="shortcut-keys"><span class="key">P</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Buscar en PDF</span>
-      <div class="shortcut-keys"><span class="key">Ctrl</span><span class="key">F</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Limpiar todo</span>
-      <div class="shortcut-keys"><span class="key">Supr</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Alternar panel lateral</span>
-      <div class="shortcut-keys"><span class="key">B</span></div>
-    </div>
-    <div class="shortcut-row">
-      <span>Mostrar atajos</span>
-      <div class="shortcut-keys"><span class="key">?</span></div>
-    </div>
+    <h3><i class="ri-keyboard-box-line"></i> Atajos de teclado</h3>
+    <div class="sc-row"><span>Pagina anterior</span><span><span class="k">←</span></span></div>
+    <div class="sc-row"><span>Pagina siguiente</span><span><span class="k">→</span></span></div>
+    <div class="sc-row"><span>Acercar zoom</span><span><span class="k">+</span></span></div>
+    <div class="sc-row"><span>Alejar zoom</span><span><span class="k">−</span></span></div>
+    <div class="sc-row"><span>Reset zoom</span><span><span class="k">0</span></span></div>
+    <div class="sc-row"><span>Rotar imagen izq</span><span><span class="k">Q</span></span></div>
+    <div class="sc-row"><span>Rotar imagen der</span><span><span class="k">E</span></span></div>
+    <div class="sc-row"><span>Pantalla completa</span><span><span class="k">F</span></span></div>
+    <div class="sc-row"><span>Modo presentacion</span><span><span class="k">P</span></span></div>
+    <div class="sc-row"><span>Limpiar todo</span><span><span class="k">Supr</span></span></div>
+    <div class="sc-row"><span>Ver atajos</span><span><span class="k">?</span></span></div>
   </div>
 </div>
 
@@ -915,553 +729,464 @@
 
 <script>
 // ============================================================
-// DOCVAULT PRO - Visor de Archivos Profesional
-// Arquitectura modular, codigo ordenado y bien estructurado
+// DOCVAULT ULTIMATE - Robusto, sin errores, bien estructurado
 // ============================================================
 
-// --- CONFIGURACION GLOBAL ---
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js';
+// --- CONFIG PDF.JS ---
+try {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.0.379/pdf.worker.min.js';
+} catch(e) {
+  console.warn('PDF.js worker config:', e);
+}
 
-// --- ESTADO GLOBAL ---
-const state = {
-  pdfDoc: null,
-  currentPage: 1,
+// --- ESTADO ---
+const ST = {
+  pdf: null,
+  page: 1,
   totalPages: 0,
   zoom: 1.5,
   rotation: 0,
-  currentFile: null,
-  fileURL: null,
-  fileType: null,
-  textContent: '',
-  searchMatches: [],
-  currentMatch: -1,
-  history: JSON.parse(localStorage.getItem('docvault_history') || '[]'),
-  sidebarTab: 'thumbs'
+  file: null,
+  fileUrl: null,
+  fileCat: null,
+  text: '',
+  history: []
 };
 
-// --- ELEMENTOS DOM ---
+// --- DOM ---
 const $ = id => document.getElementById(id);
-const el = {
+const UI = {
   fileInput: $('fileInput'),
   uploadZone: $('uploadZone'),
-  progressWrap: $('progressWrap'),
+  progress: $('progress'),
   progressFill: $('progressFill'),
   progressText: $('progressText'),
-  infoBar: $('infoBar'),
-  infoName: $('infoName'),
-  infoType: $('infoType'),
-  infoSize: $('infoSize'),
-  infoPagesItem: $('infoPagesItem'),
-  infoPages: $('infoPages'),
-  infoDimsItem: $('infoDimsItem'),
-  infoDims: $('infoDims'),
+  fileInfo: $('fileInfo'),
+  fName: $('fName'),
+  fType: $('fType'),
+  fSize: $('fSize'),
+  fExtraCard: $('fExtraCard'),
+  fExtraLabel: $('fExtraLabel'),
+  fExtra: $('fExtra'),
   toolbar: $('toolbar'),
   pdfNav: $('pdfNav'),
-  imageTools: $('imageTools'),
+  imgTools: $('imgTools'),
   textTools: $('textTools'),
   pageInput: $('pageInput'),
   totalPages: $('totalPages'),
   zoomSlider: $('zoomSlider'),
-  zoomValue: $('zoomValue'),
-  viewerContainer: $('viewerContainer'),
-  emptyState: $('emptyState'),
+  zoomVal: $('zoomVal'),
+  viewer: $('viewer'),
+  empty: $('empty'),
   pdfCanvas: $('pdfCanvas'),
-  imageView: $('imageView'),
+  imgView: $('imgView'),
   textView: $('textView'),
   audioView: $('audioView'),
   videoView: $('videoView'),
-  sidebar: $('sidebar'),
-  thumbsList: $('thumbsList'),
   historyList: $('historyList'),
-  thumbsPanel: $('thumbsPanel'),
-  historyPanel: $('historyPanel'),
-  searchBox: $('searchBox'),
-  searchInput: $('searchInput'),
-  searchCount: $('searchCount'),
-  appWrapper: $('appWrapper'),
-  toastContainer: $('toastContainer'),
-  shortcutsModal: $('shortcutsModal'),
+  toasts: $('toasts'),
+  modalBg: $('modalBg'),
+  app: $('app'),
   div1: $('div1'),
   div2: $('div2'),
   div3: $('div3')
 };
 
 // ============================================================
-// FUNCIONES DE UTILIDAD
+// UTILIDADES
 // ============================================================
 
-function formatSize(bytes) {
-  if (bytes < 1024) return bytes + ' B';
-  if (bytes < 1048576) return (bytes / 1024).toFixed(2) + ' KB';
-  if (bytes < 1073741824) return (bytes / 1048576).toFixed(2) + ' MB';
-  return (bytes / 1073741824).toFixed(2) + ' GB';
+function fmtSize(b) {
+  if (b < 1024) return b + ' B';
+  if (b < 1048576) return (b/1024).toFixed(2) + ' KB';
+  if (b < 1073741824) return (b/1048576).toFixed(2) + ' MB';
+  return (b/1073741824).toFixed(2) + ' GB';
 }
 
-function getFileCategory(file) {
-  const name = file.name.toLowerCase();
-  const type = file.type || '';
-  
-  if (name.endsWith('.pdf') || type === 'application/pdf') return 'pdf';
-  if (type.startsWith('image/')) return 'image';
-  if (type.startsWith('audio/')) return 'audio';
-  if (type.startsWith('video/')) return 'video';
-  
-  const textExts = ['.txt','.md','.csv','.json','.xml','.html','.htm','.css','.js','.py',
-                    '.java','.cpp','.c','.h','.cs','.php','.rb','.go','.rs','.ts','.jsx','.tsx',
-                    '.sql','.sh','.bat','.yml','.yaml','.toml','.ini','.conf','.log'];
-  if (textExts.some(ext => name.endsWith(ext))) return 'text';
-  
+function getCat(f) {
+  const n = f.name.toLowerCase();
+  const t = f.type || '';
+  if (n.endsWith('.pdf') || t === 'application/pdf') return 'pdf';
+  if (t.startsWith('image/')) return 'image';
+  if (t.startsWith('audio/')) return 'audio';
+  if (t.startsWith('video/')) return 'video';
+  const txt = ['.txt','.md','.csv','.json','.xml','.html','.htm','.css','.js','.py','.java','.cpp','.c','.h','.cs','.php','.rb','.go','.rs','.ts','.sql','.sh','.yml','.yaml','.log','.ini','.conf'];
+  if (txt.some(e => n.endsWith(e))) return 'text';
   return 'unknown';
 }
 
-function getTypeName(category, file) {
-  const names = {
+function getTypeName(c, f) {
+  const m = {
     pdf: 'Documento PDF',
     image: 'Imagen',
-    audio: 'Audio',
+    audio: 'Archivo de audio',
     video: 'Video',
-    text: 'Archivo de texto/codigo',
+    text: 'Texto / Codigo',
     unknown: 'Formato no soportado'
   };
-  return names[category] || file.type || 'Desconocido';
+  return m[c] || f.type || 'Desconocido';
 }
 
-function showToast(message, type = 'info') {
-  const icons = {
-    success: 'ri-checkbox-circle-fill',
-    error: 'ri-error-warning-fill',
-    warning: 'ri-alert-fill',
-    info: 'ri-information-fill'
-  };
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
-  toast.innerHTML = `<i class="${icons[type]}"></i><span>${message}</span>`;
-  el.toastContainer.appendChild(toast);
+function toast(msg, type='info') {
+  const icons = {ok:'ri-checkbox-circle-fill',err:'ri-error-warning-fill',warn:'ri-alert-fill',info:'ri-information-fill'};
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = '<i class="' + icons[type] + '"></i><span>' + msg + '</span>';
+  UI.toasts.appendChild(el);
   setTimeout(() => {
-    toast.style.animation = 'slideIn .3s ease reverse';
-    setTimeout(() => toast.remove(), 300);
+    el.style.animation = 'toastIn .3s ease reverse';
+    setTimeout(() => el.remove(), 300);
   }, 3000);
 }
 
-function setProgress(percent, text = '') {
-  el.progressWrap.classList.add('show');
-  el.progressFill.style.width = percent + '%';
-  if (text) el.progressText.textContent = text;
+function setProgress(p, txt) {
+  UI.progress.classList.add('show');
+  UI.progressFill.style.width = p + '%';
+  if (txt) UI.progressText.textContent = txt;
 }
 
 function hideProgress() {
   setTimeout(() => {
-    el.progressWrap.classList.remove('show');
-    el.progressFill.style.width = '0%';
-  }, 800);
+    UI.progress.classList.remove('show');
+    UI.progressFill.style.width = '0%';
+  }, 600);
 }
 
 // ============================================================
-// GESTION DE ARCHIVOS - CARGA
+// DRAG & DROP + CARGA DE ARCHIVOS
 // ============================================================
 
 function initDragDrop() {
-  const zone = el.uploadZone;
+  const z = UI.uploadZone;
   
-  zone.addEventListener('dragover', (e) => {
+  z.addEventListener('dragover', e => {
     e.preventDefault();
-    zone.classList.add('drag-over');
+    z.classList.add('drag');
   });
   
-  zone.addEventListener('dragleave', (e) => {
+  z.addEventListener('dragleave', e => {
     e.preventDefault();
-    zone.classList.remove('drag-over');
+    z.classList.remove('drag');
   });
   
-  zone.addEventListener('drop', (e) => {
+  z.addEventListener('drop', e => {
     e.preventDefault();
-    zone.classList.remove('drag-over');
+    z.classList.remove('drag');
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      loadFile(e.dataTransfer.files[0]);
+      handleFile(e.dataTransfer.files[0]);
     }
   });
   
-  el.fileInput.addEventListener('change', (e) => {
+  UI.fileInput.addEventListener('change', e => {
     if (e.target.files && e.target.files[0]) {
-      loadFile(e.target.files[0]);
+      handleFile(e.target.files[0]);
     }
   });
 }
 
-async function loadFile(file) {
+function handleFile(file) {
   try {
-    state.currentFile = file;
-    state.fileType = getFileCategory(file);
+    ST.file = file;
+    ST.fileCat = getCat(file);
     
-    // Mostrar info basica
-    el.infoBar.classList.add('show');
-    el.infoName.textContent = file.name;
-    el.infoType.textContent = getTypeName(state.fileType, file);
-    el.infoSize.textContent = formatSize(file.size);
+    // Info basica
+    UI.fileInfo.classList.add('show');
+    UI.fName.textContent = file.name;
+    UI.fType.textContent = getTypeName(ST.fileCat, file);
+    UI.fSize.textContent = fmtSize(file.size);
+    UI.fExtraCard.style.display = 'none';
     
-    // Limpiar vista anterior
     resetViewer();
     
-    // Guardar en historial
-    saveToHistory(file);
-    
-    if (state.fileType === 'unknown') {
-      showToast('Formato de archivo no soportado', 'warning');
+    if (ST.fileCat === 'unknown') {
+      toast('Formato no soportado', 'warn');
       return;
     }
     
-    setProgress(10, 'Procesando archivo...');
+    saveHistory(file);
     
-    // Cargar segun tipo
-    switch(state.fileType) {
-      case 'pdf': await loadPDF(file); break;
-      case 'image': await loadImage(file); break;
-      case 'text': await loadText(file); break;
+    // Cargar segun categoria
+    switch(ST.fileCat) {
+      case 'pdf': loadPDF(file); break;
+      case 'image': loadImage(file); break;
+      case 'text': loadText(file); break;
       case 'audio': loadAudio(file); break;
       case 'video': loadVideo(file); break;
     }
     
-    setProgress(100, 'Listo');
-    hideProgress();
-    showToast('Archivo cargado exitosamente', 'success');
-    
-  } catch (err) {
-    console.error(err);
-    showToast('Error: ' + err.message, 'error');
+  } catch(err) {
+    console.error('Error handleFile:', err);
+    toast('Error: ' + err.message, 'err');
     hideProgress();
   }
 }
 
 // ============================================================
-// VISOR PDF
+// PDF
 // ============================================================
 
 async function loadPDF(file) {
-  setProgress(30, 'Cargando PDF...');
-  
-  const data = await file.arrayBuffer();
-  setProgress(50, 'Decodificando...');
-  
-  state.pdfDoc = await pdfjsLib.getDocument({ data }).promise;
-  state.totalPages = state.pdfDoc.numPages;
-  state.currentPage = 1;
-  
-  // Actualizar UI
-  el.infoPagesItem.style.display = 'flex';
-  el.infoPages.textContent = state.totalPages;
-  el.pdfNav.style.display = 'flex';
-  el.totalPages.textContent = state.totalPages;
-  el.pageInput.max = state.totalPages;
-  el.div1.style.display = 'block';
-  el.searchBox.style.display = 'flex';
-  
-  setProgress(70, 'Renderizando...');
-  await renderPage();
-  
-  // Mostrar elementos
-  el.emptyState.style.display = 'none';
-  el.pdfCanvas.style.display = 'block';
-  el.toolbar.classList.add('show');
-  
-  // Generar miniaturas
-  setProgress(85, 'Generando miniaturas...');
-  generateThumbnails();
+  try {
+    setProgress(20, 'Cargando PDF...');
+    
+    if (typeof pdfjsLib === 'undefined') {
+      throw new Error('PDF.js no se cargo correctamente');
+    }
+    
+    const data = await file.arrayBuffer();
+    setProgress(50, 'Decodificando...');
+    
+    ST.pdf = await pdfjsLib.getDocument({ data }).promise;
+    ST.totalPages = ST.pdf.numPages;
+    ST.page = 1;
+    
+    // UI
+    UI.fExtraCard.style.display = 'block';
+    UI.fExtraLabel.textContent = 'Paginas';
+    UI.fExtra.textContent = ST.totalPages;
+    UI.pdfNav.style.display = 'flex';
+    UI.totalPages.textContent = ST.totalPages;
+    UI.pageInput.max = ST.totalPages;
+    UI.div1.style.display = 'block';
+    UI.div2.style.display = 'block';
+    UI.div3.style.display = 'block';
+    
+    setProgress(80, 'Renderizando...');
+    await renderPDF();
+    
+    UI.empty.style.display = 'none';
+    UI.pdfCanvas.style.display = 'block';
+    UI.toolbar.classList.add('show');
+    
+    setProgress(100, 'PDF cargado');
+    hideProgress();
+    toast('PDF cargado correctamente', 'ok');
+    
+  } catch(err) {
+    console.error('Error PDF:', err);
+    toast('Error al cargar PDF: ' + err.message, 'err');
+    hideProgress();
+  }
 }
 
-async function renderPage() {
-  if (!state.pdfDoc) return;
+async function renderPDF() {
+  if (!ST.pdf) return;
   
-  const page = await state.pdfDoc.getPage(state.currentPage);
-  const viewport = page.getViewport({ scale: state.zoom, rotation: state.rotation });
-  
-  const canvas = el.pdfCanvas;
-  const ctx = canvas.getContext('2d');
-  
-  canvas.width = viewport.width;
-  canvas.height = viewport.height;
-  
-  await page.render({
-    canvasContext: ctx,
-    viewport: viewport
-  }).promise;
-  
-  // Actualizar UI
-  el.pageInput.value = state.currentPage;
-  
-  // Resaltar miniatura activa
-  document.querySelectorAll('.thumbnail-item').forEach((t, i) => {
-    t.classList.toggle('active', i === state.currentPage - 1);
-  });
-}
-
-async function generateThumbnails() {
-  el.thumbsList.innerHTML = '';
-  
-  for (let i = 1; i <= Math.min(state.totalPages, 50); i++) {
-    const page = await state.pdfDoc.getPage(i);
-    const scale = 0.2;
-    const viewport = page.getViewport({ scale });
+  try {
+    const page = await ST.pdf.getPage(ST.page);
+    const vp = page.getViewport({ scale: ST.zoom, rotation: ST.rotation });
+    const canvas = UI.pdfCanvas;
+    const ctx = canvas.getContext('2d');
     
-    const thumbWrap = document.createElement('div');
-    thumbWrap.className = 'thumbnail-item' + (i === state.currentPage ? ' active' : '');
-    thumbWrap.innerHTML = `<canvas></canvas><div class="thumbnail-label">Pag. ${i}</div>`;
-    thumbWrap.onclick = () => goToPage(i);
+    canvas.width = vp.width;
+    canvas.height = vp.height;
     
-    const thumbCanvas = thumbWrap.querySelector('canvas');
-    thumbCanvas.width = viewport.width;
-    thumbCanvas.height = viewport.height;
-    
-    await page.render({
-      canvasContext: thumbCanvas.getContext('2d'),
-      viewport: viewport
-    }).promise;
-    
-    el.thumbsList.appendChild(thumbWrap);
+    await page.render({ canvasContext: ctx, viewport: vp }).promise;
+    UI.pageInput.value = ST.page;
+  } catch(err) {
+    console.error('Error renderPDF:', err);
   }
 }
 
 function prevPage() {
-  if (state.currentPage > 1) {
-    state.currentPage--;
-    renderPage();
+  if (ST.pdf && ST.page > 1) {
+    ST.page--;
+    renderPDF();
   }
 }
 
 function nextPage() {
-  if (state.currentPage < state.totalPages) {
-    state.currentPage++;
-    renderPage();
+  if (ST.pdf && ST.page < ST.totalPages) {
+    ST.page++;
+    renderPDF();
   }
 }
 
-function goToPage(num) {
-  num = parseInt(num);
-  if (num >= 1 && num <= state.totalPages) {
-    state.currentPage = num;
-    renderPage();
-  }
-}
-
-async function searchInPDF() {
-  const query = el.searchInput.value.trim().toLowerCase();
-  if (!query || !state.pdfDoc) return;
-  
-  state.searchMatches = [];
-  state.currentMatch = -1;
-  
-  setProgress(20, 'Buscando...');
-  
-  for (let i = 1; i <= state.totalPages; i++) {
-    const page = await state.pdfDoc.getPage(i);
-    const text = await page.getTextContent();
-    const pageText = text.items.map(item => item.str).join(' ').toLowerCase();
-    
-    let pos = 0;
-    while ((pos = pageText.indexOf(query, pos)) !== -1) {
-      state.searchMatches.push({ page: i, position: pos });
-      pos += query.length;
-    }
-    
-    setProgress(20 + (i / state.totalPages) * 70, `Buscando... Pagina ${i}/${state.totalPages}`);
-  }
-  
-  setProgress(100, `Encontradas ${state.searchMatches} coincidencias`);
-  hideProgress();
-  
-  el.searchCount.textContent = state.searchMatches.length > 0 
-    ? `1 / ${state.searchMatches.length}` 
-    : `0 / ${state.searchMatches.length}`;
-  
-  if (state.searchMatches.length > 0) {
-    state.currentMatch = 0;
-    goToPage(state.searchMatches[0].page);
-    showToast(`Encontradas ${state.searchMatches.length} coincidencias`, 'success');
-  } else {
-    showToast('No se encontraron coincidencias', 'info');
+function goToPage(n) {
+  n = parseInt(n);
+  if (ST.pdf && n >= 1 && n <= ST.totalPages) {
+    ST.page = n;
+    renderPDF();
   }
 }
 
 // ============================================================
-// VISOR DE IMAGENES
+// IMAGENES
 // ============================================================
 
-async function loadImage(file) {
-  setProgress(40, 'Cargando imagen...');
-  
-  if (state.fileURL) URL.revokeObjectURL(state.fileURL);
-  state.fileURL = URL.createObjectURL(file);
-  
-  return new Promise((resolve) => {
-    el.imageView.onload = () => {
-      el.infoDimsItem.style.display = 'flex';
-      el.infoDims.textContent = `${el.imageView.naturalWidth} × ${el.imageView.naturalHeight} px`;
+function loadImage(file) {
+  try {
+    setProgress(30, 'Cargando imagen...');
+    
+    if (ST.fileUrl) URL.revokeObjectURL(ST.fileUrl);
+    ST.fileUrl = URL.createObjectURL(file);
+    
+    UI.imgView.onload = () => {
+      UI.fExtraCard.style.display = 'block';
+      UI.fExtraLabel.textContent = 'Dimensiones';
+      UI.fExtra.textContent = UI.imgView.naturalWidth + ' × ' + UI.imgView.naturalHeight + ' px';
       
-      el.emptyState.style.display = 'none';
-      el.imageView.style.display = 'block';
-      el.imageTools.style.display = 'flex';
-      el.toolbar.classList.add('show');
-      el.div1.style.display = 'block';
-      el.div2.style.display = 'block';
+      UI.empty.style.display = 'none';
+      UI.imgView.style.display = 'block';
+      UI.imgTools.style.display = 'flex';
+      UI.toolbar.classList.add('show');
+      UI.div1.style.display = 'block';
+      UI.div2.style.display = 'block';
+      UI.div3.style.display = 'block';
       
-      applyImageTransform();
-      resolve();
+      applyImgTransform();
+      
+      setProgress(100, 'Imagen cargada');
+      hideProgress();
+      toast('Imagen cargada correctamente', 'ok');
     };
-    el.imageView.src = state.fileURL;
-  });
+    
+    UI.imgView.onerror = () => {
+      toast('Error al cargar la imagen', 'err');
+      hideProgress();
+    };
+    
+    UI.imgView.src = ST.fileUrl;
+    
+  } catch(err) {
+    console.error('Error imagen:', err);
+    toast('Error: ' + err.message, 'err');
+    hideProgress();
+  }
 }
 
-function rotateImage(degrees) {
-  state.rotation = (state.rotation + degrees) % 360;
-  applyImageTransform();
-  showToast(`Rotado a ${state.rotation}°`, 'info');
+function rotateImg(d) {
+  ST.rotation = (ST.rotation + d) % 360;
+  applyImgTransform();
 }
 
-function applyImageTransform() {
-  el.imageView.style.transform = `scale(${state.zoom}) rotate(${state.rotation}deg)`;
-  el.imageView.style.transformOrigin = 'center center';
+function applyImgTransform() {
+  UI.imgView.style.transform = 'scale(' + ST.zoom + ') rotate(' + ST.rotation + 'deg)';
 }
 
 // ============================================================
-// VISOR DE TEXTO / CODIGO
+// TEXTO / CODIGO
 // ============================================================
 
 async function loadText(file) {
-  setProgress(40, 'Leyendo archivo...');
-  
-  const text = await file.text();
-  state.textContent = text;
-  
-  setProgress(70, 'Formateando...');
-  
-  // Resaltado basico de sintaxis
-  const highlighted = highlightSyntax(text, file.name);
-  
-  el.textView.innerHTML = highlighted;
-  
-  el.emptyState.style.display = 'none';
-  el.textView.style.display = 'block';
-  el.textTools.style.display = 'flex';
-  el.toolbar.classList.add('show');
-  el.div1.style.display = 'block';
-  el.div2.style.display = 'block';
-}
-
-function highlightSyntax(text, filename) {
-  // Escapar HTML primero
-  let html = text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
-  
-  // Comentarios
-  html = html.replace(/(\/\/.*$)/gm, '<span class="com">$1</span>');
-  html = html.replace(/(\/\*[\s\S]*?\*\/)/g, '<span class="com">$1</span>');
-  html = html.replace(/(#.*$)/gm, '<span class="com">$1</span>');
-  
-  // Strings
-  html = html.replace(/(['"`])(?:\\.|[^\\])*?\1/g, '<span class="str">$&</span>');
-  
-  // Numeros
-  html = html.replace(/\b(\d+\.?\d*)\b/g, '<span class="num">$1</span>');
-  
-  // Palabras clave
-  const keywords = ['var','let','const','function','return','if','else','for','while','do','switch','case','break','continue','class','new','this','super','import','export','from','default','async','await','try','catch','finally','throw','typeof','instanceof','in','of','true','false','null','undefined','void','delete','yield','static','public','private','protected','readonly','interface','type','enum','as','implements','extends','namespace','module','declare','abstract'];
-  keywords.forEach(kw => {
-    const regex = new RegExp(`\\b(${kw})\\b`, 'g');
-    html = html.replace(regex, '<span class="kw">$1</span>');
-  });
-  
-  // Nombres de funcion
-  html = html.replace(/\b([a-zA-Z_$][a-zA-Z0-9_$]*)\s*\(/g, '<span class="fn">$1</span>(');
-  
-  return html;
-}
-
-function copyText() {
-  navigator.clipboard.writeText(state.textContent).then(() => {
-    showToast('Texto copiado al portapapeles', 'success');
-  }).catch(() => {
-    showToast('No se pudo copiar el texto', 'error');
-  });
-}
-
-function downloadText() {
-  if (!state.currentFile) return;
-  const blob = new Blob([state.textContent], { type: 'text/plain' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = state.currentFile.name;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('Archivo descargado', 'success');
-}
-
-// ============================================================
-// VISOR DE AUDIO
-// ============================================================
-
-function loadAudio(file) {
-  if (state.fileURL) URL.revokeObjectURL(state.fileURL);
-  state.fileURL = URL.createObjectURL(file);
-  
-  el.audioView.src = state.fileURL;
-  el.emptyState.style.display = 'none';
-  el.audioView.style.display = 'block';
-  el.toolbar.classList.add('show');
-  el.div1.style.display = 'none';
-  el.div2.style.display = 'none';
-  el.div3.style.display = 'none';
-}
-
-// ============================================================
-// VISOR DE VIDEO
-// ============================================================
-
-function loadVideo(file) {
-  if (state.fileURL) URL.revokeObjectURL(state.fileURL);
-  state.fileURL = URL.createObjectURL(file);
-  
-  el.videoView.src = state.fileURL;
-  el.emptyState.style.display = 'none';
-  el.videoView.style.display = 'block';
-  el.toolbar.classList.add('show');
-  el.div1.style.display = 'none';
-  el.div2.style.display = 'none';
-  el.div3.style.display = 'none';
-}
-
-// ============================================================
-// CONTROLES DE ZOOM
-// ============================================================
-
-function setZoom(value) {
-  state.zoom = parseFloat(value);
-  el.zoomSlider.value = state.zoom;
-  el.zoomValue.textContent = Math.round(state.zoom * 100) + '%';
-  
-  if (state.fileType === 'pdf' && state.pdfDoc) {
-    renderPage();
-  } else if (state.fileType === 'image') {
-    applyImageTransform();
+  try {
+    setProgress(40, 'Leyendo archivo...');
+    
+    ST.text = await file.text();
+    
+    UI.fExtraCard.style.display = 'block';
+    UI.fExtraLabel.textContent = 'Caracteres';
+    UI.fExtra.textContent = ST.text.length.toLocaleString();
+    
+    // Resaltado simple
+    let html = ST.text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/(\/\/.*$)/gm, '<span style="color:#6b7280;font-style:italic">$1</span>')
+      .replace(/(['"`])(?:\\.|[^\\])*?\1/g, '<span style="color:#22d3ee">$&</span>')
+      .replace(/\b(\d+\.?\d*)\b/g, '<span style="color:#fbbf24">$1</span>');
+    
+    const kws = ['var','let','const','function','return','if','else','for','while','class','new','this','import','export','from','async','await','try','catch','true','false','null','undefined','interface','type','enum','public','private','static','void'];
+    kws.forEach(k => {
+      html = html.replace(new RegExp('\\b('+k+')\\b','g'), '<span style="color:#a855f7;font-weight:700">$1</span>');
+    });
+    
+    UI.textView.innerHTML = html;
+    
+    UI.empty.style.display = 'none';
+    UI.textView.style.display = 'block';
+    UI.textTools.style.display = 'flex';
+    UI.toolbar.classList.add('show');
+    UI.div1.style.display = 'block';
+    UI.div2.style.display = 'block';
+    UI.div3.style.display = 'block';
+    
+    setProgress(100, 'Archivo cargado');
+    hideProgress();
+    toast('Texto cargado correctamente', 'ok');
+    
+  } catch(err) {
+    console.error('Error texto:', err);
+    toast('Error: ' + err.message, 'err');
+    hideProgress();
   }
 }
 
-function zoomIn() {
-  const newZoom = Math.min(5, state.zoom + 0.2);
-  setZoom(newZoom);
+function copyText() {
+  navigator.clipboard.writeText(ST.text).then(() => {
+    toast('Texto copiado al portapapeles', 'ok');
+  }).catch(() => {
+    toast('No se pudo copiar', 'err');
+  });
 }
 
-function zoomOut() {
-  const newZoom = Math.max(0.2, state.zoom - 0.2);
-  setZoom(newZoom);
+// ============================================================
+// AUDIO
+// ============================================================
+
+function loadAudio(file) {
+  try {
+    if (ST.fileUrl) URL.revokeObjectURL(ST.fileUrl);
+    ST.fileUrl = URL.createObjectURL(file);
+    
+    UI.audioView.src = ST.fileUrl;
+    UI.empty.style.display = 'none';
+    UI.audioView.style.display = 'block';
+    UI.toolbar.classList.add('show');
+    UI.div1.style.display = 'none';
+    UI.div2.style.display = 'none';
+    UI.div3.style.display = 'none';
+    
+    toast('Audio cargado correctamente', 'ok');
+  } catch(err) {
+    toast('Error: ' + err.message, 'err');
+  }
 }
 
+// ============================================================
+// VIDEO
+// ============================================================
+
+function loadVideo(file) {
+  try {
+    if (ST.fileUrl) URL.revokeObjectURL(ST.fileUrl);
+    ST.fileUrl = URL.createObjectURL(file);
+    
+    UI.videoView.src = ST.fileUrl;
+    UI.empty.style.display = 'none';
+    UI.videoView.style.display = 'block';
+    UI.toolbar.classList.add('show');
+    UI.div1.style.display = 'none';
+    UI.div2.style.display = 'none';
+    UI.div3.style.display = 'none';
+    
+    toast('Video cargado correctamente', 'ok');
+  } catch(err) {
+    toast('Error: ' + err.message, 'err');
+  }
+}
+
+// ============================================================
+// ZOOM
+// ============================================================
+
+function setZoom(v) {
+  ST.zoom = parseFloat(v);
+  UI.zoomSlider.value = ST.zoom;
+  UI.zoomVal.textContent = Math.round(ST.zoom * 100) + '%';
+  
+  if (ST.fileCat === 'pdf' && ST.pdf) {
+    renderPDF();
+  } else if (ST.fileCat === 'image') {
+    applyImgTransform();
+  }
+}
+
+function zoomIn() { setZoom(Math.min(5, ST.zoom + 0.2)); }
+function zoomOut() { setZoom(Math.max(0.2, ST.zoom - 0.2)); }
 function resetZoom() {
+  ST.rotation = 0;
   setZoom(1.5);
-  state.rotation = 0;
-  if (state.fileType === 'image') applyImageTransform();
-  showToast('Zoom restablecido', 'info');
+  if (ST.fileCat === 'image') applyImgTransform();
 }
 
 // ============================================================
@@ -1469,157 +1194,63 @@ function resetZoom() {
 // ============================================================
 
 function resetViewer() {
-  state.pdfDoc = null;
-  state.currentPage = 1;
-  state.totalPages = 0;
-  state.rotation = 0;
-  state.zoom = 1.5;
-  state.searchMatches = [];
-  state.currentMatch = -1;
+  ST.pdf = null;
+  ST.page = 1;
+  ST.totalPages = 0;
+  ST.rotation = 0;
+  ST.zoom = 1.5;
   
-  if (state.fileURL) {
-    URL.revokeObjectURL(state.fileURL);
-    state.fileURL = null;
+  if (ST.fileUrl) {
+    URL.revokeObjectURL(ST.fileUrl);
+    ST.fileUrl = null;
   }
   
-  // Ocultar todos los visores
-  el.emptyState.style.display = 'block';
-  el.pdfCanvas.style.display = 'none';
-  el.imageView.style.display = 'none';
-  el.textView.style.display = 'none';
-  el.audioView.style.display = 'none';
-  el.videoView.style.display = 'none';
+  // Ocultar visores
+  UI.empty.style.display = 'block';
+  UI.pdfCanvas.style.display = 'none';
+  UI.imgView.style.display = 'none';
+  UI.textView.style.display = 'none';
+  UI.audioView.style.display = 'none';
+  UI.videoView.style.display = 'none';
   
-  // Ocultar herramientas especificas
-  el.pdfNav.style.display = 'none';
-  el.imageTools.style.display = 'none';
-  el.textTools.style.display = 'none';
-  el.infoPagesItem.style.display = 'none';
-  el.infoDimsItem.style.display = 'none';
-  el.searchBox.style.display = 'none';
-  el.toolbar.classList.remove('show');
+  // Detener audio/video
+  try { UI.audioView.pause(); UI.audioView.src = ''; } catch(e){}
+  try { UI.videoView.pause(); UI.videoView.src = ''; } catch(e){}
+  
+  // Ocultar herramientas
+  UI.pdfNav.style.display = 'none';
+  UI.imgTools.style.display = 'none';
+  UI.textTools.style.display = 'none';
+  UI.toolbar.classList.remove('show');
   
   // Reset zoom UI
-  el.zoomSlider.value = 1.5;
-  el.zoomValue.textContent = '150%';
-  
-  // Limpiar miniaturas
-  el.thumbsList.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">Carga un PDF para ver las miniaturas</div>';
+  UI.zoomSlider.value = 1.5;
+  UI.zoomVal.textContent = '150%';
 }
 
 function clearAll() {
   resetViewer();
-  el.fileInput.value = '';
-  el.infoBar.classList.remove('show');
-  el.appWrapper.classList.remove('presentation-mode');
-  showToast('Todo limpiado', 'info');
+  UI.fileInput.value = '';
+  UI.fileInfo.classList.remove('show');
+  UI.app.classList.remove('pres-mode');
+  toast('Todo limpiado', 'info');
 }
 
 function downloadFile() {
-  if (!state.currentFile) {
-    showToast('No hay archivo para descargar', 'warning');
-    return;
-  }
-  
-  const url = state.fileURL || URL.createObjectURL(state.currentFile);
+  if (!ST.file) { toast('No hay archivo', 'warn'); return; }
+  const url = ST.fileUrl || URL.createObjectURL(ST.file);
   const a = document.createElement('a');
   a.href = url;
-  a.download = state.currentFile.name;
+  a.download = ST.file.name;
   a.click();
-  if (!state.fileURL) URL.revokeObjectURL(url);
-  showToast('Descarga iniciada', 'success');
-}
-
-// ============================================================
-// PANEL LATERAL
-// ============================================================
-
-function toggleSidebar() {
-  el.sidebar.classList.toggle('collapsed');
-}
-
-function switchSidebarTab(tab) {
-  state.sidebarTab = tab;
-  document.querySelectorAll('.sidebar-tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.tab === tab);
-  });
-  el.thumbsPanel.style.display = tab === 'thumbs' ? 'block' : 'none';
-  el.historyPanel.style.display = tab === 'history' ? 'block' : 'none';
-}
-
-// ============================================================
-// HISTORIAL
-// ============================================================
-
-function saveToHistory(file) {
-  const item = {
-    name: file.name,
-    size: file.size,
-    type: state.fileType,
-    typeName: getTypeName(state.fileType, file),
-    date: Date.now()
-  };
-  
-  // Eliminar duplicados
-  state.history = state.history.filter(h => h.name !== item.name);
-  // Agregar al inicio
-  state.history.unshift(item);
-  // Limitar a 20
-  state.history = state.history.slice(0, 20);
-  
-  localStorage.setItem('docvault_history', JSON.stringify(state.history));
-  renderHistory();
-}
-
-function renderHistory() {
-  if (state.history.length === 0) {
-    el.historyList.innerHTML = '<div style="color:var(--muted);font-size:12px;text-align:center;padding:20px;">Sin archivos recientes</div>';
-    return;
-  }
-  
-  const icons = {
-    pdf: 'ri-file-pdf-line',
-    image: 'ri-image-line',
-    text: 'ri-file-text-line',
-    audio: 'ri-music-line',
-    video: 'ri-video-line',
-    unknown: 'ri-file-line'
-  };
-  
-  el.historyList.innerHTML = state.history.map(h => `
-    <div class="history-item" onclick="showToast('Debes volver a seleccionar el archivo fisicamente', 'info')">
-      <div class="history-icon"><i class="${icons[h.type] || icons.unknown}"></i></div>
-      <div class="history-info">
-        <div class="history-name">${h.name}</div>
-        <div class="history-meta">${formatSize(h.size)} · ${new Date(h.date).toLocaleDateString()}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-function clearHistory() {
-  state.history = [];
-  localStorage.removeItem('docvault_history');
-  renderHistory();
-  showToast('Historial limpiado', 'info');
-}
-
-// ============================================================
-// BUSQUEDA Y PANTALLA COMPLETA
-// ============================================================
-
-function toggleSearch() {
-  const isVisible = el.searchBox.style.display !== 'none';
-  el.searchBox.style.display = isVisible ? 'none' : 'flex';
-  if (!isVisible) el.searchInput.focus();
+  if (!ST.fileUrl) URL.revokeObjectURL(url);
+  toast('Descarga iniciada', 'ok');
 }
 
 function toggleFullscreen() {
-  const container = el.viewerContainer;
-  
   if (!document.fullscreenElement) {
-    container.requestFullscreen().catch(err => {
-      showToast('No se pudo activar pantalla completa', 'error');
+    UI.viewer.requestFullscreen().catch(() => {
+      toast('No se pudo activar pantalla completa', 'err');
     });
   } else {
     document.exitFullscreen();
@@ -1627,8 +1258,60 @@ function toggleFullscreen() {
 }
 
 function togglePresentation() {
-  const isPres = el.appWrapper.classList.toggle('presentation-mode');
-  showToast(isPres ? 'Modo presentacion activado' : 'Modo presentacion desactivado', 'info');
+  const on = UI.app.classList.toggle('pres-mode');
+  toast(on ? 'Modo presentacion ON' : 'Modo presentacion OFF', 'info');
+}
+
+// ============================================================
+// HISTORIAL
+// ============================================================
+
+function loadHistory() {
+  try {
+    ST.history = JSON.parse(localStorage.getItem('docvault_hist') || '[]');
+  } catch(e) { ST.history = []; }
+  renderHistory();
+}
+
+function saveHistory(file) {
+  const item = {
+    name: file.name,
+    size: file.size,
+    type: ST.fileCat,
+    typeName: getTypeName(ST.fileCat, file),
+    date: Date.now()
+  };
+  ST.history = ST.history.filter(h => h.name !== item.name);
+  ST.history.unshift(item);
+  ST.history = ST.history.slice(0, 15);
+  try {
+    localStorage.setItem('docvault_hist', JSON.stringify(ST.history));
+  } catch(e){}
+  renderHistory();
+}
+
+function renderHistory() {
+  if (ST.history.length === 0) {
+    UI.historyList.innerHTML = '<div class="history-empty">Sin archivos recientes</div>';
+    return;
+  }
+  const icons = {pdf:'ri-file-pdf-line',image:'ri-image-line',text:'ri-file-text-line',audio:'ri-music-line',video:'ri-video-line',unknown:'ri-file-line'};
+  UI.historyList.innerHTML = ST.history.map(h => 
+    '<div class="history-item" onclick="toast(\'Selecciona el archivo fisicamente para cargarlo\',\'info\')">' +
+      '<div class="history-icon"><i class="' + (icons[h.type] || icons.unknown) + '"></i></div>' +
+      '<div class="history-info">' +
+        '<div class="history-name">' + h.name + '</div>' +
+        '<div class="history-meta">' + fmtSize(h.size) + '</div>' +
+      '</div>' +
+    '</div>'
+  ).join('');
+}
+
+function clearHistory() {
+  ST.history = [];
+  try { localStorage.removeItem('docvault_hist'); } catch(e){}
+  renderHistory();
+  toast('Historial limpiado', 'info');
 }
 
 // ============================================================
@@ -1636,8 +1319,7 @@ function togglePresentation() {
 // ============================================================
 
 function initKeyboard() {
-  document.addEventListener('keydown', (e) => {
-    // No interceptar si esta escribiendo en input
+  document.addEventListener('keydown', e => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
       if (e.key === 'Escape') e.target.blur();
       return;
@@ -1646,50 +1328,44 @@ function initKeyboard() {
     switch(e.key) {
       case 'ArrowLeft': prevPage(); e.preventDefault(); break;
       case 'ArrowRight': nextPage(); e.preventDefault(); break;
-      case '+': case '=': zoomIn(); e.preventDefault(); break;
-      case '-': case '_': zoomOut(); e.preventDefault(); break;
-      case '0': resetZoom(); e.preventDefault(); break;
-      case 'q': case 'Q': if (state.fileType === 'image') rotateImage(-90); break;
-      case 'e': case 'E': if (state.fileType === 'image') rotateImage(90); break;
-      case 'f': case 'F': 
-        if (e.ctrlKey || e.metaKey) { e.preventDefault(); toggleSearch(); el.searchInput.focus(); }
-        else toggleFullscreen(); 
-        break;
+      case '+': case '=': zoomIn(); break;
+      case '-': case '_': zoomOut(); break;
+      case '0': resetZoom(); break;
+      case 'q': case 'Q': if (ST.fileCat === 'image') rotateImg(-90); break;
+      case 'e': case 'E': if (ST.fileCat === 'image') rotateImg(90); break;
+      case 'f': case 'F': toggleFullscreen(); break;
       case 'p': case 'P': togglePresentation(); break;
-      case 'b': case 'B': toggleSidebar(); break;
       case 'Delete': case 'Backspace': clearAll(); e.preventDefault(); break;
       case '?': case '/': showShortcuts(); e.preventDefault(); break;
-      case 'Escape': 
+      case 'Escape':
         hideShortcuts();
-        if (el.appWrapper.classList.contains('presentation-mode')) {
-          el.appWrapper.classList.remove('presentation-mode');
-        }
+        UI.app.classList.remove('pres-mode');
         break;
     }
   });
 }
 
-function showShortcuts() {
-  el.shortcutsModal.classList.add('show');
-}
-
-function hideShortcuts() {
-  el.shortcutsModal.classList.remove('show');
-}
+function showShortcuts() { UI.modalBg.classList.add('show'); }
+function hideShortcuts() { UI.modalBg.classList.remove('show'); }
 
 // ============================================================
-// INICIALIZACION
+// INICIO
 // ============================================================
 
 function init() {
-  initDragDrop();
-  initKeyboard();
-  renderHistory();
-  console.log('%c DOCVAULT PRO ', 'background:#c47046;color:#fff;font-size:16px;font-weight:bold;padding:8px 16px;border-radius:6px;');
-  console.log('%c Visor de archivos profesional cargado correctamente', 'color:#9a978f;font-size:12px;');
+  try {
+    initDragDrop();
+    initKeyboard();
+    loadHistory();
+    console.log('%c DOCVAULT ULTIMATE ', 'background:linear-gradient(90deg,#00d4ff,#a855f7);color:#0b0f1a;font-size:16px;font-weight:700;padding:8px 16px;border-radius:6px;');
+    console.log('%c Sistema listo - Todos los modulos cargados', 'color:#7a8ba8;font-size:12px;');
+  } catch(err) {
+    console.error('Init error:', err);
+    toast('Error de inicializacion: ' + err.message, 'err');
+  }
 }
 
-// Ejecutar inmediatamente (no usar DOMContentLoaded)
+// Iniciar inmediatamente
 init();
 </script>
 </html>
