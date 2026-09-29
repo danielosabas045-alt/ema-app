@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: ema-database
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BASE_URL
+        sync: false
+      - key: DATABASE_URL
+        fromDatabase:
+          name: ema-database-postgres
+          property: connectionString
+      - key: JWT_SECRET
+        sync: false
+      - key: ADMIN_EMAIL
+        value: danielosabas045@gmail.com
+      - key: ADMIN_PASSWORD
+        sync: false
+      - key: ADMIN_NAME
+        value: Daniel Osabas
+      - key: GMAIL_USER
+        value: danielosabas045@gmail.com
+      - key: GMAIL_APP_PASSWORD
+        sync: false
+
+databases:
+  - name: ema-database-postgres
+    plan: free
+    databaseName: ema_database
+    user: ema
