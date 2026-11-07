@@ -1,10 +1,11 @@
-# El plan basic-256mb de PostgreSQL tiene coste. Revisar el precio en Render antes de crear.
+# PostgreSQL persistente tiene coste de cómputo y almacenamiento. Revisar el plan antes de aprobar.
 # El servidor usa la URL del propio servicio para enlaces seguros. DATABASE_URL usa la red privada.
 services:
   - type: web
     name: ema-database
     runtime: node
     plan: free
+    region: oregon
     buildCommand: npm ci --omit=dev
     startCommand: npm start
     healthCheckPath: /api/health
@@ -26,15 +27,15 @@ services:
       - key: ADMIN_NAME
         value: Daniel Osabas
       - key: ADMIN_PASSWORD
-        sync: false
-      - key: RESEND_API_KEY
-        sync: false
-      - key: MAIL_FROM
-        sync: false
+        generateValue: true
+    # Configurar RESEND_API_KEY y MAIL_FROM después en Environment para activar correo.
+    # La ausencia de correo no bloquea el acceso al servidor ni los registros SQL.
 
 databases:
   - name: ema-database-postgres
-    plan: basic-256mb
+    plan: 0.1c-256mb
+    region: oregon
+    diskSizeGB: 1
     databaseName: ema_database
     user: ema
     ipAllowList: []
