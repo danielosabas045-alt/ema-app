@@ -165,7 +165,23 @@ function renderPage() {
 function metric(label, value, detail) { return div('card kpi',el('small',{},label),el('strong',{},String(value)),el('span',{},detail)); }
 function renderDashboard() {
   const s = state.stats || {};
-  shell('Panel principal','Información sincronizada desde PostgreSQL',div('',div('grid',metric('Registros',s.records ?? 0,'Datos reales'),metric('Usuarios',s.users ?? '—','Cuentas registradas'),metric('Invitaciones',s.invitations ?? '—','Envíos registrados'),metric('Servidor','ONLINE','API conectada')),div('two section',div('card',div('head',heading('Acciones rápidas'),para('Trabajo diario')),div('actions',button('Nuevo registro',()=>openRecord(),'primary'),...(state.user.role === 'admin' ? [button('Invitar usuario',openInvite,'btn')] : []))),div('card',heading('Estado del sistema'),para('Base de datos: conectada'),para('Invitaciones por Gmail: '+(state.health?.emailConfigured ? 'configuradas' : 'pendientes de configurar')),notice('Los cambios se guardan en el servidor y son visibles según los permisos de cada cuenta.'))))));
+  const metrics = div('grid',
+    metric('Registros',s.records ?? 0,'Datos reales'),
+    metric('Usuarios',s.users ?? '—','Cuentas registradas'),
+    metric('Invitaciones',s.invitations ?? '—','Envíos registrados'),
+    metric('Servidor','ONLINE','API conectada')
+  );
+  const actions = div('card',
+    heading('Acciones rápidas'),para('Trabajo diario'),
+    div('actions',button('Nuevo registro',()=>openRecord(),'primary'),
+      ...(state.user.role === 'admin' ? [button('Invitar usuario',openInvite)] : []))
+  );
+  const services = div('card',
+    heading('Estado del sistema'),para('Base de datos: conectada'),
+    para('Invitaciones por Gmail: '+(state.health?.emailConfigured ? 'configuradas' : 'pendientes de configurar')),
+    notice('Los cambios se guardan en el servidor y son visibles según los permisos de cada cuenta.')
+  );
+  shell('Panel principal','Información sincronizada desde PostgreSQL',div('',metrics,div('two section',actions,services)));
 }
 function openInvite() {
   const name = inputField('Nombre','text','',true,120), email = inputField('Correo Gmail o de otro proveedor','email','',true,254);
