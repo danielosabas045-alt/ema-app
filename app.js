@@ -255,7 +255,16 @@ function renderRecords() {
   shell('Base de datos','Registros reales con permisos por usuario',div('',div('head',heading('Registros'),div('actions',button('Exportar visibles CSV',exportVisibleCSV),button('+ Agregar registro',()=>openRecord(),'primary'))),div('card section',div('actions searchbar',search,button('Buscar',runSearch)),rows.length?table(['ID','Título','Descripción','Usuario','Fecha','Acciones'],rows):div('empty',heading('Sin registros'),para('Creá uno nuevo o cambiá la búsqueda.')),state.more ? button('Cargar 100 más',fetchMore,'btn load-more') : null),notice('La exportación CSV incluye los registros cargados en pantalla.')));
 }
 function renderSettings() {
-  shell('Configuración','Estado y cuenta actual',div('two',div('card',heading('Mi cuenta'),para('Nombre: '+state.user.name),para('Correo: '+state.user.email),para('Rol: '+state.user.role),button('Cerrar sesión',logout,'btn danger')),div('card',heading('Servicios'),para('API: '+location.origin),para('PostgreSQL: conectado'),para('Gmail SMTP: '+(state.health?.emailConfigured?'configurado':'sin configurar')),notice('Las contraseñas de Gmail, SQL y JWT se configuran únicamente en el servidor. Nunca en GitHub Pages.')))));
+  const account = div('card',
+    heading('Mi cuenta'),para('Nombre: '+state.user.name),para('Correo: '+state.user.email),
+    para('Rol: '+state.user.role),button('Cerrar sesión',logout,'btn danger')
+  );
+  const services = div('card',
+    heading('Servicios'),para('API: '+location.origin),para('PostgreSQL: conectado'),
+    para('Gmail SMTP: '+(state.health?.emailConfigured ? 'configurado' : 'sin configurar')),
+    notice('Las contraseñas de Gmail, SQL y JWT se configuran únicamente en el servidor. Nunca en GitHub Pages.')
+  );
+  shell('Configuración','Estado y cuenta actual',div('two',account,services));
 }
 (async function start() {
   if (!token) return renderLogin();
