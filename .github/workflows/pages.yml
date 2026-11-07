@@ -21,8 +21,8 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
       - name: Validate browser scripts
@@ -32,10 +32,23 @@ jobs:
           mkdir public
           cp index.html app.js styles.css invite.html invite.js config.json public/
           touch public/.nojekyll
+      - name: Read current Pages mode
+        id: mode
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          pages_build_mode=$(gh api "repos/${{ github.repository }}/pages" --jq .build_type)
+          echo "mode=$pages_build_mode" >> "$GITHUB_OUTPUT"
       - uses: actions/configure-pages@v5
+        if: steps.mode.outputs.mode == 'workflow'
       - uses: actions/upload-pages-artifact@v3
+        if: steps.mode.outputs.mode == 'workflow'
         with:
           path: public
       - name: Deploy
+        if: steps.mode.outputs.mode == 'workflow'
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: Keep existing branch publication
+        if: steps.mode.outputs.mode != 'workflow'
+        run: echo "::notice::Pages conserva la publicación desde la rama configurada. Para publicar solo archivos públicos mediante este flujo, selecciona GitHub Actions en Settings > Pages."

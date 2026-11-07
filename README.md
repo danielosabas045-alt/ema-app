@@ -90,7 +90,7 @@ TEST_DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/ema_test npm run tes
 
 Las pruebas de integración crean y eliminan un esquema aislado dentro de la base de pruebas. Verifican sesiones, permisos entre usuarios, SQL/CRUD, invitaciones, fallos de correo, aceptación única, recuperación de contraseñas y reinicios. Si falta `TEST_DATABASE_URL`, las pruebas SQL se omiten; CI siempre aporta PostgreSQL. Usa una base exclusiva para pruebas.
 
-GitHub Actions ejecuta las comprobaciones antes de revisar un cambio. El flujo de Pages publica únicamente archivos públicos y comprueba la sintaxis de los scripts.
+GitHub Actions ejecuta las comprobaciones antes de revisar un cambio. El flujo de Pages comprueba la sintaxis de los scripts y respeta el modo de publicación existente. Si eliges GitHub Actions en Settings → Pages, publicará únicamente los archivos públicos; si mantienes la publicación desde una rama, GitHub seguirá publicando desde esa rama. El repositorio es público y nunca debe contener secretos.
 
 ## Respaldos
 

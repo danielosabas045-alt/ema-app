@@ -29,8 +29,8 @@ jobs:
     env:
       TEST_DATABASE_URL: postgresql://ema:ema_ci_password@localhost:5432/ema_test
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: 24
           cache: npm
