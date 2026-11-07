@@ -46,6 +46,28 @@ describe('production configuration', () => {
     assert.ok(template.text.includes('https://ema.example/invite.html#token=test'));
     assert.ok(!template.html.includes(config.gmailPassword));
   });
+
+  it('configures Brevo with a verified sender and keeps provider precedence', () => {
+    const config = loadConfig({ ...database, ADMIN_EMAIL: 'Sender@Gmail.com', BREVO_API_KEY: 'test-brevo-key', GMAIL_APP_PASSWORD: 'gmail-password', SMTP_HOST: 'smtp.example.test' });
+    assert.equal(config.mailProvider, 'brevo');
+    assert.equal(config.brevoApiKey, 'test-brevo-key');
+    assert.equal(config.brevoSenderEmail, 'sender@gmail.com');
+    assert.equal(config.brevoSenderName, 'EMA Database');
+    const custom = loadConfig({ ...database, BREVO_API_KEY: 'test-brevo-key', BREVO_SENDER_EMAIL: ' Team@Gmail.com ', BREVO_SENDER_NAME: ' Mi equipo ' });
+    assert.equal(custom.brevoSenderEmail, 'team@gmail.com');
+    assert.equal(custom.brevoSenderName, 'Mi equipo');
+    assert.equal(loadConfig({ ...database, BREVO_API_KEY: 'test-brevo-key', RESEND_API_KEY: 'test-resend-key', MAIL_FROM: 'EMA <ema@example.test>' }).mailProvider, 'resend');
+  });
+
+  it('rejects invalid or multiline Brevo sender configuration without exposing credentials', () => {
+    for (const BREVO_SENDER_EMAIL of ['invalid', 'EMA <sender@gmail.com>', 'sender@gmail.com\r\nBcc: other@gmail.com', 'sender@gmail.com\n', 'sender @gmail.com']) {
+      assert.throws(() => loadConfig({ ...database, BREVO_API_KEY: 'secret-key', BREVO_SENDER_EMAIL }), /BREVO_SENDER_EMAIL/);
+    }
+    for (const BREVO_SENDER_NAME of ['   ', 'EMA\r\nBcc: other@gmail.com', 'x'.repeat(121)]) {
+      assert.throws(() => loadConfig({ ...database, BREVO_API_KEY: 'secret-key', BREVO_SENDER_NAME }), /BREVO_SENDER_NAME/);
+    }
+    assert.throws(() => loadConfig({ ...database, BREVO_API_KEY: 'secret-key', ADMIN_EMAIL: 'invalid' }), /BREVO_SENDER_EMAIL/);
+  });
 });
 
 describe('real email-provider adapter', () => {
@@ -67,6 +89,51 @@ describe('real email-provider adapter', () => {
       assert.equal(body.from, message.from);
       global.fetch = async () => ({ ok: false, status: 403 });
       await assert.rejects(() => mailer.sendMail(message), /403/);
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('sends Brevo messages over HTTPS using the configured sender and accepts queued messages', async () => {
+    const originalFetch = global.fetch;
+    const requests = [];
+    try {
+      global.fetch = async (url, options) => {
+        requests.push({ url, options });
+        return { ok: true, status: 202, json: async () => ({ messageId: '<queued-message@brevo.test>' }) };
+      };
+      const mailer = createMailer(loadConfig({ ...database, BREVO_API_KEY: 'test-brevo-key', BREVO_SENDER_EMAIL: 'verified@gmail.com', BREVO_SENDER_NAME: 'Equipo EMA' }));
+      const message = { from: 'Unrelated <unused@example.test>', to: 'recipient@gmail.com', subject: 'Invitación EMA', text: 'URL personal', html: '<p>Invitación</p>' };
+      assert.deepEqual(await mailer.sendMail(message), { messageId: '<queued-message@brevo.test>' });
+      const { url, options } = requests[0];
+      assert.equal(url, 'https://api.brevo.com/v3/smtp/email');
+      assert.equal(options.method, 'POST');
+      assert.equal(options.headers['api-key'], 'test-brevo-key');
+      assert.equal(options.headers['Content-Type'], 'application/json');
+      assert.ok(options.signal instanceof AbortSignal);
+      assert.deepEqual(JSON.parse(options.body), {
+        sender: { name: 'Equipo EMA', email: 'verified@gmail.com' },
+        to: [{ email: 'recipient@gmail.com' }], subject: message.subject,
+        htmlContent: message.html, textContent: message.text,
+      });
+    } finally {
+      global.fetch = originalFetch;
+    }
+  });
+
+  it('preserves Brevo rejection as a safe failure without reading provider error details', async () => {
+    const originalFetch = global.fetch;
+    try {
+      const mailer = createMailer(loadConfig({ ...database, BREVO_API_KEY: 'secret-brevo-key' }));
+      for (const status of [401, 403, 429, 500]) {
+        global.fetch = async () => ({ ok: false, status, json: async () => { throw new Error('secret-brevo-key provider-private-detail'); } });
+        await assert.rejects(() => mailer.sendMail({ to: 'recipient@gmail.com' }), error => {
+          assert.equal(error.message, `El proveedor de correo rechazó el envío (${status}).`);
+          assert.ok(!error.message.includes('secret-brevo-key'));
+          assert.ok(!error.message.includes('provider-private-detail'));
+          return true;
+        });
+      }
     } finally {
       global.fetch = originalFetch;
     }

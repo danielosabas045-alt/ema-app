@@ -28,7 +28,7 @@ services:
         value: Daniel Osabas
       - key: ADMIN_PASSWORD
         generateValue: true
-    # Configurar RESEND_API_KEY y MAIL_FROM después en Environment para activar correo.
+    # Configurar BREVO_API_KEY + BREVO_SENDER_EMAIL o RESEND_API_KEY + MAIL_FROM en Environment.
     # La ausencia de correo no bloquea el acceso al servidor ni los registros SQL.
 
 databases:
