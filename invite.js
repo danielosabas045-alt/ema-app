@@ -1,1 +1,31 @@
-const token=new URLSearchParams(location.search).get('token')||'';const form=document.getElementById('f');const msg=document.getElementById('msg');form.addEventListener('submit',async e=>{e.preventDefault();msg.textContent='Activando...';try{const r=await fetch('/api/invite/accept',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,name:document.getElementById('name').value,password:document.getElementById('password').value})});const d=await r.json();if(!r.ok)throw Error(d.error||'No se pudo activar');localStorage.setItem('ema_token',d.token);msg.style.color='#35d39b';msg.textContent='Cuenta activada. Entrando...';setTimeout(()=>location.href='/',700)}catch(x){msg.style.color='#ff667c';msg.textContent=x.message}});
+'use strict';
+const token = new URLSearchParams(location.search).get('token') || '';
+const form = document.getElementById('f');
+const msg = document.getElementById('msg');
+if (!/^[a-f0-9]{64}$/.test(token)) {
+  msg.textContent = 'Este enlace de invitación no es válido.';
+  form.querySelector('button').disabled = true;
+}
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  const button = form.querySelector('button');
+  button.disabled = true;
+  msg.textContent = 'Activando cuenta...';
+  try {
+    const response = await fetch('/api/invite/accept', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({token,name:document.getElementById('name').value,password:document.getElementById('password').value})
+    });
+    const data = await response.json();
+    if (!response.ok) throw Error(data.error || 'No se pudo activar.');
+    sessionStorage.setItem('ema_session_v2',data.token);
+    history.replaceState(null,'','/invite.html');
+    msg.textContent = 'Cuenta activada. Entrando...';
+    msg.style.color = '#35d39b';
+    location.replace('/');
+  } catch (error) {
+    msg.textContent = error.message;
+    msg.style.color = '#ff667c';
+    button.disabled = false;
+  }
+});
