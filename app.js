@@ -178,7 +178,7 @@ function renderDashboard() {
   );
   const services = div('card',
     heading('Estado del sistema'),para('Base de datos: conectada'),
-    para('Invitaciones por Gmail: '+(state.health?.emailConfigured ? 'configuradas' : 'pendientes de configurar')),
+    para('Correo saliente: '+(state.health?.emailConfigured ? (state.health.mailProvider === 'resend_https' ? 'Resend HTTPS' : 'Gmail SMTP') : 'pendiente de configurar')),
     notice('Los cambios se guardan en el servidor y son visibles según los permisos de cada cuenta.')
   );
   shell('Panel principal','Información sincronizada desde PostgreSQL',div('',metrics,div('two section',actions,services)));
@@ -261,7 +261,7 @@ function renderSettings() {
   );
   const services = div('card',
     heading('Servicios'),para('API: '+location.origin),para('PostgreSQL: conectado'),
-    para('Gmail SMTP: '+(state.health?.emailConfigured ? 'configurado' : 'sin configurar')),
+    para('Correo saliente: '+(state.health?.emailConfigured ? (state.health.mailProvider === 'resend_https' ? 'Resend HTTPS' : 'Gmail SMTP') : 'sin configurar')),
     notice('Las contraseñas de Gmail, SQL y JWT se configuran únicamente en el servidor. Nunca en GitHub Pages.')
   );
   shell('Configuración','Estado y cuenta actual',div('two',account,services));
