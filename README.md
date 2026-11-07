@@ -7,7 +7,7 @@ Espacio de trabajo multiusuario en español con PostgreSQL, sesiones seguras e i
 ## Activar la aplicación pública
 
 1. Conecta este repositorio en Render como Blueprint usando `render.yaml`. **El PostgreSQL `0.1c-256mb` con 1 GB de almacenamiento tiene coste**: revisa la tarifa antes de crear recursos. El servidor web usa el plan Free y puede tardar en despertar; puedes cambiarlo por un plan con funcionamiento continuo.
-2. Render genera automáticamente `ADMIN_PASSWORD` y la conserva como variable privada. Consulta su valor en Environment para el primer inicio de sesión y luego cambia la contraseña desde EMA. Para activar el correo configura allí `RESEND_API_KEY` y `MAIL_FROM`. En Resend, `MAIL_FROM` debe pertenecer a un dominio verificado. No uses el remitente de prueba para enviar a destinatarios arbitrarios. `DATABASE_URL` se conecta automáticamente a PostgreSQL. La URL pública se toma de `RENDER_EXTERNAL_URL`; puedes definir `BASE_URL` si usas un dominio propio.
+2. Render genera automáticamente `ADMIN_PASSWORD` y la conserva como variable privada. Consulta su valor en Environment para el primer inicio de sesión y luego cambia la contraseña desde EMA. Para activar el correo configura allí `BREVO_API_KEY` y `BREVO_SENDER_EMAIL`, o `RESEND_API_KEY` y `MAIL_FROM`. En Brevo verifica antes tu remitente y habilita el envío transaccional. En Resend, `MAIL_FROM` debe pertenecer a un dominio verificado. No uses el remitente de prueba para enviar a destinatarios arbitrarios. `DATABASE_URL` se conecta automáticamente a PostgreSQL. La URL pública se toma de `RENDER_EXTERNAL_URL`; puedes definir `BASE_URL` si usas un dominio propio.
 3. Abre la URL HTTPS de **ese servidor**. Entra con `danielosabas045@gmail.com` y la contraseña inicial generada por Render. El administrador se crea solo al primer inicio; reiniciar el servicio nunca reemplaza su contraseña. `/api/health` debe responder `ok: true`, `database: "connected"` y, una vez configurado el proveedor de correo, `emailConfigured: true`. Sin proveedor configurado SQL y el acceso funcionan, pero las invitaciones y la recuperación muestran que el correo está pendiente.
 4. Invita a un correo de prueba que controles. Comprueba la recepción y activa la cuenta desde el enlace. Entra desde otro navegador y crea un registro para confirmar la persistencia compartida.
 
@@ -19,7 +19,7 @@ No es necesario conectar un complemento de Gmail para que la aplicación envíe 
 
 Para probar el servidor sin un plan PostgreSQL de pago, usa `render-free.yaml` como ruta del Blueprint. Conserva las mismas funciones SQL y genera la contraseña inicial en Render, pero **la base caduca a los 30 días**. El servidor Free se suspende tras 15 minutos sin tráfico y el siguiente acceso puede tardar aproximadamente un minuto. Antes de guardar información permanente, cambia la base a un plan persistente y configura respaldos.
 
-El correo requiere configurar `RESEND_API_KEY` y `MAIL_FROM` privadamente después de crear el servicio. Sin esas credenciales no se envían invitaciones. El plan gratuito no permite Gmail SMTP.
+El correo requiere configurar Brevo o Resend privadamente después de crear el servicio. Sin esas credenciales no se envían invitaciones. El plan gratuito no permite Gmail SMTP; para usar solamente una cuenta Gmail como remitente, consulta la guía de Brevo de abajo.
 
 ## Proveedor de correo
 
@@ -27,12 +27,29 @@ Elige una opción:
 
 | Servicio | Variables privadas | Uso |
 | --- | --- | --- |
+| Brevo por HTTPS | `BREVO_API_KEY`, `BREVO_SENDER_EMAIL` | Compatible con Render Free; requiere cuenta activa y remitente verificado |
 | Resend por HTTPS | `RESEND_API_KEY`, `MAIL_FROM` | Recomendado en Render Free; remitente con dominio verificado |
 | Gmail SMTP | `GMAIL_USER`, `GMAIL_APP_PASSWORD` | Requiere contraseña de aplicación de Google y salida SMTP permitida |
 
-**Render Free bloquea los puertos SMTP**: una contraseña correcta de Gmail no elimina ese bloqueo. Usa Resend por HTTPS o un alojamiento compatible con SMTP. El destinatario puede ser Gmail con cualquiera de los dos proveedores, sujeto a los permisos y límites del proveedor.
+**Render Free bloquea los puertos SMTP**: una contraseña correcta de Gmail no elimina ese bloqueo. Usa Brevo o Resend por HTTPS, o un alojamiento compatible con SMTP. El destinatario puede ser Gmail con cualquiera de los proveedores, sujeto a los permisos y límites del proveedor.
 
 La aplicación registra aceptación o rechazo por el proveedor y permite reenviar invitaciones pendientes. Una respuesta aceptada no garantiza entrega a Recibidos: el servidor del destinatario puede filtrar o rechazar el mensaje después. La prueba de recepción real se hace con las credenciales del despliegue; las pruebas automatizadas usan un proveedor simulado.
+
+## Activar correo con una cuenta Gmail y Brevo
+
+El mensaje «El envío de correo aún no está configurado» indica que falta un proveedor. Ni publicar EMA ni conectar Gmail a ChatGPT configura por sí solo el envío de la aplicación.
+
+1. Crea tu cuenta en [Brevo](https://www.brevo.com/) y agrega el remitente desde **Settings → Senders, Domains, IPs → Senders**: nombre **EMA Database** y el Gmail que controlas. Introduce en Brevo el código de verificación que recibas en ese correo.
+2. Comprueba que el envío **transaccional** esté activado. Algunas cuentas nuevas deben solicitar esa activación a soporte de Brevo; una cuenta creada no equivale a permiso para enviar.
+3. En **Settings → SMTP & API → API keys**, crea una **API key**, no una clave SMTP.
+4. Abre [el servicio EMA en Render](https://dashboard.render.com/web/srv-dbnl50jrjlhs73954abg), entra en **Environment** y agrega `BREVO_API_KEY` con esa clave y `BREVO_SENDER_EMAIL` con el mismo Gmail verificado. `BREVO_SENDER_NAME` es opcional y por defecto es `EMA Database`. Guarda con **Save, rebuild, and deploy**. No publiques la clave ni la pegues en el chat.
+5. Espera a que Render muestre **Live**. En EMA, Configuración debe mostrar correo configurado y `/api/health` debe devolver `emailConfigured: true`, `emailProvider: "brevo"`. Esta comprobación confirma configuración, no entrega. Repite la invitación y comprueba Recibidos y Spam del destinatario.
+
+Si el Gmail verificado coincide con `ADMIN_EMAIL`, se usa por defecto como remitente cuando no está definida `BREVO_SENDER_EMAIL`. Configúrala explícitamente si usas otro correo. Si hay claves de varios proveedores, se prioriza Resend, después Brevo y luego SMTP; conserva solo las del proveedor elegido.
+
+Brevo documenta que puede sustituir un remitente Gmail por una dirección de su dominio de envío para cumplir las políticas de correo. Es una solución temporal sin comprar dominio, sujeta a aprobación y límites del proveedor. Recomienda un dominio autenticado para un servicio permanente. No se garantiza la llegada a Recibidos.
+
+Referencias oficiales: [crear y verificar remitente](https://help.brevo.com/hc/en-us/articles/208836149-Create-a-new-sender-From-name-and-From-email), [políticas y sustitución del remitente](https://help.brevo.com/hc/en-us/articles/14925263522578-Comply-with-Gmail-Yahoo-and-Microsoft-s-requirements-for-email-senders), [activación transaccional](https://help.brevo.com/hc/en-us/articles/115000188150-Troubleshooting-Issues-with-Brevo-SMTP).
 
 ## Funciones
 
