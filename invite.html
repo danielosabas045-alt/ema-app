@@ -1,1 +1,20 @@
-<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Aceptar invitación | EMA Database</title><link rel="stylesheet" href="styles.css"></head><body><main class="auth-wrap"><section class="auth-card"><div class="brand-big">E</div><div class="eyebrow">EMA DATABASE</div><h1>Aceptar invitación</h1><p>Creá tu contraseña para entrar.</p><form id="f"><label>Nombre<input id="name" maxlength="120" placeholder="Nombre completo"></label><label>Contraseña<input id="password" type="password" minlength="8" required placeholder="Mínimo 8 caracteres"></label><button class="primary">Activar cuenta</button><div id="msg" class="msg"></div></form></section></main><script src="invite.js"></script></body></html>
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#102a36">
+  <title>Tu acceso · EMA Database</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="invite.js" defer></script>
+</head>
+<body>
+  <main class="invite-page">
+    <a class="brand" href="./"><span class="brand-mark">E<span>·</span></span><span>EMA<span class="brand-caption">DATABASE</span></span></a>
+    <section class="invite-card" id="invite-content" aria-live="polite"><div class="loading" role="status"><span class="spinner"></span><span>Revisando tu enlace…</span></div></section>
+    <p class="invite-footer">Tu equipo y tu información, en un mismo lugar.</p>
+  </main>
+  <noscript><p class="noscript">Activa JavaScript para continuar.</p></noscript>
+</body>
+</html>
