@@ -15,6 +15,12 @@ GitHub Pages sirve solo los archivos del navegador. Su pantalla permite abrir el
 
 No es necesario conectar un complemento de Gmail para que la aplicación envíe correos: el envío se configura en el servidor. Una integración de Render en ChatGPT permite revisar/desplegar recursos desde el chat cuando esté conectada.
 
+## Prueba gratuita en Render
+
+Para probar el servidor sin un plan PostgreSQL de pago, usa `render-free.yaml` como ruta del Blueprint. Conserva las mismas funciones SQL y genera la contraseña inicial en Render, pero **la base caduca a los 30 días**. El servidor Free se suspende tras 15 minutos sin tráfico y el siguiente acceso puede tardar aproximadamente un minuto. Antes de guardar información permanente, cambia la base a un plan persistente y configura respaldos.
+
+El correo requiere configurar `RESEND_API_KEY` y `MAIL_FROM` privadamente después de crear el servicio. Sin esas credenciales no se envían invitaciones. El plan gratuito no permite Gmail SMTP.
+
 ## Proveedor de correo
 
 Elige una opción:
