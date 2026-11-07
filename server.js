@@ -19,13 +19,16 @@ const config = {
   adminName: String(process.env.ADMIN_NAME || 'Administrador EMA').trim(),
   gmailUser: String(process.env.GMAIL_USER || '').trim().toLowerCase(),
   gmailPassword: String(process.env.GMAIL_APP_PASSWORD || '').replace(/\s/g, ''),
+  resendApiKey: String(process.env.RESEND_API_KEY || '').trim(),
+  mailFrom: String(process.env.MAIL_FROM || '').trim(),
   baseUrl: (process.env.BASE_URL || 'http://localhost:' + (process.env.PORT || 3000)).replace(/\/+$/, '')
 };
 if (!config.databaseUrl) throw Error('Falta DATABASE_URL; configurá PostgreSQL.');
 if (!config.jwtSecret || config.jwtSecret.length < 32) throw Error('JWT_SECRET debe tener al menos 32 caracteres aleatorios.');
 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.adminEmail)) throw Error('Configurá ADMIN_EMAIL correctamente.');
 if (config.environment === 'production' && !config.baseUrl.startsWith('https://')) throw Error('BASE_URL debe usar HTTPS en producción.');
-if (!!config.gmailUser !== !!config.gmailPassword) throw Error('GMAIL_USER y GMAIL_APP_PASSWORD deben configurarse juntos.');
+if (config.gmailPassword && !config.gmailUser) throw Error('GMAIL_USER es necesario para Gmail SMTP.');
+if (config.resendApiKey && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(config.mailFrom)) throw Error('MAIL_FROM requiere una dirección del dominio verificado del proveedor.');
 
 const app = express();
 app.disable('x-powered-by');
@@ -52,6 +55,8 @@ const mailer = config.gmailPassword ? nodemailer.createTransport({
   host: 'smtp.gmail.com', port: 465, secure: true, auth: { user: config.gmailUser, pass: config.gmailPassword },
   connectionTimeout: 12000, greetingTimeout: 12000, socketTimeout: 20000
 }) : null;
+const emailConfigured = Boolean(config.resendApiKey && config.mailFrom) || Boolean(mailer);
+const mailProvider = config.resendApiKey ? 'resend_https' : mailer ? 'gmail_smtp' : null;
 const q = (sql, params = []) => pool.query(sql, params);
 const run = fn => (req, res, next) => Promise.resolve(fn(req, res)).catch(next);
 const bad = (res, status, error) => res.status(status).json({ error });
@@ -118,6 +123,41 @@ function limit(maxHits, periodMs, keyPrefix) {
 function emailTemplate(name, url, role) {
   return '<!doctype html><html lang="es"><head><meta charset="utf-8"></head><body style="background:#eef4fb;font-family:Arial,sans-serif;padding:24px"><main style="max-width:550px;margin:auto;padding:32px;border-radius:14px;background:#fff;color:#142337"><h1 style="color:#0878bb">EMA DATABASE</h1><h2>Hola, '+html(name)+'</h2><p>Te invitaron a colaborar en EMA con el rol de <strong>'+html(role)+'</strong>.</p><p>Tu enlace personal vence en 48 horas.</p><p><a style="display:inline-block;background:#0878bb;color:white;padding:14px 20px;text-decoration:none;border-radius:8px" href="'+html(url)+'">Aceptar invitación</a></p><p style="font-size:12px;color:#697a8b">Si no esperabas esta invitación, ignorá el mensaje. No compartás el enlace.</p></main></body></html>';
 }
+
+async function deliverInvitation(user, target, hashed) {
+  const subject = 'Invitación para entrar a EMA Database';
+  const plain = 'Hola '+user.name+'. Te invitaron a EMA como '+user.role+'. Aceptá antes de 48 horas: '+target;
+  const content = emailTemplate(user.name,target,user.role);
+  if (config.resendApiKey) {
+    // URL de pruebas disponible únicamente en NODE_ENV=test; producción siempre usa HTTPS de Resend.
+    const testUrl = config.environment === 'test' && /^http:\/\/127\.0\.0\.1:\d+\/emails$/.test(process.env.RESEND_TEST_URL || '')
+      ? process.env.RESEND_TEST_URL : null;
+    const response = await fetch(testUrl || 'https://api.resend.com/emails', {
+      method:'POST',
+      headers:{
+        'Authorization':'Bearer '+config.resendApiKey,
+        'Content-Type':'application/json',
+        'User-Agent':'EMA-Database/2.0',
+        'Idempotency-Key':'ema-invite-'+hashed
+      },
+      body:JSON.stringify({
+        from:'EMA Database <'+config.mailFrom+'>',
+        to:[user.email],subject,html:content,text:plain
+      }),
+      signal:AbortSignal.timeout(15000)
+    });
+    if (!response.ok) throw Error('Proveedor HTTPS rechazó el envío (HTTP '+response.status+').');
+    const result = await response.json();
+    if (!result.id) throw Error('El proveedor no confirmó la creación del mensaje.');
+    return;
+  }
+  if (!mailer) throw Error('No hay proveedor de correo configurado.');
+  await mailer.sendMail({
+    from:{name:'EMA Database',address:config.gmailUser},
+    to:user.email,subject,text:plain,html:content
+  });
+}
+
 async function issueInvitation(user, actorId) {
   const raw = crypto.randomBytes(32).toString('hex');
   const hashed = SHA256(raw);
@@ -126,19 +166,13 @@ async function issueInvitation(user, actorId) {
   await q('INSERT INTO invitations(user_id,email,role,token_hash) VALUES($1,$2,$3,$4)', [user.id,user.email,user.role,hashed]);
   const target = config.baseUrl + '/invite.html?token=' + raw;
   try {
-    const info = await mailer.sendMail({
-      from: { name:'EMA Database', address:config.gmailUser },
-      to:user.email,
-      subject:'Invitación para entrar a EMA Database',
-      text:'Hola '+user.name+'. Te invitaron a EMA como '+user.role+'. Aceptá antes de 48 horas: '+target,
-      html:emailTemplate(user.name,target,user.role)
-    });
-    await audit(actorId, 'invitation.smtp_accepted', user.email);
-    return { ok:true, email:user.email, message:'Gmail SMTP aceptó el envío. Revisá la bandeja de entrada y spam.' };
+    await deliverInvitation(user,target,hashed);
+    await audit(actorId, 'invitation.provider_accepted', user.email);
+    return { ok:true, email:user.email, message:'El proveedor de correo aceptó el envío. Revisá entrada y spam.' };
   } catch (err) {
     await q('UPDATE invitations SET last_error=$1 WHERE token_hash=$2', [String(err.message || err).slice(0,500),hashed]);
     await audit(actorId,'invitation.failed',user.email);
-    const ex = Error('No se pudo enviar el correo. Verificá la configuración SMTP del servidor.'); ex.status=502; throw ex;
+    const ex = Error('No se pudo enviar el correo. Revisá el proveedor de correo del servidor.'); ex.status=502; throw ex;
   }
 }
 
@@ -151,7 +185,7 @@ for (const [route, filename] of Object.entries(PUBLIC_FILES)) {
 }
 app.get('/api/health', run(async(_req,res) => {
   await q('SELECT 1');
-  res.json({ok:true,database:'connected',emailConfigured:!!mailer});
+  res.json({ok:true,database:'connected',emailConfigured,mailProvider});
 }));
 app.post('/api/login', limit(12, 15*60*1000,'login'), run(async(req,res) => {
   const email = String(req.body?.email || '').trim().toLowerCase();
@@ -177,7 +211,7 @@ app.get('/api/users',authenticate,adminOnly,run(async(_req,res) => {
   res.json({users:data.rows});
 }));
 app.post('/api/users/invite',limit(20,60*60*1000,'invite'),authenticate,adminOnly,run(async(req,res) => {
-  if (!mailer) return bad(res,503,'SMTP Gmail no está configurado en el servidor.');
+  if (!emailConfigured) return bad(res,503,'Configurá RESEND_API_KEY y MAIL_FROM o Gmail SMTP en el servidor.');
   const email = String(req.body?.email || '').trim().toLowerCase();
   const name = String(req.body?.name || '').trim();
   const role = String(req.body?.role || 'user');
@@ -196,7 +230,7 @@ app.post('/api/users/invite',limit(20,60*60*1000,'invite'),authenticate,adminOnl
   res.status(201).json(result);
 }));
 app.post('/api/users/:id/resend',limit(20,60*60*1000,'resend'),authenticate,adminOnly,run(async(req,res) => {
-  if (!mailer) return bad(res,503,'SMTP Gmail no está configurado.');
+  if (!emailConfigured) return bad(res,503,'El proveedor de correo no está configurado.');
   const user = (await q("SELECT id,email,name,role FROM users WHERE id=$1 AND status='pending' AND role<>'admin'",[req.params.id])).rows[0];
   if (!user) return bad(res,404,'No se encontró una invitación pendiente.');
   res.json(await issueInvitation(user,req.user.id));
