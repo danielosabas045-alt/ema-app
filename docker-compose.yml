@@ -1,31 +1,40 @@
 services:
   db:
     image: postgres:16-alpine
+    restart: unless-stopped
     environment:
       POSTGRES_DB: ema_database
       POSTGRES_USER: ema
-      POSTGRES_PASSWORD: ema_local_password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Configura POSTGRES_PASSWORD en .env}
     volumes:
       - ema_pg:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL","pg_isready -U ema -d ema_database"]
+      test: ["CMD-SHELL", "pg_isready -U ema -d ema_database"]
       interval: 5s
       timeout: 5s
       retries: 20
   web:
     build: .
+    restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
     environment:
+      NODE_ENV: development
       PORT: 3000
-      DATABASE_URL: postgresql://ema:ema_local_password@db:5432/ema_database
-      BASE_URL: http://localhost:3000
-      JWT_SECRET: local-change-this-secret
-      ADMIN_EMAIL: danielosabas045@gmail.com
-      ADMIN_PASSWORD: Admin123!ChangeMe
-      ADMIN_NAME: Daniel Osabas
-      GMAIL_USER: danielosabas045@gmail.com
-      GMAIL_APP_PASSWORD: ""
+      BASE_URL: ${BASE_URL:-http://localhost:3000}
+      PGHOST: db
+      PGPORT: 5432
+      PGUSER: ema
+      PGPASSWORD: ${POSTGRES_PASSWORD:?Configura POSTGRES_PASSWORD en .env}
+      PGDATABASE: ema_database
+      DATABASE_SSL: disable
+      ADMIN_EMAIL: ${ADMIN_EMAIL:-danielosabas045@gmail.com}
+      ADMIN_NAME: ${ADMIN_NAME:-Daniel Osabas}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?Configura ADMIN_PASSWORD en .env}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      GMAIL_USER: ${GMAIL_USER:-}
+      GMAIL_APP_PASSWORD: ${GMAIL_APP_PASSWORD:-}
     depends_on:
       db:
         condition: service_healthy
