@@ -1,0 +1,13 @@
+# EMA Database - Fullstack Express + PostgreSQL
+language = "javascript"
+entrypoint = "server.js"
+run = "npm start"
+
+[[ports]]
+localPort = 3000
+externalPort = 80
+
+[deployment]
+run = "npm start"
+build = "npm install --omit=dev"
+ignorePorts = false
