@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
 import {setTimeout as delay} from 'node:timers/promises';
 import bcrypt from 'bcryptjs';
+import {createServer} from 'node:http';
 import pg from 'pg';
 
 const port = 3107;
@@ -47,6 +48,21 @@ async function request(path,method='GET',body=null,token='') {
 }
 test('EMA V2 API: sessions, permissions, persistence, CRUD and security',async()=>{
   const pool = new pg.Pool({connectionString:db});
+  const sent = [];
+  const emailMock = createServer((req,res) => {
+    if (req.url !== '/emails' || req.method !== 'POST') { res.writeHead(404); return res.end(); }
+    let raw = '';
+    req.on('data',chunk => { raw += String(chunk); });
+    req.on('end',() => {
+      try {
+        sent.push({body:JSON.parse(raw),auth:req.headers.authorization});
+        res.writeHead(200,{'Content-Type':'application/json'});
+        res.end(JSON.stringify({id:'test-sent-'+sent.length}));
+      } catch {
+        res.writeHead(400); res.end();
+      }
+    });
+  });
   try {
     await startServer();
     assert.equal((await request('/api/health')).data.database,'connected');
@@ -91,8 +107,40 @@ test('EMA V2 API: sessions, permissions, persistence, CRUD and security',async()
     assert.equal((await request('/api/login','POST',{email:env.ADMIN_EMAIL,password})).status,200);
     assert.equal((await request('/api/login','POST',{email:env.ADMIN_EMAIL,password:env.ADMIN_PASSWORD})).status,401);
     assert.ok(u2);
+
+    // Recorrido completo del correo sin enviar mensajes reales durante CI.
+    await new Promise(resolve => emailMock.listen(3108,'127.0.0.1',resolve));
+    await stopServer();
+    env.RESEND_API_KEY='re_automated_test_only';
+    env.MAIL_FROM='sender@example.org';
+    env.RESEND_TEST_URL='http://127.0.0.1:3108/emails';
+    await startServer();
+    assert.equal((await request('/api/health')).data.mailProvider,'resend_https');
+    const adminAgain=(await request('/api/login','POST',{email:env.ADMIN_EMAIL,password})).data.token;
+    const invited=await request('/api/users/invite','POST',{name:'Persona Invitada',email:'invitado.ema@example.org',role:'user'},adminAgain);
+    assert.equal(invited.status,201,'provider API should accept email request');
+    assert.equal(sent.length,1);
+    assert.equal(sent[0].auth,'Bearer re_automated_test_only');
+    assert.deepEqual(sent[0].body.to,['invitado.ema@example.org']);
+    const firstToken=sent[0].body.html.match(/invite\.html\?token=([a-f0-9]{64})/)?.[1];
+    assert.ok(firstToken,'email must include one-time invite URL');
+    const users=(await request('/api/users','GET',null,adminAgain)).data.users;
+    const invitee=users.find(u=>u.email==='invitado.ema@example.org');
+    assert.ok(invitee);
+    assert.equal((await request('/api/users/'+invitee.id+'/resend','POST',null,adminAgain)).status,200);
+    assert.equal(sent.length,2);
+    const secondToken=sent[1].body.html.match(/invite\.html\?token=([a-f0-9]{64})/)?.[1];
+    assert.ok(secondToken);
+    assert.notEqual(firstToken,secondToken);
+    const activate={name:'Persona Invitada',password:'NewLongPassword123!'};
+    assert.equal((await request('/api/invite/accept','POST',{...activate,token:firstToken})).status,400,'old token must be invalidated');
+    assert.equal((await request('/api/invite/accept','POST',{...activate,token:secondToken})).status,200);
+    assert.equal((await request('/api/invite/accept','POST',{...activate,token:secondToken})).status,400,'accepted token cannot be reused');
+    assert.equal((await request('/api/login','POST',{email:'invitado.ema@example.org',password:activate.password})).status,200);
+    assert.equal((await request('/api/users/invite','POST',{name:'Otra',email:'invitado.ema@example.org',role:'user'},adminAgain)).status,409);
   } finally {
     await stopServer();
     await pool.end();
+    await new Promise(resolve=>emailMock.close(resolve));
   }
 });
